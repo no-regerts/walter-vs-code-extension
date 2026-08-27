@@ -1,1 +1,193 @@
-"test"
+; This file is intended for visual testing of all supported WALTER syntax-related features.
+; Run the 'Test syntax highlighting' launch option to verify the highlighting.
+; Additionally, press 'Ctrl + Shift + P' and select 'Developer: Inspect Editor Tokens and Scopes' to enable syntax debugging mode.
+; Hit 'Ctrl + R' to reload the window after you made some changes.
+; Note: syntax highlighting is highly dependent on the chosen theme, so make sure to test it on different themes.
+
+;---------------------------------- COMMENTS -----------------------------------
+
+; test
+test ; test
+test; test
+test ;test
+
+
+;--------------------------- THEME CONFIG PROPERTIES ---------------------------
+
+version
+use_pngs
+use_overlays
+tinttcp
+peaksedges
+tcp_folderindent
+tcp_heights 4 25 54 64
+tcp_master_minheight
+tcp_voltext_flags
+tcp_master_voltext_flags
+mcp_voltext_flags
+mcp_master_voltext_flags
+tcp_vupeakwidth
+mcp_vupeakheight
+mcp_mastervupeakheight
+tcp_showborders
+mcp_showborders
+trans_showborders
+mcp_altmeterpos
+tcp_vol_zeroline FF666666
+tcp_pan_zeroline
+tcp_width_zeroline
+mcp_vol_zeroline
+mcp_pan_zeroline
+mcp_width_zeroline
+trans_speed_zeroline
+item_volknobfg
+envcp_min_height
+mcp_min_height
+no_meter_reclbl
+gen_pan_zeroline
+gen_vol_zeroline
+warnings all
+warnings    all
+warnings pedantic
+adjuster_script "Default_7.0_theme_adjuster.lua"
+misc_dpi_translate
+global_scale
+layout_dpi_translate
+want_os_type
+
+
+;---------------------------------- COMMANDS -----------------------------------
+
+clear mcp.*
+reset mcp.*
+set mcp.size [20 20]
+def square10 10 10
+front tcp.solo
+define_parameter "hide_mute" "Hide Mute Button" 0 0 1
+custom 123
+
+macro
+endmacro
+
+Macro
+EndMacro
+
+layout
+endLayout
+endlayout
+
+Layout
+EndLayout
+
+
+;-------------------------------- EXPRESSIONS ----------------------------------
+
+1.0
+
+[0 0 20 20 0 0 1 1]
+[. . . 0]
+
+test1<test2
+test1>test2
+test1<=test2
+test1>=test2
+test1==test2
+test1!=test2
+?test1
+!test1
+
++ test1 test2
+- test1 test2
+* test1 test2
+/ test1 test2
++:test1:test2
+*:test1:test2
+
+test1&test2
+
+set test w<100 [0]
+set test w<100 [0] .
+set test w<100 [0] test
+
+; Predefined scalar variables:
+w
+h
+reaper_version
+os_type
+folderstate
+folderdepth
+maxfolderdepth
+mcp_maxfolderdepth
+recarm
+tcp_iconsize
+mcp_iconsize
+mcp_wantextmix
+tracknch
+trackpanmode
+tcp_fxparms
+tcp_fxembed
+mcp_fxembed
+tcp_sends_enabled
+tcp_fxlist_enabled
+trackpinned
+tcp_hidden_overridden
+send_cnt
+fx_parm_cnt
+fx_cnt
+recfx_cnt
+trackcolor_valid
+trackcolor_r
+trackcolor_g
+trackcolor_b
+mixer_visible
+track_selected
+trackidx
+ntracks
+trackfixedlanes
+trans_flags
+trans_docked
+trans_center
+envcp_type
+env_selected
+
+set test 1.0@w
+set test recarm@w
+test{x}@x
+test@x
+
+test{x}
+test{y}
+test{w}
+test{h}
+test{ls}
+test{ts}
+test{rs}
+test{bs}
+
+trackidx ; trackidx here is a predefined scalar value...
+tcp.custom.trackidx ; and here it isn't.
+
+h<100 ; h should be highlighted as a scalar value.
+
+; Strings:
+"test50%$''``#@$^*&()_+=-"
+'test50%$""``#@$^*&()_+=-'
+`test50%$""''#@$^*&()_+=-`
+
+
+;------------------------------------ OTHER ------------------------------------
+
+SET test ; WALTER is a case-insensitive language.
+
+layout.test ; 'layout' here should be highlighted as an identifier, not as a command word.
+trans.custom.rateFaderBg ; 'custom' here should be highlighted as an identifier, not as a command word.
+
+; Line continuation character:
+set trans.rate ?cond  \
+  [0]                 \
+  [1]
+
+; Token pasting:
+something{3} ##macroParam
+something##macroParam##
+something##macroParam
