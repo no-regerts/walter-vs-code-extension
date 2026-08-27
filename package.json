@@ -1,0 +1,25 @@
+{
+  "name": "WALTER",
+  "displayName": "WALTER",
+  "description": "Complete language support for WALTER",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.134.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [{
+      "id": "walter",
+      "aliases": ["WALTER", "walter"],
+      "extensions": [".txt"],
+      "configuration": "./configs/language-configuration.json"
+    }],
+    "grammars": [{
+      "language": "walter",
+      "scopeName": "source.walter",
+      "path": "./configs/walter.tmLanguage.json"
+    }]
+  }
+}
