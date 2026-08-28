@@ -25,8 +25,10 @@ This extension provides full feature support for WALTER language in VS Code.
   - No dashes in variable names.
   - no-consecutive-blank-lines
   - consistent variable names (camelCase or _)
-  max-line-length
-- Jump to definition.
+  - max-line-length
+- Jump to definition:
+  - For variables.
+  - For macros.
 - Formatting:
   - Adding indentations for layouts and macros.
   - Removing all trailing spaces.
@@ -47,5 +49,16 @@ This extension contributes the following settings:
 * `myExtension.thing`: Set to `blah` to do something.
 
 ## Known Issues
+- '-' is a valid character in identifiers, but it conflicts with the minus sign. Handling this ambiguity would require numerous hard to maintain and inefficient parsing rules. Rather than supporting all these edge cases (see the example below), we should recommend users (via code suggestions) to replace all dashes with underscores:
+  ``` WALTER
+  something##param##-1 ; Not good.
+  something##param##_1 ; Good enough.
+  ```
+- Macro param separators add some troubles too:
+  ``` WALTER
+  something ## somethingElse ; Good.
+  something## somethingElse ; Maybe good.
+  something{3}## somethingElse ; Not good.
+  ```
 
 ## Release Notes
