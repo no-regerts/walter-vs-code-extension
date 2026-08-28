@@ -1,0 +1,40 @@
+; SYNTAX TEST "source.walter"
+
+test1<test2
+;    ^ keyword.operator.logical.walter
+;   ^ ^ - keyword.operator.logical.walter
+
+test1>test2
+;    ^ keyword.operator.logical.walter
+;   ^ ^ - keyword.operator.logical.walter
+
+test1<=test2
+;    ^^ keyword.operator.logical.walter
+;   ^  ^ - keyword.operator.logical.walter
+
+test1>=test2
+;    ^^ keyword.operator.logical.walter
+;   ^  ^ - keyword.operator.logical.walter
+
+test1==test2
+;    ^^ keyword.operator.logical.walter
+;   ^  ^ - keyword.operator.logical.walter
+
+test1!=test2
+;    ^^ keyword.operator.logical.walter
+;   ^  ^ - keyword.operator.logical.walter
+
+ ?test1
+;<- - keyword.operator.logical.walter
+;^ keyword.operator.logical.walter
+; ^ - keyword.operator.logical.walter
+
+ !test1
+;<- - keyword.operator.logical.walter
+;^ keyword.operator.logical.walter
+; ^ - keyword.operator.logical.walter
+
+test1&test2
+;    ^ keyword.operator.logical.walter
+;   ^ ^ - keyword.operator.logical.walter
+

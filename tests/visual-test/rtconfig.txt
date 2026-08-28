@@ -1,0 +1,5 @@
+; This file is intended for visual testing of all supported WALTER syntax-related features.
+; Run the 'Test syntax highlighting' launch option to verify the highlighting.
+; Additionally, press 'Ctrl + Shift + P' and select 'Developer: Inspect Editor Tokens and Scopes' to enable syntax debugging mode.
+; Hit 'Ctrl + R' to reload the window after you made some changes.
+; Note: syntax highlighting is highly dependent on the chosen theme, so make sure to test it on different themes.

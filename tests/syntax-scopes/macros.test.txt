@@ -1,0 +1,10 @@
+; SYNTAX TEST "source.walter"
+
+something{3} ##macroParam
+;            ^^ punctuation.separator.walter
+
+something##macroParam##
+;        ^^          ^^ punctuation.separator.walter
+
+something##macroParam
+;        ^^ punctuation.separator.walter

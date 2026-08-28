@@ -1,0 +1,13 @@
+; SYNTAX TEST "source.walter"
+
+ "test50%$''``#@$^*&()_+=-"
+;^^^^^^^^^^^^^^^^^^^^^^^^^^ string.quoted.double.walter
+;                          ^ - string.quoted.double.walter
+
+ 'test50%$""``#@$^*&()_+=-'
+;^^^^^^^^^^^^^^^^^^^^^^^^^^ string.quoted.single.walter
+;                          ^ - string.quoted.single.walter
+
+ `test50%$""''#@$^*&()_+=-`
+;^^^^^^^^^^^^^^^^^^^^^^^^^^ string.quoted.backtick.walter
+;                          ^ - string.quoted.backtick.walter

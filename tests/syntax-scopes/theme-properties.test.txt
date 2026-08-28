@@ -1,0 +1,161 @@
+; SYNTAX TEST "source.walter"
+
+ version 5.0
+;^^^^^^^ entity.name.tag.walter
+;       ^ - entity.name.tag.walter
+
+ use_pngs 1
+;^^^^^^^^ entity.name.tag.walter
+;        ^ - entity.name.tag.walter
+
+ use_overlays 0
+;^^^^^^^^^^^^ entity.name.tag.walter
+;            ^ - entity.name.tag.walter
+ 
+ tinttcp 298
+;^^^^^^^ entity.name.tag.walter
+;       ^ - entity.name.tag.walter
+
+ peaksedges 0
+;^^^^^^^^^^ entity.name.tag.walter
+;          ^ - entity.name.tag.walter
+
+ tcp_folderindent 0
+;^^^^^^^^^^^^^^^^ entity.name.tag.walter
+;                ^ - entity.name.tag.walter
+
+ tcp_heights 3 24 49 72
+;^^^^^^^^^^^ entity.name.tag.walter
+;           ^ - entity.name.tag.walter
+
+ tcp_master_minheight 32
+;^^^^^^^^^^^^^^^^^^^^ entity.name.tag.walter
+;                    ^ - entity.name.tag.walter
+
+ tcp_voltext_flags 12
+;^^^^^^^^^^^^^^^^^ entity.name.tag.walter
+;                 ^ - entity.name.tag.walter
+
+ tcp_master_voltext_flags
+;^^^^^^^^^^^^^^^^^^^^^^^^ entity.name.tag.walter
+;                        ^ - entity.name.tag.walter
+
+ mcp_voltext_flags 5 5
+;^^^^^^^^^^^^^^^^^ entity.name.tag.walter
+;                 ^ - entity.name.tag.walter
+
+ mcp_master_voltext_flags
+;^^^^^^^^^^^^^^^^^^^^^^^^ entity.name.tag.walter
+;                        ^ - entity.name.tag.walter
+
+ tcp_vupeakwidth 2
+;^^^^^^^^^^^^^^^ entity.name.tag.walter
+;               ^ - entity.name.tag.walter
+
+ mcp_vupeakheight 2
+;^^^^^^^^^^^^^^^^ entity.name.tag.walter
+;                ^ - entity.name.tag.walter
+
+ mcp_mastervupeakheight 4
+;^^^^^^^^^^^^^^^^^^^^^^ entity.name.tag.walter
+;                      ^ - entity.name.tag.walter
+
+ tcp_showborders 0
+;^^^^^^^^^^^^^^^ entity.name.tag.walter
+;               ^ - entity.name.tag.walter
+
+ mcp_showborders 0
+;^^^^^^^^^^^^^^^ entity.name.tag.walter
+;               ^ - entity.name.tag.walter
+
+ trans_showborders 0
+;^^^^^^^^^^^^^^^^^ entity.name.tag.walter
+;                 ^ - entity.name.tag.walter
+
+ mcp_altmeterpos 0
+;^^^^^^^^^^^^^^^ entity.name.tag.walter
+;               ^ - entity.name.tag.walter
+
+ tcp_vol_zeroline FF666666
+;^^^^^^^^^^^^^^^^ entity.name.tag.walter
+;                ^ - entity.name.tag.walter
+
+ tcp_pan_zeroline 66000000
+;^^^^^^^^^^^^^^^^ entity.name.tag.walter
+;                ^ - entity.name.tag.walter
+
+ tcp_width_zeroline 85000000
+;^^^^^^^^^^^^^^^^^^ entity.name.tag.walter
+;                  ^ - entity.name.tag.walter
+
+ mcp_vol_zeroline FF666666
+;^^^^^^^^^^^^^^^^ entity.name.tag.walter
+;                ^ - entity.name.tag.walter
+
+ mcp_pan_zeroline 85000000
+;^^^^^^^^^^^^^^^^ entity.name.tag.walter
+;                ^ - entity.name.tag.walter
+
+ mcp_width_zeroline 85000000
+;^^^^^^^^^^^^^^^^^^ entity.name.tag.walter
+;                  ^ - entity.name.tag.walter
+
+ trans_speed_zeroline FF000000
+;^^^^^^^^^^^^^^^^^^^^ entity.name.tag.walter
+;                    ^ - entity.name.tag.walter
+
+ item_volknobfg 85282828 85282828 85282828
+;^^^^^^^^^^^^^^ entity.name.tag.walter
+;              ^ - entity.name.tag.walter
+
+ envcp_min_height 27
+;^^^^^^^^^^^^^^^^ entity.name.tag.walter
+;                ^ - entity.name.tag.walter
+
+ mcp_min_height 220 80
+;^^^^^^^^^^^^^^ entity.name.tag.walter
+;              ^ - entity.name.tag.walter
+
+ no_meter_reclbl
+;^^^^^^^^^^^^^^^ entity.name.tag.walter
+;               ^ - entity.name.tag.walter
+
+ gen_pan_zeroline FF000000
+;^^^^^^^^^^^^^^^^ entity.name.tag.walter
+;                ^ - entity.name.tag.walter
+
+ gen_vol_zeroline FF000000
+;^^^^^^^^^^^^^^^^ entity.name.tag.walter
+;                ^ - entity.name.tag.walter
+
+ warnings all
+;^^^^^^^^^^^^ entity.name.tag.walter
+;            ^ - entity.name.tag.walter
+
+ warnings    all
+;^^^^^^^^^^^^^^^ entity.name.tag.walter
+;               ^ - entity.name.tag.walter
+
+ warnings pedantic
+;^^^^^^^^^^^^^^^^^ entity.name.tag.walter
+;                 ^ - entity.name.tag.walter
+
+ adjuster_script "Default_7.0_theme_adjuster.lua"
+;^^^^^^^^^^^^^^^ entity.name.tag.walter
+;               ^ - entity.name.tag.walter
+
+ misc_dpi_translate 50 100
+;^^^^^^^^^^^^^^^^^^ entity.name.tag.walter
+;                  ^ - entity.name.tag.walter
+
+ global_scale
+;^^^^^^^^^^^^ entity.name.tag.walter
+;            ^ - entity.name.tag.walter
+
+ layout_dpi_translate '150%_C' 1.74 '200%_C'
+;^^^^^^^^^^^^^^^^^^^^ entity.name.tag.walter
+;                    ^ - entity.name.tag.walter
+
+ want_os_type
+ ;^^^^^^^^^^^ entity.name.tag.walter
+;            ^ - entity.name.tag.walter

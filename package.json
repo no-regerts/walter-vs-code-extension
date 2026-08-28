@@ -9,6 +9,11 @@
   "categories": [
     "Programming Languages"
   ],
+  "scripts": {
+    "validate-syntax-grammar": "textmate-validate --verbose ./configs/syntax-patterns.json",
+    "test-syntax-grammar": "vscode-tmgrammar-test testcases ./tests/**/*.test.txt -g ./configs/syntax-patterns.json",
+    "test": "npm run validate-syntax-grammar && npm run test-syntax-grammar"
+  },
   "contributes": {
     "languages": [
       {
@@ -30,5 +35,9 @@
         "path": "./configs/syntax-patterns.json"
       }
     ]
+  },
+  "devDependencies": {
+    "@carlwr/textmate-validate": "^1.0.1",
+    "vscode-tmgrammar-test": "^0.1.3"
   }
 }

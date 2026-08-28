@@ -1,0 +1,45 @@
+; SYNTAX TEST "source.walter"
+
+ clear mcp.*
+;<-   ^ - keyword.control.commands.walter
+;^^^^^ keyword.control.commands.walter
+
+ reset mcp.*
+;<-   ^ - keyword.control.commands.walter
+;^^^^^ keyword.control.commands.walter
+
+ set mcp.size [20 20]
+;<-^ - keyword.control.commands.walter
+;^^^ keyword.control.commands.walter
+
+ def square10 10 10
+;<-^ - keyword.control.commands.walter
+;^^^ keyword.control.commands.walter
+
+ front tcp.solo
+;<-   ^ - keyword.control.commands.walter
+;^^^^^ keyword.control.commands.walter
+
+ define_parameter "hide_mute" "Hide Mute Button" 0 0 1
+;<-              ^ - keyword.control.commands.walter
+;^^^^^^^^^^^^^^^^ keyword.control.commands.walter
+
+ custom 123
+;<-    ^ - keyword.control.commands.walter
+;^^^^^^ keyword.control.commands.walter
+
+ macro macroName param1 param2
+;<-   ^ - keyword.control.commands.walter
+;^^^^^ keyword.control.commands.walter
+
+ endmacro
+;<-      ^ - keyword.control.commands.walter
+;^^^^^^^^ keyword.control.commands.walter
+
+ layout "Layout Name" "Layout Folder"
+;<-    ^ - keyword.control.commands.walter
+;^^^^^^ keyword.control.commands.walter
+
+ endlayout
+;<-       ^ - keyword.control.commands.walter
+;^^^^^^^^^ keyword.control.commands.walter

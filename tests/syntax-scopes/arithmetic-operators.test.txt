@@ -1,0 +1,31 @@
+; SYNTAX TEST "source.walter"
+
+ + test1 test2
+;<- - keyword.operator.walter
+;^ keyword.operator.walter
+; ^ - keyword.operator.walter
+
+ - test1 test2
+;<- - keyword.operator.walter
+;^ keyword.operator.walter
+; ^ - keyword.operator.walter
+
+ * test1 test2
+;<- - keyword.operator.walter
+;^ keyword.operator.walter
+; ^ - keyword.operator.walter
+
+ / test1 test2
+;<- - keyword.operator.walter
+;^ keyword.operator.walter
+; ^ - keyword.operator.walter
+
+ +:test1:test2
+;<- - keyword.operator.walter
+;^^     ^ keyword.operator.walter
+;  ^     ^ - keyword.operator.walter
+
+ *:test1:test2
+;<- - keyword.operator.walter
+;^^     ^ keyword.operator.walter
+;  ^     ^ - keyword.operator.walter

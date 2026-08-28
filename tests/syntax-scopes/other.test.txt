@@ -1,0 +1,19 @@
+; SYNTAX TEST "source.walter"
+
+; WALTER is a case-insensitive language:
+ SET test
+;^^^ keyword.control.commands.walter
+
+
+ layout.test
+;^^^^^^ variable.other.walter
+ trans.custom.rateFaderBg
+;      ^^^^^^ variable.other.walter
+
+; Line continuation character:
+ \
+;^ constant.character.escape.walter
+
+; Punctuation marks:
+ {} [] , . 
+;^^ ^^ ^ ^ punctuation.walter

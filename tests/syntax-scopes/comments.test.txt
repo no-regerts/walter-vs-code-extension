@@ -1,0 +1,16 @@
+; SYNTAX TEST "source.walter"
+
+ ; test
+;^^^^^^ comment.line.walter
+
+ test ; test
+;^^^^ variable.other.walter
+;     ^^^^^^ comment.line.walter
+
+ test; test
+;^^^^ variable.other.walter
+;    ^^^^^^ comment.line.walter
+
+ test ;test
+;^^^^ variable.other.walter
+;     ^^^^^ comment.line.walter

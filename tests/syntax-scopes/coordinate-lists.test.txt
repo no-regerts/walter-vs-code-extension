@@ -1,0 +1,50 @@
+; SYNTAX TEST "source.walter"
+
+ [0 0 20 20 0 0 1 1]
+;<- source.walter
+;^                 ^ punctuation.walter
+; ^ ^ ^^ ^^ ^ ^ ^ ^ constant.numeric.walter
+
+ [. . . 0]
+;<- source.walter
+;^^ ^ ^  ^ punctuation.walter
+;       ^ constant.numeric.walter
+
+
+; Accessing scalar components of coordinate lists:
+
+set test 1.0@w
+;           ^^ support.variable.scalar.walter
+
+set test recarm@w
+;              ^^ support.variable.scalar.walter
+
+test{x}@x
+;    ^ ^^ support.variable.scalar.walter
+
+test@x
+;    ^ support.variable.scalar.walter
+
+test{x}
+;    ^ support.variable.scalar.walter
+
+test{y}
+;    ^ support.variable.scalar.walter
+
+test{w}
+;    ^ support.variable.scalar.walter
+
+test{h}
+;    ^ support.variable.scalar.walter
+
+test{ls}
+;    ^^ support.variable.scalar.walter
+
+test{ts}
+;    ^^ support.variable.scalar.walter
+
+test{rs}
+;    ^^ support.variable.scalar.walter
+
+test{bs}
+;    ^^ support.variable.scalar.walter

@@ -1,0 +1,10 @@
+; SYNTAX TEST "source.walter"
+
+ 1.0
+;^^^ constant.numeric.walter
+
+ FF000000
+;^^^^^^^^ constant.numeric.walter
+
+ 00FF00FF
+;^^^^^^^^ constant.numeric.walter
