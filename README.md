@@ -1,6 +1,9 @@
 # Complete language support for WALTER
 
 ## Features
+- Automatic bracket and quote pairing.
+- Code block comment toggling.
+- Folding regions.
 
 ## Extension Settings
 
