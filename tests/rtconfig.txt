@@ -4,6 +4,7 @@
 ; Hit 'Ctrl + R' to reload the window after you made some changes.
 ; Note: syntax highlighting is highly dependent on the chosen theme, so make sure to test it on different themes.
 
+
 ;---------------------------------- COMMENTS -----------------------------------
 
 ; test
@@ -13,15 +14,14 @@ test ;test
 
 
 ;--------------------------- THEME CONFIG PROPERTIES ---------------------------
-
-version
-use_pngs
-use_overlays
-tinttcp
-peaksedges
-tcp_folderindent
+version 5.0
+use_pngs 1
+use_overlays 0
+tinttcp 298
+peaksedges 0
+tcp_folderindent 0
 tcp_heights 4 25 54 64
-tcp_master_minheight
+tcp_master_minheight 32
 tcp_voltext_flags
 tcp_master_voltext_flags
 mcp_voltext_flags
@@ -29,32 +29,32 @@ mcp_master_voltext_flags
 tcp_vupeakwidth
 mcp_vupeakheight
 mcp_mastervupeakheight
-tcp_showborders
-mcp_showborders
-trans_showborders
+tcp_showborders 0
+mcp_showborders 0
+trans_showborders 0
 mcp_altmeterpos
 tcp_vol_zeroline FF666666
-tcp_pan_zeroline
+tcp_pan_zeroline 66000000
 tcp_width_zeroline
-mcp_vol_zeroline
-mcp_pan_zeroline
+mcp_vol_zeroline FF666666
+mcp_pan_zeroline 85000000
 mcp_width_zeroline
-trans_speed_zeroline
+trans_speed_zeroline FF000000
 item_volknobfg
-envcp_min_height
-mcp_min_height
+envcp_min_height 27
+mcp_min_height 220 80
 no_meter_reclbl
-gen_pan_zeroline
-gen_vol_zeroline
+gen_pan_zeroline FF000000
+gen_vol_zeroline FF000000
 warnings all
 warnings    all
 warnings pedantic
 adjuster_script "Default_7.0_theme_adjuster.lua"
-misc_dpi_translate
+misc_dpi_translate 50 100
 global_scale
-layout_dpi_translate
+layout_dpi_translate '150%_C' 1.74 '200%_C'
 want_os_type
-
+want_os_type
 
 ;---------------------------------- COMMANDS -----------------------------------
 
@@ -66,23 +66,17 @@ front tcp.solo
 define_parameter "hide_mute" "Hide Mute Button" 0 0 1
 custom 123
 
-macro
+macro macroName param1 param2
 endmacro
 
-Macro
-EndMacro
-
-layout
-endLayout
+layout "Layout Name" "Layout Folder"
 endlayout
-
-Layout
-EndLayout
-
 
 ;-------------------------------- EXPRESSIONS ----------------------------------
 
 1.0
+
+FF666666
 
 [0 0 20 20 0 0 1 1]
 [. . . 0]
@@ -165,7 +159,7 @@ test{rs}
 test{bs}
 
 trackidx ; trackidx here is a predefined scalar value...
-tcp.custom.trackidx ; and here it isn't.
+tcp.custom.trackidx ; and here it is not.
 
 h<100 ; h should be highlighted as a scalar value.
 
@@ -173,6 +167,9 @@ h<100 ; h should be highlighted as a scalar value.
 "test50%$''``#@$^*&()_+=-"
 'test50%$""``#@$^*&()_+=-'
 `test50%$""''#@$^*&()_+=-`
+
+; Punctuation marks:
+() {} [] , .
 
 
 ;------------------------------------ OTHER ------------------------------------
@@ -191,3 +188,15 @@ set trans.rate ?cond  \
 something{3} ##macroParam
 something##macroParam##
 something##macroParam
+
+
+;--------------------------------- KNOWN BUGS ----------------------------------
+
+; '-' is a valid character in identifiers, but it conflicts with the minus sign. Handling this ambiguity would require numerous hard to maintain and inefficient parsing rules. Rather than supporting all these edge cases (see the example below), we should recommend users (via code suggestions) to replace all dashes with underscores.
+something##param##-1 ; Not good.
+something##param##_1 ; Good enough.
+
+; Macro param separators add some troubles too.
+something ## somethingElse ; Good.
+something## somethingElse ; Maybe good.
+something{3}## somethingElse ; Not good.

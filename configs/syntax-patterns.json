@@ -1,0 +1,73 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "WALTER",
+  "scopeName": "source.walter",
+  "patterns": [
+    {
+      "name": "comment.line.walter",
+      "match": ";.*$"
+    },
+    {
+      "name": "entity.name.tag.walter",
+      "match": "(?i)(?:adjuster_script|envcp_min_height|gen_(?:(?:pan|vol)_zeroline)|global_scale|item_volknobfg|layout_dpi_translate|mcp_(?:altmeterpos|master_vol_zeroline|master_voltext_flags|mastervupeakheight|min_height|pan_zeroline|showborders|vol_zeroline|voltext_flags|vupeakheight|width_zeroline)|misc_dpi_translate|no_meter_reclbl|peaksedges|tcp_(?:folderindent|heights|margin|master_minheight|master_voltext_flags|pan_zeroline|showborders|vol_zeroline|voltext_flags|vupeakwidth|width_zeroline)|tinttcp|trans_(?:showborders|speed_zeroline)|use_(?:overlays|pngs)|version|want_os_type|warnings\\s+(?:all|pedantic))"
+    },
+    {
+      "name": "support.variable.scalar.walter",
+      "match": "(?i)@|(?<=[\\{@])(?:\\s*[0-7]|bs|h|ls|rs|ts|w|x|y)",
+      "comment": "This pattern must be placed before built-in scalar variables. Otherwise all 'w' and 'h' letters would be marked as a such variable."
+    },
+    {
+      "name": "variable.other.constant",
+      "match": "(?i)(?<!\\.)(?:env(?:_selected|cp_type)|folder(?:depth|state)|fx_(?:cnt|parm_cnt)|h|maxfolderdepth|mcp_(?:fxembed|iconsize|maxfolderdepth|wantextmix)|mixer_visible|ntracks|os_type|reaper_version|rec(?:arm|fx_cnt)|send_cnt|tcp_(?:fx(?:embed|list_enabled|parms)|hidden_overridden|iconsize|sends_enabled)|track(?:_selected|color_(?:b|g|r|valid)|fixedlanes|idx|nch|panmode|pinned)|trans_(center|docked|flags)|w)",
+      "comment": "(?<!\\.) in the beginning ensures that a custom property with one of these names won't be highlighted (tcp.custom.track_selected)."
+    },
+    {
+      "name": "keyword.control.commands.walter",
+      "match": "(?i)(clear|custom|def|define_parameter|endlayout|endmacro|front|globallayout|layout|macro|reset|set)(?=\\s)",
+      "comment": "(?=\\s) at the end ensures that 'custom' in text like tcp.custom.myPanel won't be highlighted as a command."
+    },
+    {
+      "name": "keyword.operator.walter",
+      "match": "\\+|-|\\*|\\/|\\+:|\\*:|:|&"
+    },
+    {
+      "name": "keyword.operator.logical.walter",
+      "match": "<|>|<=|>=|==|!=|\\?|!"
+    },
+    {
+      "name": "punctuation.walter",
+      "match": "\\.|,|\\{|\\}|\\(|\\)|\\[|\\]"
+    },
+    {
+      "name": "constant.numeric.walter",
+      "match": "(?i)(?:\\d+\\.?\\d*)|(?:[a-f0-9]{8})"
+    },
+    {
+      "name": "variable.other.walter",
+      "match": "[a-zA-Z_][\\w-]*(?=\\W)"
+    },
+    {
+      "name": "punctuation.separator.walter",
+      "match": "(?:(?<=\\S)##)|(?:##(?=\\S))"
+    },
+    {
+      "name": "constant.character.escape.walter",
+      "match": "\\\\"
+    },
+    {
+      "name": "string.quoted.double.walter",
+      "begin": "\"",
+      "end": "\""
+    },
+    {
+      "name": "string.quoted.single.walter",
+      "begin": "'",
+      "end": "'"
+    },
+    {
+      "name": "string.quoted.backtick.walter",
+      "begin": "`",
+      "end": "`"
+    }
+  ]
+}
