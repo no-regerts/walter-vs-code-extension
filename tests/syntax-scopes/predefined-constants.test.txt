@@ -1,126 +1,126 @@
 ; SYNTAX TEST "source.walter"
 
  w
-;^ variable.other.constant.walter
+;^ variable.language.predefined.walter
 
  h
-;^ variable.other.constant.walter
+;^ variable.language.predefined.walter
 
  reaper_version
-;^^^^^^^^^^^^^^ variable.other.constant.walter
+;^^^^^^^^^^^^^^ variable.language.predefined.walter
 
  os_type
-;^^^^^^^ variable.other.constant.walter
+;^^^^^^^ variable.language.predefined.walter
 
  folderstate
-;^^^^^^^^^^^ variable.other.constant.walter
+;^^^^^^^^^^^ variable.language.predefined.walter
 
  folderdepth
-;^^^^^^^^^^^ variable.other.constant.walter
+;^^^^^^^^^^^ variable.language.predefined.walter
 
  maxfolderdepth
-;^^^^^^^^^^^^^^ variable.other.constant.walter
+;^^^^^^^^^^^^^^ variable.language.predefined.walter
 
  mcp_maxfolderdepth
-;^^^^^^^^^^^^^^^^^^ variable.other.constant.walter
+;^^^^^^^^^^^^^^^^^^ variable.language.predefined.walter
 
  recarm
-;^^^^^^ variable.other.constant.walter
+;^^^^^^ variable.language.predefined.walter
 
  tcp_iconsize
-;^^^^^^^^^^^^ variable.other.constant.walter
+;^^^^^^^^^^^^ variable.language.predefined.walter
 
  mcp_iconsize
-;^^^^^^^^^^^^ variable.other.constant.walter
+;^^^^^^^^^^^^ variable.language.predefined.walter
 
  mcp_wantextmix
-;^^^^^^^^^^^^^^ variable.other.constant.walter
+;^^^^^^^^^^^^^^ variable.language.predefined.walter
 
  tracknch
-;^^^^^^^^ variable.other.constant.walter
+;^^^^^^^^ variable.language.predefined.walter
 
  trackpanmode
-;^^^^^^^^^^^^ variable.other.constant.walter
+;^^^^^^^^^^^^ variable.language.predefined.walter
 
  tcp_fxparms
-;^^^^^^^^^^^ variable.other.constant.walter
+;^^^^^^^^^^^ variable.language.predefined.walter
 
  tcp_fxembed
-;^^^^^^^^^^^ variable.other.constant.walter
+;^^^^^^^^^^^ variable.language.predefined.walter
 
  mcp_fxembed
-;^^^^^^^^^^^ variable.other.constant.walter
+;^^^^^^^^^^^ variable.language.predefined.walter
 
  tcp_sends_enabled
-;^^^^^^^^^^^^^^^^^ variable.other.constant.walter
+;^^^^^^^^^^^^^^^^^ variable.language.predefined.walter
 
  tcp_fxlist_enabled
-;^^^^^^^^^^^^^^^^^^ variable.other.constant.walter
+;^^^^^^^^^^^^^^^^^^ variable.language.predefined.walter
 
  trackpinned
-;^^^^^^^^^^^ variable.other.constant.walter
+;^^^^^^^^^^^ variable.language.predefined.walter
 
  tcp_hidden_overridden
-;^^^^^^^^^^^^^^^^^^^^^ variable.other.constant.walter
+;^^^^^^^^^^^^^^^^^^^^^ variable.language.predefined.walter
 
  send_cnt
-;^^^^^^^^ variable.other.constant.walter
+;^^^^^^^^ variable.language.predefined.walter
 
  fx_parm_cnt
-;^^^^^^^^^^^ variable.other.constant.walter
+;^^^^^^^^^^^ variable.language.predefined.walter
 
  fx_cnt
-;^^^^^^ variable.other.constant.walter
+;^^^^^^ variable.language.predefined.walter
 
  recfx_cnt
-;^^^^^^^^^ variable.other.constant.walter
+;^^^^^^^^^ variable.language.predefined.walter
 
  trackcolor_valid
-;^^^^^^^^^^^^^^^^ variable.other.constant.walter
+;^^^^^^^^^^^^^^^^ variable.language.predefined.walter
 
  trackcolor_r
-;^^^^^^^^^^^^ variable.other.constant.walter
+;^^^^^^^^^^^^ variable.language.predefined.walter
 
  trackcolor_g
-;^^^^^^^^^^^^ variable.other.constant.walter
+;^^^^^^^^^^^^ variable.language.predefined.walter
 
  trackcolor_b
-;^^^^^^^^^^^^ variable.other.constant.walter
+;^^^^^^^^^^^^ variable.language.predefined.walter
 
  mixer_visible
-;^^^^^^^^^^^^^ variable.other.constant.walter
+;^^^^^^^^^^^^^ variable.language.predefined.walter
 
  track_selected
-;^^^^^^^^^^^^^^ variable.other.constant.walter
+;^^^^^^^^^^^^^^ variable.language.predefined.walter
 
  trackidx
-;^^^^^^^^ variable.other.constant.walter
+;^^^^^^^^ variable.language.predefined.walter
 
  ntracks
-;^^^^^^^ variable.other.constant.walter
+;^^^^^^^ variable.language.predefined.walter
 
  trackfixedlanes
-;^^^^^^^^^^^^^^^ variable.other.constant.walter
+;^^^^^^^^^^^^^^^ variable.language.predefined.walter
 
  trans_flags
-;^^^^^^^^^^^ variable.other.constant.walter
+;^^^^^^^^^^^ variable.language.predefined.walter
 
  trans_docked
-;^^^^^^^^^^^^ variable.other.constant.walter
+;^^^^^^^^^^^^ variable.language.predefined.walter
 
  trans_center
-;^^^^^^^^^^^^ variable.other.constant.walter
+;^^^^^^^^^^^^ variable.language.predefined.walter
 
  envcp_type
-;^^^^^^^^^^ variable.other.constant.walter
+;^^^^^^^^^^ variable.language.predefined.walter
 
  env_selected
-;^^^^^^^^^^^^ variable.other.constant.walter
+;^^^^^^^^^^^^ variable.language.predefined.walter
 
 
  h<100
-;^ variable.other.constant.walter
-; ^ - variable.other.constant.walter
+;^ variable.language.predefined.walter
+; ^ - variable.language.predefined.walter
 
  tcp.custom.trackidx
-;           ^^^^^^^^ - variable.other.constant.walter
+;           ^^^^^^^^ - variable.language.predefined.walter
