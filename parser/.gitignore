@@ -1,0 +1,5 @@
+node_modules/
+bindings
+binding.gyp
+src/
+walter-parser.wasm

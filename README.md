@@ -62,3 +62,6 @@ This extension contributes the following settings:
   ```
 
 ## Release Notes
+
+## Contributions
+To generate a parser from a grammar, you must have node on your PATH.
