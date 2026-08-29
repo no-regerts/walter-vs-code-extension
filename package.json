@@ -35,6 +35,10 @@
         "filenames": [
           "rtconfig.txt"
         ],
+        "icon": {
+          "light": "./assets/walter-icon.png",
+          "dark": "./assets/walter-icon.png"
+        },
         "configuration": "./configs/language-configuration.json"
       }
     ],
