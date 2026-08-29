@@ -9,7 +9,11 @@
       "args": [
         "--extensionDevelopmentPath=${workspaceFolder}",
         "${workspaceFolder}/tests/visual-test/rtconfig.txt"
-      ]
-    },
+      ],
+      "outFiles": [
+        "${workspaceFolder}/out/**/*.js"
+      ],
+      "preLaunchTask": "${defaultBuildTask}"
+    }
   ]
 }
