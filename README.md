@@ -5,8 +5,9 @@ This extension provides full feature support for WALTER language in VS Code.
 + Bracket/quote matching.
 + Bracket/quote autoclosing.
 + Comment toggling.
-+ Folding (by `;region` and `;endregion` markers).
++ Custom folding regions (by `;region` and `;endregion` markers).
 
+- Folding (for macros and layouts).
 - Auto indentation.
 - Hover information:
   - Documentation for commands and built-in values.
@@ -35,11 +36,12 @@ This extension provides full feature support for WALTER language in VS Code.
 - Refactoring:
   - Changing name of a user variable across the document.
 - Documentation comments.
+- Actions:
+  - Unravel code.
 
 - Snippet completion.
 - Bracket autosurrounding.
 - Code folding.
-- Actions.
 
 ## Extension Settings
 

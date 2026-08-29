@@ -4,10 +4,8 @@ import { Parser, Language } from "web-tree-sitter";
 export async function activate(context: vscode.ExtensionContext) {
   console.log('Extension "WALTER" is now active!');
 
-  // 1. Initialize the Web Tree-sitter runtime
   await Parser.init();
 
-  // 2. Locate and load your specific language WASM file
   const wasmPath = vscode.Uri.joinPath(
     context.extensionUri,
     "parser",
@@ -15,23 +13,28 @@ export async function activate(context: vscode.ExtensionContext) {
   ).fsPath;
   const parserBinary = await Language.load(wasmPath);
 
-  // 3. Create the parser instance and assign the language
   const parser = new Parser();
   parser.setLanguage(parserBinary);
 
-  // 4. Parse example code
-  const sourceCode = "hello = 42";
-  const tree = parser.parse(sourceCode);
+  const editor = vscode.window.activeTextEditor;
 
-  const disposable = vscode.commands.registerCommand(
-    "walter.helloWorld",
-    () => {
+  if (editor) {
+      const document = editor.document;
+      const fullText = document.getText();
+      const tree = parser.parse(fullText);
       console.log(tree?.rootNode.toString());
-      vscode.window.showInformationMessage("Hello World from WALTER!");
-    },
-  );
+  } else {
+      vscode.window.showInformationMessage('No active editor found.');
+  }
 
-  context.subscriptions.push(disposable);
+  // const disposable = vscode.commands.registerCommand(
+  //   "walter.helloWorld",
+  //   () => {
+  //     vscode.window.showInformationMessage("Hello World from WALTER!");
+  //   },
+  // );
+
+  // context.subscriptions.push(disposable);
 }
 
 export function deactivate() {}

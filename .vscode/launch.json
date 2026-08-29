@@ -8,7 +8,7 @@
       "runtimeExecutable": "${execPath}",
       "args": [
         "--extensionDevelopmentPath=${workspaceFolder}",
-        "${workspaceFolder}/tests/visual-test/rtconfig.txt"
+        "${workspaceFolder}/tests/visual-test/simple/rtconfig.txt"
       ],
       "outFiles": [
         "${workspaceFolder}/out/**/*.js"

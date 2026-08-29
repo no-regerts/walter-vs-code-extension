@@ -231,8 +231,28 @@ set textBrightnessMult                            * textBrightness{0} 0.01
 set Layout##thisLayout##-tcpVolumeLength         Layout##thisLayout##-tcpVolumeLength{0}<=40 20 .
 set Layout##thisLayout##-tcpFxparmVisflag1        !tcp_fxlist_enabled{0} -1 .
 set Layout##thisLayout##-tcpFxparmVisflag2        !tcp_sends_enabled{0} -1 .            
-set sectionMarginXYWH                             h<singleRowH{0} + * Scale - [sectionMargin{0}] * 2 [0 0 sectionMargin{0}] - [0 ySqueeze{0}] * 2 [0 0 0 ySqueeze{0}] \
-                                                * Scale + [sectionMargin{0} sectionMargin{0}] * -2 [0 0 sectionMargin{0} sectionMargin{0}]
+set sectionMarginXYWH \
+  h<singleRowH{0} \
+    + \
+      * \
+        Scale \
+        - \
+          [sectionMargin{0}] \
+          * \
+            2 \
+            [0 0 sectionMargin{0}] \
+        - \
+          [0 ySqueeze{0}] \
+          * \
+            2 \
+            [0 0 0 ySqueeze{0}] \
+      * \
+        Scale \
+        + \
+          [sectionMargin{0} sectionMargin{0}] \
+          * \
+            -2 \
+            [0 0 sectionMargin{0} sectionMargin{0}]
 
 ;-- TCP SECTIONS (pt.1) --    
 

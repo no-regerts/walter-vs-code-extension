@@ -19,7 +19,7 @@
     "test-syntax-grammar": "vscode-tmgrammar-test testcases ./tests/**/*.test.txt -g ./configs/syntax-patterns.json",
     "pretest": "npm run compile && npm run lint",
     "test": "npm run validate-syntax-grammar && npm run test-syntax-grammar && vscode-test && tree-sitter test",
-    "parser:build": "npm --prefix parser run generate && npm --prefix parser run build-wasm",
+    "parser:build": "npm --prefix parser run generate && npm --prefix parser run build",
     "vscode:prepublish": "npm run parser:build && npm run compile"
   },
   "contributes": {

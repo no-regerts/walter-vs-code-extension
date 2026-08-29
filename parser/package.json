@@ -3,10 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "init": "tree-sitter init",
     "generate": "tree-sitter generate",
-    "build-wasm": "tree-sitter build --wasm -o walter-parser.wasm",
-    "parse": "tree-sitter parse"
+    "build": "tree-sitter build --wasm -o walter-parser.wasm"
   },
   "devDependencies": {
     "tree-sitter-cli": "^0.26.13"
