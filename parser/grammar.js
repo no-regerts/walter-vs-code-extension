@@ -10,7 +10,8 @@
 
 // Options : optional(rule) — This function creates a rule that matches zero or one occurrence of a given rule. It is analogous to the [x] (square bracket) syntax in EBNF notation.
 
-// Precedence : prec(number, rule) — This function marks the given rule with a numerical precedence, which will be used to resolve LR(1) Conflicts at parser-generation time. When two rules overlap in a way that represents either a true ambiguity or a local ambiguity given one token of lookahead, Tree-sitter will try to resolve the conflict by matching the rule with the higher precedence. The default precedence of all rules is zero. This works similarly to the precedence directives in Yacc grammars.
+// Precedence : prec(number, rule)
+  // marks the given rule with a numerical precedence, which will be used to resolve LR(1) Conflicts at parser-generation time. When two rules overlap in a way that represents either a true ambiguity or a local ambiguity given one token of lookahead, Tree-sitter will try to resolve the conflict by matching the rule with the higher precedence. The default precedence of all rules is zero. This works similarly to the precedence directives in Yacc grammars.
   // Пример:
   // unary_expression: $ =>
   //   prec(
@@ -69,75 +70,483 @@
 
 // Starting a rule's name with an underscore causes the rule to be hidden in the syntax tree. This is useful for rules like _expression in the grammars above, which always just wrap a single child node. If these nodes were not hidden, they would add substantial depth and noise to the syntax tree without making it any easier to understand.
 
+/*
+Precedince:
+< > <= >= == != & 0
++ - 50
+* / 75
+*/
+
+function repeatUpTo(max, rule) {
+  const rules = [rule];
+
+  for (let i = 1; i < max; i++) {
+    rules.push(optional(rule));
+  }
+
+  return rules;
+}
+
 module.exports = grammar({
   name: 'WALTER',
 
   extras: $ => [
-    /[\s\n\r\t]/,
-    $.comment,
+    /[\\]/,
   ],
 
+  conflicts: $ => [
+    [$.commentStatement, $.emptyStatement],
+    [$.frontCommand],
+    [$.coordinateListItem, $.scalarValue],
+    [$.scalarProperty, $.layoutKeyword],
+    [$.customCommand],
+    [$.expression, $.userProperty],
+    [$.expression, $.negativeConditional],
+    [$.expression, $.relationalConditional],
+  ],
+
+  word: $ => $.identifier,
+
   rules: {
-    source_file: $ => repeat($._statement),
+    source_file: $ => repeat($.statement),
 
-    _statement: $ => choice(
-      $._definition,
-      $.assignment,
-      $.lineComment,
+    // TODO: line continuation character '\'.
+
+    lineEnd: $ => choice(
+      $.newLine,
+      // /^\s\S/, // TODO: детектировать конец строки.
     ),
+    anyChar: $ => /[^\s\S]/,
 
-    _definition: $ => choice(
-      $.macroDefinition,
-      // $.layoutDefinition,
+    space: $ => /[^a-z0-9_+\-*/@&!?<>='"`;:.,(){}\[\]\r\n]+/i,
+    newLine: $ => /\r?\n/,
+
+    comment: $ => /;[^\r\n]*/,
+
+    number: $ => /-?\d+(?:\.\d+)?/,
+
+    string: $ => choice(
+      $.singleQuoteString,
+      $.doubleQuoteString,
+      $.backtickQuoteString,
     ),
-
-    macroDefinition: $ => seq(
-      /macro/i,
-      $.identifier,
-      // $.macroParameterList,
-      // optional($.block),
-      /endmacro/i,
-    ),
-
-    // macroParameterList: $ => repeat($.identifier),
-
-    // block: $ => repeat($._statement),
-
-    lineComment: $ => seq(
-      $.comment,
-    ),
-
-    assignment: $ => seq(
-      /set/i,
-      $.identifier,
-      $._expression
-    ),
-
-    _expression: $ => choice(
-      $.identifier,
-      $.number,
-      // $.unaryExpression,
-      $._binaryExpression,
-    ),
-
-    unaryExpression: $ => choice(
-      seq('?', $._expression),
-      seq('!', $._expression),
-    ),
-
-    _binaryExpression: $ => choice(
-      $.additionExpression,
-      // $.substraction,
-      // $.multiplication,
-      // $.division,
-    ),
-
-    additionExpression: $ => seq('+', $._expression, $._expression),
-
-    comment: $ => token(seq(";", /.*/)),
-
+    singleQuoteString: $ => /'[^']*'/,
+    doubleQuoteString: $ => /"[^"]*"/,
+    backtickQuoteString: $ => /`[^`]*`/,
+    
     identifier: $ => /[a-z_][a-z0-9_]*/i,
 
-    number: $ => /\d+/,
+    statement: $ => choice(
+      $.commentStatement,
+      $.commandStatement,
+      $.emptyStatement,
+      // TODO: theme config statement.
+      // $.macroCallStatement,
+    ),
+
+    commandStatement: $ => prec(100, seq(
+      optional($.space),
+      choice(
+        $.clearCommand,
+        $.resetCommand,
+        $.setCommand,
+        // $.defCommand,
+        $.frontCommand,
+        $.defineParameterCommand,
+        $.customCommand,
+        // $.macroCommand,
+        $.layoutCommand,
+      ),
+      optional($.space),
+      optional($.comment),
+      $.newLine,
+    )),
+
+    commentStatement: $ => seq(
+      optional($.space),
+      optional($.comment),
+      $.lineEnd,
+    ),
+
+    emptyStatement: $ => seq(
+      optional($.space),
+      $.lineEnd,
+    ),
+
+    // macroCallStatement: $ => seq(
+    //   optional($.space),
+    //   $.identifier,
+    //   optional(repeat1(seq($.space, $.identifier))),
+    //   optional($.space),
+    //   optional($.comment),
+    //   $.newLine,
+    // ),
+
+    // // Принимает только один параметр, т.е. clear trans.* tcp.* - нельзя.
+    clearCommand: $ => seq(
+      /clear/i,
+      $.space,
+      $.layoutProperty,
+    ),
+    
+    // // Принимает только один параметр, т.е. reset trans.* tcp.* - нельзя.
+    resetCommand: $ => seq(
+      /reset/i,
+      $.space,
+      $.layoutProperty,
+    ),
+    
+    setCommand: $ => seq(
+      /set/i,
+      $.space,
+      choice(
+        $.userProperty,
+        $.layoutProperty,
+      ),
+      $.space,
+      $.expression,
+    ),
+
+    // // defCommand: $ => seq(
+    // //   /def/i,
+    // //   $.identifier,
+    // //   repeat1($._anyToken), // TODO
+    // // ),
+
+    frontCommand: $ => seq(
+      /front/i,
+      repeat1(seq($.space, $.layoutProperty)),
+    ),
+
+    // // macroCommand: $ => seq(
+    // //   /macro/i,
+    // //   $.identifier,
+    // //   optional($.macroParameterList),
+    // //   optional($.macroBlock),
+    // //   /endmacro/i,
+    // // ),
+    // // macroParameterList: $ => seq(
+    // //   $.identifier,
+    // //   repeat($.identifier),
+    // // ),
+    // // macroBlock: $ => repeat1($._anyToken), // TODO
+
+    defineParameterCommand: $ => seq(
+      /define_parameter/i,
+      $.space,
+      $.identifier,
+      $.space,
+      $.string,
+      $.space,
+      $.number,
+      $.space,
+      $.number,
+      $.space,
+      $.number,
+    ),
+    
+    customCommand: $ => seq(
+      /custom/i,
+      $.space,
+      $.layoutProperty,
+      optional(seq($.space, $.string)),
+      optional(seq($.space, $.number)),
+      optional(seq($.space, $.string)),
+      optional(seq($.space, $.string)),
+    ),
+    
+    layoutCommand: $ => seq(
+      /layout/i,
+      $.space,
+      $.string,
+      optional(seq($.space, $.string)),
+      $.newLine,
+      optional(repeat($.statement)),
+      seq(optional($.space), /endlayout/i),
+    ),
+
+    coordinateList: $ => seq(
+      "[",
+      optional($.space),
+      $.coordinateListItem,
+      ...repeatUpTo(7, seq(optional( // TODO: не забыть вернуть на 7
+        seq(
+          $.space,
+          $.coordinateListItem,
+        ),
+      ))),
+      optional($.space),
+      "]",
+    ),
+    placeholder: $ => '.',
+    coordinateListItem: $ => choice(
+      $.placeholder,
+      $.scalarValue,
+      $.userProperty,
+      seq($.userProperty, $.accessExpression),
+      $.layoutProperty, // TODO: should we allow this?
+      seq($.layoutProperty, $.accessExpression),
+    ),
+    accessExpression: $ => seq(
+      '{',
+      optional($.space),
+      choice('x', 'y', 'w', 'h', 'ls', 'ts', 'rs', 'bs', /[0-7]/),
+      optional($.space),
+      '}',
+    ),
+
+    expression: $ => choice(
+      $.identifier,
+      $.combinatorExpression,
+      $.coordinateList,
+      $.conditionalExpression,
+      $.layoutProperty,
+      $.scalarValue,
+      $.placeholder,
+    ),
+    scalarValue: $ => choice(
+      $.number,
+      $.scalarProperty,
+      seq($.layoutProperty, $.accessExpression),
+      $.userProperty,
+      seq($.userProperty, $.accessExpression),
+    ),
+
+    combinatorExpression: $ => choice(
+      // $.wtf1, // +:
+      // $.wtf2, // *:
+      $.additionExpression,
+      $.subtractionExpression,
+      $.multiplicationExpression,
+      $.divisionExpression,
+    ),
+
+    // wtf1: $ => seq(
+    //   '+:',
+    //   $.expression,
+    //   ':',
+    //   $.expression,
+    // ),
+    // wtf2: $ => seq(
+    //   '*:',
+    //   $.expression,
+    //   ':',
+    //   $.expression,
+    // ),
+
+    additionExpression: $ => seq(
+      '+',
+      $.space,
+      $.expression,
+      $.space,
+      $.expression,
+    ),
+    subtractionExpression: $ => seq(
+      '-',
+      $.space,
+      $.expression,
+      $.space,
+      $.expression,
+    ),
+    multiplicationExpression: $ => seq(
+      '*',
+      $.space,
+      $.expression,
+      $.space,
+      $.expression,
+    ),
+    divisionExpression: $ => seq(
+      '/',
+      $.space,
+      $.expression,
+      $.space,
+      $.expression,
+    ),
+
+    // TODO: decide whether optional branches should be supported at all.
+    conditionalExpression: $ => choice(
+      $.positiveConditional,
+      $.negativeConditional,
+      $.relationalConditional,
+      // $.bitwiseConditional,
+    ),
+    positiveConditional: $ => prec(1, seq(
+      '?',
+      $.scalarValue,
+      $.space,
+      $.expression,
+      choice(
+        seq($.space, $.expression),
+        seq($.space, $.placeholder),
+      ),
+    )),
+    negativeConditional: $ => seq(
+      '!',
+      $.scalarValue,
+      $.space,
+      $.expression,
+      choice(
+        seq($.space, $.expression),
+        seq($.space, $.placeholder),
+      ),
+    ),
+    relationalConditional: $ => seq(
+      $.scalarValue,
+      choice('<', '>', '<=', '>=', '==', '!='),
+      $.scalarValue,
+      $.space,
+      $.expression,
+      choice(
+        seq($.space, $.expression),
+        seq($.space, $.placeholder),
+      ),
+    ),
+    // bitwiseConditional: $ => seq(
+    //   $.expression,
+    //   '&',
+    //   $.expression,
+    //   $.expression,
+    //   $.expression,
+    // ),
+
+    property: $ => choice(
+      $.layoutProperty,
+      $.scalarProperty,
+      $.userProperty,
+    ),
+    scalarProperty: $ => choice(
+      'w',
+      'h',
+      'reaper_version',
+      'os_type',
+      'folderstate',
+      'folderdepth',
+      'maxfolderdepth',
+      'mcp_maxfolderdepth',
+      'recarm',
+      'tcp_iconsize',
+      'mcp_iconsize',
+      'mcp_wantextmix',
+      'tracknch',
+      'trackpanmode',
+      'tcp_fxparms',
+      'tcp_fxembed',
+      'mcp_fxembed',
+      'tcp_sends_enabled',
+      'tcp_fxlist_enabled',
+      'trackpinned',
+      'tcp_hidden_overridden',
+      'send_cnt',
+      'fx_parm_cnt',
+      'fx_cnt',
+      'recfx_cnt',
+      'trackcolor_valid',
+      'trackcolor_r',
+      'trackcolor_g',
+      'trackcolor_b',
+      'mixer_visible',
+      'track_selected',
+      'trackidx',
+      'ntracks',
+      'trackfixedlanes',
+      'trans_flags',
+      'trans_docked',
+      'trans_center',
+      'envcp_type',
+      'env_selected',
+    ),
+    layoutKeyword: $ => choice(
+      'arm',
+      'automode',
+      'bottom',
+      'bpm',
+      'bypass',
+      'color',
+      'curtimesig',
+      'div',
+      'dockedheight',
+      'dragdropinfo',
+      'edit',
+      'env',
+      'envcp',
+      'extmixer',
+      'fader',
+      'fadermode',
+      'folder',
+      'foldercomp',
+      'font',
+      'fwd',
+      'fx',
+      'fxbyp',
+      'fxembed',
+      'fxembedheader',
+      'fxin',
+      'fxlist',
+      'fxparm',
+      'hide',
+      'infoblock',
+      'inputlabel',
+      'inputlabelbox',
+      'io',
+      'label',
+      'learn',
+      'lit',
+      'margin',
+      'master',
+      'mcp',
+      'menubutton',
+      'meter',
+      'minmax',
+      'mod',
+      'mode',
+      'mono',
+      'mute',
+      'pan',
+      'pause',
+      'phase',
+      'play',
+      'position',
+      'rate',
+      'readout',
+      'rec',
+      'recarm',
+      'recinput',
+      'recmode',
+      'recmon',
+      'repeat',
+      'rew',
+      'rmsdiv',
+      'rmsreadout',
+      'scale',
+      'sel',
+      'sendlist',
+      'size',
+      'solo',
+      'status',
+      'stop',
+      'tap',
+      'tcp',
+      'timebase',
+      'top',
+      'trackidx',
+      'trans',
+      'unlit',
+      'value',
+      'visflags',
+      'volume',
+      'vu',
+      'width',
+    ),
+    layoutProperty: $ => prec.left(100, seq(
+      $.layoutKeyword,
+      repeat(seq('.', $.layoutKeyword)),
+      optional(
+        choice(
+          seq('.', '*'),
+          seq('.', 'custom', '.', $.userProperty),
+        ),
+      ),
+    )),
+    userProperty: $ => $.identifier, // TODO: пользовательские поля не должны совпадать с layoutKeyword и scalarProperty.
   }
 });
