@@ -10,7 +10,10 @@
     "Programming Languages"
   ],
   "main": "./out/extension.js",
-  "activationEvents": [],
+  "type": "module",
+  "activationEvents": [
+    "onStartupFinished"
+  ],
   "scripts": {
     "lint": "eslint src",
     "watch": "tsc -watch -p ./",
@@ -25,8 +28,12 @@
   "contributes": {
     "commands": [
       {
-        "command": "walter.helloWorld",
-        "title": "Hello World"
+        "command": "walter.printAst",
+        "title": "Print AST"
+      },
+      {
+        "command": "walter.printErrors",
+        "title": "Print Errors"
       }
     ],
     "languages": [

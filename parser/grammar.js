@@ -72,7 +72,12 @@ Precedince:
 < > <= >= == != & 0
 + - 50
 * / 75
+
+
+Приоритетность всех отдельных команд (setCommand, ...) должна быть выше, чем у macroCallStatement.
 */
+
+const spaceRegex = /[^a-z0-9_+\-*/\\@&!?<>='"`;:.,(){}\[\]\r\n]+/i;
 
 function repeatUpTo(max, rule) {
   const rules = [rule];
@@ -88,8 +93,15 @@ module.exports = grammar({
   name: 'WALTER',
 
   extras: $ => [
-    /[\\]/,
+    token(seq(
+      '\\', 
+      optional(spaceRegex),
+      /\r?\n/,
+      optional(spaceRegex),
+    )),
   ],
+
+  word: $ => $.identifier,
 
   conflicts: $ => [
     [$.commentStatement, $.emptyStatement],
@@ -113,9 +125,10 @@ module.exports = grammar({
       $.newLine,
       // /^\s\S/, // TODO: детектировать конец строки.
     ),
-    anyChar: $ => /[^\s\S]/,
 
-    space: $ => /[^a-z0-9_+\-*/@&!?<>='"`;:.,(){}\[\]\r\n]+/i,
+    // anyChar: $ => /[^\s\S]/,
+
+    space: $ => spaceRegex,
     newLine: $ => /\r?\n/,
 
     comment: $ => /;[^\r\n]*/,
@@ -140,7 +153,7 @@ module.exports = grammar({
       $.commentStatement,
       $.commandStatement,
       $.themeConfigStatement,
-      // $.macroCallStatement,
+      $.macroCallStatement,
     ),
 
     emptyStatement: $ => seq(
@@ -154,7 +167,7 @@ module.exports = grammar({
       $.lineEnd,
     ),
 
-    commandStatement: $ => seq(
+    commandStatement: $ => prec(1, seq(
       optional($.space),
       choice(
         $.clearCommand,
@@ -164,13 +177,13 @@ module.exports = grammar({
         $.frontCommand,
         $.defineParameterCommand,
         $.customCommand,
-        // $.macroCommand,
+        $.macroCommand,
         $.layoutCommand,
       ),
       optional($.space),
       optional($.comment),
       $.newLine,
-    ),
+    )),
 
     themeConfigStatement: $ => seq(
       optional($.space),
@@ -272,33 +285,37 @@ module.exports = grammar({
       'adjuster_script',
     ),
 
-    // macroCallStatement: $ => seq(
-    //   optional($.space),
-    //   $.identifier,
-    //   optional(repeat1(seq($.space, $.identifier))),
-    //   optional($.space),
-    //   optional($.comment),
-    //   $.newLine,
-    // ),
-
-    ///////////////////////////////// COMMANDS /////////////////////////////////
+    macroCallStatement: $ => prec(0, seq(
+      optional($.space),
+      $.identifier,
+      optional(repeat1(seq($.space, choice(
+        $.identifier,
+        $.number,
+        $.string,
+      )))),
+      optional($.space),
+      optional($.comment),
+      $.newLine,
+    )),
+    
+        ///////////////////////////////// COMMANDS /////////////////////////////////
 
     // Принимает только один параметр, т.е. clear trans.* tcp.* - нельзя.
     clearCommand: $ => seq(
-      /clear/i,
+      token(prec(2, /clear/i)),
       $.space,
       $.layoutProperty,
     ),
     
     // // Принимает только один параметр, т.е. reset trans.* tcp.* - нельзя.
     resetCommand: $ => seq(
-      /reset/i,
+      token(prec(2, /reset/i)),
       $.space,
       $.layoutProperty,
     ),
     
     setCommand: $ => seq(
-      /set/i,
+      token(prec(2, /set/i)),
       $.space,
       choice(
         $.userProperty,
@@ -309,46 +326,48 @@ module.exports = grammar({
     ),
 
     // defCommand: $ => seq(
-    //   /def/i,
+    //   token(prec(2, /def/i)),
     //   $.identifier,
     //   repeat1($._anyToken), // TODO
     // ),
 
     frontCommand: $ => seq(
-      /front/i,
+      token(prec(2, /front/i)),
       repeat1(seq($.space, $.layoutProperty)),
     ),
 
-    // macroCommand: $ => seq(
-    //   /macro/i,
-    //   $.identifier,
-    //   optional($.macroParameterList),
-    //   optional($.macroBlock),
-    //   /endmacro/i,
-    // ),
-    // macroParameterList: $ => seq(
-    //   $.identifier,
-    //   repeat($.identifier),
-    // ),
-    // macroBlock: $ => repeat1($._anyToken), // TODO
+    macroCommand: $ => seq(
+      token(prec(0, /macro/i)), // wtf
+      $.space,
+      $.identifier,
+      optional(seq(
+        $.space, seq(
+          $.identifier,
+          repeat(seq($.space, $.identifier)),
+        ),
+      )), 
+      seq(optional($.space), $.newLine),
+      optional(repeat($.statement)),
+      seq(optional($.space), token(/endmacro/i)),
+    ),
 
     // TODO: сделать опциональные токены.
     defineParameterCommand: $ => seq(
-      /define_parameter/i,
+      token(prec(2, /define_parameter/i)),
       $.space,
       $.identifier,
       $.space,
-      $.string,
+      choice($.string, $.identifier),
       $.space,
-      $.number,
+      choice($.number, $.identifier),
       $.space,
-      $.number,
+      choice($.number, $.identifier),
       $.space,
-      $.number,
+      choice($.number, $.identifier),
     ),
     
     customCommand: $ => seq(
-      /custom/i,
+      token(prec(2, /custom/i)),
       $.space,
       $.layoutProperty,
       optional(seq($.space, $.string)),
@@ -358,14 +377,16 @@ module.exports = grammar({
     ),
     
     layoutCommand: $ => seq(
-      /layout/i,
+      token(prec(2, /layout/i)),
       $.space,
       $.string,
       optional(seq($.space, $.string)),
       $.newLine,
       optional(repeat($.statement)),
-      seq(optional($.space), /endlayout/i),
+      seq(optional($.space), token(prec(2, /endlayout/i))),
     ),
+
+    /////////////////////////////////////////////////////////////////
 
     coordinateList: $ => seq(
       "[",

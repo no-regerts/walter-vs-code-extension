@@ -1,16 +1,18 @@
 This extension provides full feature support for WALTER language in VS Code.
 
 ## Features
-+ Syntax highlighting.
++ Lexical syntax highlighting.
 + Bracket/quote matching.
 + Bracket/quote autoclosing.
 + Comment toggling.
-+ Custom folding regions (by `;region` and `;endregion` markers).
++ Custom folding (by `;region` and `;endregion` markers).
 
 - Folding (for macros and layouts).
+- Semantic syntax highlighting.
 - Auto indentation.
 - Hover information:
   - Documentation for commands and built-in values.
+  - Report spelling or linter errors in source code using diagnostics.
 - Auto completion:
   - For built-in values (tcp.size).
   - For built-in commands (custom, forward).
@@ -38,10 +40,12 @@ This extension provides full feature support for WALTER language in VS Code.
 - Documentation comments.
 - Actions:
   - Unravel code.
+- Find References.
 
 - Snippet completion.
 - Bracket autosurrounding.
 - Code folding.
+- Breadcrumbs.
 
 ## Extension Settings
 

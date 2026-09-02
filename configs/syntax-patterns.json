@@ -16,8 +16,8 @@
     },
     {
       "name": "variable.language.predefined.walter",
-      "match": "(?i)(?<!\\.)(?:env(?:_selected|cp_type)|folder(?:depth|state)|fx_(?:cnt|parm_cnt)|h|maxfolderdepth|mcp_(?:fxembed|iconsize|maxfolderdepth|wantextmix)|mixer_visible|ntracks|os_type|reaper_version|rec(?:arm|fx_cnt)|send_cnt|tcp_(?:fx(?:embed|list_enabled|parms)|hidden_overridden|iconsize|sends_enabled)|track(?:_selected|color_(?:b|g|r|valid)|fixedlanes|idx|nch|panmode|pinned)|trans_(center|docked|flags)|w)",
-      "comment": "(?<!\\.) in the beginning ensures that a custom property with one of these names won't be highlighted (tcp.custom.track_selected)."
+      "match": "(?i)(?<!\\.)(?:env(?:_selected|cp_type)|folder(?:depth|state)|fx_(?:cnt|parm_cnt)|h|maxfolderdepth|mcp_(?:fxembed|iconsize|maxfolderdepth|wantextmix)|mixer_visible|ntracks|os_type|reaper_version|rec(?:arm|fx_cnt)|send_cnt|tcp_(?:fx(?:embed|list_enabled|parms)|hidden_overridden|iconsize|sends_enabled)|track(?:_selected|color_(?:b|g|r|valid)|fixedlanes|idx|nch|panmode|pinned)|trans_(center|docked|flags)|w)(?![a-z0-9_])",
+      "comment": "(?<!\\.) in the beginning ensures that a custom property with one of these names won't be highlighted (tcp.custom.track_selected). (?![a-z0-9_]) is to make sure that random words won't be highlighted in the beginning because of this pattern (>h<eight)."
     },
     {
       "name": "keyword.control.commands.walter",

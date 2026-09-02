@@ -10,7 +10,7 @@
  ;comment
  ; comment
 
-      
+       
 
 clear mcp.*
   clear mcp.bottom
@@ -55,6 +55,17 @@ set valce vadue>0 + 1 . .
 ; set includeextra  !didshrink 0 ; вероятно ждёт, что didshrink должен быть скаляром.
 set include_extra show_side_sends&show_side_fx 0 1
 
+set tcp.custom.sectionLeft1       \
+  +                               \
+    +                             \
+      tcpfolderBalanceType==2     \
+        *                         \
+          Scale                   \
+          [tcpFolderBalancer{x}]  \
+        [0]                       \
+      [tcp.custom.sectionNumber]  \
+    [tcp.custom.sectionNumber{w} 0 sectionLeft1DrawW{0} h]
+
 ; def myDef whatever
 
 front mcp.*
@@ -63,18 +74,19 @@ front mcp.custom.test mcp.custom.test mcp.custom.test
 front mcp.bottom.font
 front mcp.bottom.font.*
 
-; macro m p1 p2
-;   set test 1
-;   whatever
-; endmacro
+mCallTest p1 p2 p3
+
+macro m p1 p2
+  set test 1
+endmacro
 
 define_parameter myParam "str" 5 0 10
 
 custom tcp.custom.folder_start '' 0 '' 'folder_start'
-custom tcp.custom.sectionLeft1 someIdentifier someIdentifier 1
-custom tcp.custom.sectionLeft2 hideSection Left2 2 DrawW thisLayout
-custom tcp.custom.tcpDiv
-set tcp.custom.tcpDiv.color * Scale [0 0 0 0 0 0 0 tcpDivOpacity{0}]
+; custom tcp.custom.sectionLeft1 someIdentifier someIdentifier 1
+; custom tcp.custom.sectionLeft2 hideSection Left2 2 DrawW thisLayout
+; custom tcp.custom.tcpDiv
+; set tcp.custom.tcpDiv.color * Scale [0 0 0 0 0 0 0 tcpDivOpacity{0}]
 
 layout "mylayout" "folder"
 endlayout
@@ -107,3 +119,5 @@ layout "test" "test"
   set hello 123 ; comment
   ;comment
 endLayout
+
+set helloblya [ 1 2 3 4 ]

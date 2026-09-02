@@ -1,40 +1,113 @@
 import * as vscode from "vscode";
-import { Parser, Language } from "web-tree-sitter";
+import * as wts from "web-tree-sitter";
+import { WalterParser } from "./walter-parser.js";
 
 export async function activate(context: vscode.ExtensionContext) {
-  console.log('Extension "WALTER" is now active!');
+  let currentDocument: vscode.TextDocument;
+  // vscode.window.showInformationMessage("No active editor found.");
+  // document.fileName
 
-  await Parser.init();
+  await wts.Parser.init();
+  const language = await wts.Language.load(
+    vscode.Uri.joinPath(context.extensionUri, "parser", "walter-parser.wasm")
+      .fsPath,
+  );
 
-  const wasmPath = vscode.Uri.joinPath(
-    context.extensionUri,
-    "parser",
-    "walter-parser.wasm",
-  ).fsPath;
-  const parserBinary = await Language.load(wasmPath);
+  const diagnosticCollection =
+    vscode.languages.createDiagnosticCollection("myDiagCollection");
 
-  const parser = new Parser();
-  parser.setLanguage(parserBinary);
+  const walterParser = new WalterParser(language);
+  walterParser.subscribe((errorCaptures) => {
+    const errors = errorCaptures.map((capture: wts.QueryCapture) => {
+      const node = capture.node;
+      return new vscode.Diagnostic(
+        new vscode.Range(
+          node.startPosition.row,
+          node.startPosition.column,
+          node.endPosition.row,
+          node.endPosition.column,
+        ),
+        `${capture.name}: ${node.type}`,
+        vscode.DiagnosticSeverity.Error,
+      );
+    });
 
-  const editor = vscode.window.activeTextEditor;
+    diagnosticCollection.clear();
+    diagnosticCollection.set(currentDocument.uri, errors);
+  });
 
-  if (editor) {
-      const document = editor.document;
-      const fullText = document.getText();
-      const tree = parser.parse(fullText);
-      console.log(tree?.rootNode.toString());
-  } else {
-      vscode.window.showInformationMessage('No active editor found.');
-  }
+  vscode.languages.registerHoverProvider(
+    "walter",
+    new (class implements vscode.HoverProvider {
+      provideHover(
+        _document: vscode.TextDocument,
+        position: vscode.Position,
+        _token: vscode.CancellationToken,
+      ): vscode.ProviderResult<vscode.Hover> {
+        const nodeInfo = walterParser.infoAtPosition(
+          position.line,
+          position.character,
+        )!;
+        return new vscode.Hover(nodeInfo);
+      }
+    })(),
+  );
 
-  // const disposable = vscode.commands.registerCommand(
-  //   "walter.helloWorld",
-  //   () => {
-  //     vscode.window.showInformationMessage("Hello World from WALTER!");
-  //   },
-  // );
+  const disposable5 = vscode.commands.registerCommand("walter.printAst", () =>
+    walterParser.printAst(),
+  );
+  const disposable4 = vscode.commands.registerCommand(
+    "walter.printErrors",
+    () => walterParser.printErrors(),
+  );
 
-  // context.subscriptions.push(disposable);
+  // Когда изменяется содержимое любого текстового документа (например, пользователь набрал символ, удалил строку или сработало автоформатирование).
+  const disposable2 = vscode.workspace.onDidChangeTextDocument((editor) => {
+    currentDocument = editor.document;
+    const currentText = currentDocument.getText();
+    walterParser.reset();
+    walterParser.parseNewDocument(currentText);
+  });
+
+  const disposable3 = vscode.workspace.onDidOpenTextDocument((document) => {
+    currentDocument = document;
+    walterParser.reset();
+    walterParser.parseNewDocument(document.getText());
+  });
+
+  // const disposable4 = vscode.workspace.onDidCloseTextDocument((_e) => deactivate());
+
+  let disposable = vscode.window.onDidChangeActiveTextEditor((editor) => {
+    // console.log("changed editor");
+    if (editor) {
+      currentDocument = editor.document;
+      const documentText = currentDocument.getText();
+      walterParser.reset();
+      walterParser.parseNewDocument(documentText);
+    }
+  });
+
+  context.subscriptions.push(
+    disposable,
+    disposable2,
+    disposable3,
+    disposable4,
+    disposable5,
+  );
 }
+
+/*
+tree1.edit({
+  startIndex: 0,
+  oldEndIndex: 3,
+  newEndIndex: 5,
+  startPosition: { row: 0, column: 0 },
+  oldEndPosition: { row: 0, column: 3 },
+  newEndPosition: { row: 0, column: 5 },
+});
+
+// Re-parse with the old tree
+const tree2 = parser.parse('const x = 1;', tree1);
+*/
 
 export function deactivate() {}
