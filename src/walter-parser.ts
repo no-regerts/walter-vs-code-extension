@@ -1,5 +1,5 @@
 import * as wts from "web-tree-sitter";
-import { Observer } from './observer.js';
+import { Observer } from "./observer.js";
 
 export class WalterParser extends Observer {
   private parser: wts.Parser;
@@ -16,15 +16,17 @@ export class WalterParser extends Observer {
 
   public parseNewDocument(text: string) {
     this.parser.reset();
+    this.currentErrors = [];
+
     this.currentAst = this.parser.parse(text);
     this.buildDiagnostics();
-    this.notifyAll('parsed', this.currentErrors);
+    this.notifyAll("parsed", this.currentErrors);
   }
 
-  public parseIncrementally(_edits: any[]) {
-    // adapt edits here
+  public parseIncrementally(text: string, _edits: any[]) {
+    // TODO: perform tree edits to the current AST here...
 
-    this.currentAst = this.parser.parse('const x = 1;', this.currentAst);
+    this.currentAst = this.parser.parse(text, this.currentAst);
   }
 
   // private editTree() {
@@ -42,6 +44,7 @@ export class WalterParser extends Observer {
   //   this.currentAst!.edit(newEdit);
   // }
 
+  // TODO: move to StaticAnalizer.
   private buildDiagnostics(): void {
     //   У ERROR есть:
     // startPosition
@@ -58,11 +61,6 @@ export class WalterParser extends Observer {
     `;
     const query = new wts.Query(this.language, errorQueryString);
     this.currentErrors = query.captures(this.currentAst!.rootNode);
-  }
-
-  public reset(): void {
-    this.parser.reset();
-    this.currentErrors = [];
   }
 
   public infoAtPosition(row: number, column: number) {

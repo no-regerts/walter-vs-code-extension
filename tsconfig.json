@@ -12,7 +12,11 @@
       "./node_modules/@types"
     ],
     "sourceMap": true,
-    "rootDir": "src",
+    // "rootDir": "./src",
+    "rootDirs": [
+      "./src",
+      "./tests"
+    ],
     "strict": true,
     "noImplicitReturns": true,
     "noUnusedParameters": true

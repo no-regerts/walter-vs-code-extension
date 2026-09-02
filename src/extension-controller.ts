@@ -3,10 +3,20 @@ import * as wts from "web-tree-sitter";
 import { WalterParser } from "./walter-parser.js";
 
 export class ExtensionController {
+  private context?: vscode.ExtensionContext;
   private currentDocument?: vscode.TextDocument;
   private walterParser?: WalterParser;
+  private disposables: vscode.Disposable[] = [];
 
-  private setupDiagnostics() {
+  extractTextFromEditorAndParse() {
+    const editor = vscode.window.activeTextEditor;
+    if (!editor) return;
+    this.currentDocument = editor.document;
+    const currentText = this.currentDocument.getText();
+    this.walterParser!.parseNewDocument(currentText);
+  }
+
+  private setupDiagnostics = () => {
     const diagnosticCollection =
       vscode.languages.createDiagnosticCollection("myDiagCollection");
 
@@ -28,13 +38,13 @@ export class ExtensionController {
       diagnosticCollection.clear();
       diagnosticCollection.set(this.currentDocument!.uri, errors);
     });
-  }
+  };
 
-  private setupHoverProvider() {
+  private setupHoverProvider = () => {
     vscode.languages.registerHoverProvider(
       "walter",
       new (class implements vscode.HoverProvider {
-        constructor (private walterParser: WalterParser) {}
+        constructor(private walterParser: WalterParser) {}
         provideHover(
           _document: vscode.TextDocument,
           position: vscode.Position,
@@ -48,73 +58,62 @@ export class ExtensionController {
         }
       })(this.walterParser!),
     );
-  }
+  };
 
-  public async activate(context: vscode.ExtensionContext) {
+  private setupCommnads = () => {
+    this.disposables.push(
+      vscode.commands.registerCommand("walter.printAst", () =>
+        this.walterParser!.printAst(),
+      ),
+    );
+
+    this.disposables.push(
+      vscode.commands.registerCommand("walter.printErrors", () =>
+        this.walterParser!.printErrors(),
+      ),
+    );
+  };
+
+  private setupEditorBindings = () => {
+    // Executes at startup to process the already opened document:
+    (() => {
+      this.extractTextFromEditorAndParse();
+    })();
+
+    // On swithcing editors:
+    this.disposables.push(
+      vscode.window.onDidChangeActiveTextEditor(() => {
+        this.extractTextFromEditorAndParse();
+      }),
+    );
+
+    // On each editor text change:
+    this.disposables.push(
+      vscode.workspace.onDidChangeTextDocument(() => {
+        this.extractTextFromEditorAndParse();
+        // TODO: do incremental text updates here instead:
+        // this.walterParser!.parseIncrementally();
+      }),
+    );
+  };
+
+  public activate = async (context: vscode.ExtensionContext) => {
+    this.context = context;
+
     await wts.Parser.init();
     const language = await wts.Language.load(
       vscode.Uri.joinPath(context.extensionUri, "parser", "walter-parser.wasm")
         .fsPath,
     );
-
     this.walterParser = new WalterParser(language);
 
     this.setupDiagnostics();
     this.setupHoverProvider();
+    this.setupCommnads();
+    this.setupEditorBindings();
 
-    // ВЫЗЫВАЕМ СРАЗУ ПРИ СТАРТЕ для уже открытого документа
-    ((editor: vscode.TextEditor | undefined) => {
-      if (!editor) return;
+    this.context!.subscriptions.push(...this.disposables);
+  };
 
-      this.currentDocument = editor.document;
-      const currentText = this.currentDocument.getText();
-      this.walterParser.reset();
-      this.walterParser.parseNewDocument(currentText);
-    })(vscode.window.activeTextEditor);
-
-    const disposable5 = vscode.commands.registerCommand("walter.printAst", () =>
-      this.walterParser!.printAst(),
-    );
-    const disposable4 = vscode.commands.registerCommand(
-      "walter.printErrors",
-      () => this.walterParser!.printErrors(),
-    );
-
-    // Когда изменяется содержимое любого текстового документа (например, пользователь набрал символ, удалил строку или сработало автоформатирование).
-    const disposable2 = vscode.workspace.onDidChangeTextDocument((editor) => {
-      if (!editor) return;
-
-      this.currentDocument = editor.document;
-      const currentText = this.currentDocument.getText();
-      this.walterParser!.reset();
-      this.walterParser!.parseNewDocument(currentText);
-    });
-
-    // const disposable3 = vscode.workspace.onDidOpenTextDocument((document) => {
-    //   this.currentDocument = document;
-    //   walterParser.reset();
-    //   walterParser.parseNewDocument(document.getText());
-    // });
-
-    // const disposable4 = vscode.workspace.onDidCloseTextDocument((_e) => deactivate());
-
-    let disposable = vscode.window.onDidChangeActiveTextEditor((editor) => {
-      if (!editor) return;
-
-      this.currentDocument = editor.document;
-      const documentText = this.currentDocument.getText();
-      this.walterParser!.reset();
-      this.walterParser!.parseNewDocument(documentText);
-    });
-
-    context.subscriptions.push(
-      disposable,
-      disposable2,
-      // disposable3,
-      disposable4,
-      disposable5,
-    );
-  }
-
-  public deactivate() {}
+  public deactivate = () => {};
 }
