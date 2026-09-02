@@ -1,13 +1,14 @@
 import * as wts from "web-tree-sitter";
+import { Observer } from './observer';
 
-export class WalterParser {
+export class WalterParser extends Observer {
   private parser: wts.Parser;
   private language: wts.Language;
-  private listeners: Function[] = [];
   private currentAst: wts.Tree | null = null;
   private currentErrors: wts.QueryCapture[] = [];
 
   constructor(language: wts.Language) {
+    super();
     this.language = language;
     this.parser = new wts.Parser();
     this.parser.setLanguage(this.language);
@@ -17,7 +18,7 @@ export class WalterParser {
     this.parser.reset();
     this.currentAst = this.parser.parse(text);
     this.buildDiagnostics();
-    this.notifyAll(this.currentErrors);
+    this.notifyAll('parsed', this.currentErrors);
   }
 
   private buildDiagnostics(): void {
@@ -78,13 +79,5 @@ export class WalterParser {
 
   public printErrors() {
     console.log(this.currentErrors);
-  }
-
-  public subscribe(cb: (errors: any) => void) {
-    this.listeners.push(cb);
-  }
-
-  private notifyAll(payload: any) {
-    this.listeners.forEach((listener) => listener(payload));
   }
 }

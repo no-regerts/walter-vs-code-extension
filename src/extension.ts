@@ -17,7 +17,7 @@ export async function activate(context: vscode.ExtensionContext) {
     vscode.languages.createDiagnosticCollection("myDiagCollection");
 
   const walterParser = new WalterParser(language);
-  walterParser.subscribe((errorCaptures) => {
+  walterParser.on('parsed', (errorCaptures) => {
     const errors = errorCaptures.map((capture: wts.QueryCapture) => {
       const node = capture.node;
       return new vscode.Diagnostic(
