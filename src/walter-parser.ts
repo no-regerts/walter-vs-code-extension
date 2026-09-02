@@ -1,5 +1,5 @@
 import * as wts from "web-tree-sitter";
-import { Observer } from './observer';
+import { Observer } from './observer.js';
 
 export class WalterParser extends Observer {
   private parser: wts.Parser;
@@ -20,6 +20,27 @@ export class WalterParser extends Observer {
     this.buildDiagnostics();
     this.notifyAll('parsed', this.currentErrors);
   }
+
+  public parseIncrementally(_edits: any[]) {
+    // adapt edits here
+
+    this.currentAst = this.parser.parse('const x = 1;', this.currentAst);
+  }
+
+  // private editTree() {
+  //   const newEdit: wts.Edit = {
+  //     startIndex: 0,
+  //     oldEndIndex: 3,
+  //     newEndIndex: 5,
+  //     startPosition: { row: 0, column: 0 },
+  //     oldEndPosition: { row: 0, column: 3 },
+  //     newEndPosition: { row: 0, column: 5 },
+  //     editPoint:
+  //     editRange:
+  //   };
+
+  //   this.currentAst!.edit(newEdit);
+  // }
 
   private buildDiagnostics(): void {
     //   У ERROR есть:
