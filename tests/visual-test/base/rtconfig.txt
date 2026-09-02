@@ -1,0 +1,109 @@
+; This file is intended for visual testing of all supported WALTER syntax-related features.
+; Run the 'Test syntax highlighting' launch option to verify the highlighting.
+; Additionally, press 'Ctrl + Shift + P' and select 'Developer: Inspect Editor Tokens and Scopes' to enable syntax debugging mode.
+; Hit 'Ctrl + R' to reload the window after you made some changes.
+; Note: syntax highlighting is highly dependent on the chosen theme, so make sure to test it on different themes.
+
+
+;comment
+; comment
+ ;comment
+ ; comment
+
+      
+
+clear mcp.*
+  clear mcp.bottom
+clear mcp.bottom.*
+
+reset mcp.*
+  reset mcp.bottom
+reset mcp.bottom.*
+
+set hello 145
+  set mcp hello
+set mcp [-20 11 -10.5]
+set mcp.bottom.font [20 -11 -10.5]
+set mcp.bottom.font [ 20 11 10.5 20 ] ; comment
+set mcp.bottom.font [ 20 11 10.5 20 ]; comment
+set mcp.bottom.font [ tcp{x} myVar{x} 20 ];comment
+set mcp.bottom.font [ 20 11 10.5 20 ] ;comment
+set mcp.bottom.font [20 hello 10.5 9]
+set tcp.mute [0 tcp.custom.test{x} 10 10]
+  set mcp.bottom.font [20 hello{w} 10.5 9]
+  set mcp.bottom.font [trans.play{x} 9]
+  set myvar w<100 [0 0 10 10] [20 20 10 10]
+set myvar w<100 [0 0 10 10] w<200 [20 20 10 10] [40 40 10 10]
+set tcp.width.label trackpanmode>=4 tcp.custom.test{x}>0 [tcp.width{w} 1] [0] [0]
+set tcp.fxin !recarm 123 234
+set tcp.fxin h>164 !recarm [0] [362 21 19 37] [0]
+set tcp.fxin !recarm 123 234
+set tcp.fxin ?recarm 123 234
+set tcp.fxin ?recarm 123 + 234 456
+set tcp.fxin ?recarm 123 - 234 456
+set tcp.fxin ?recarm 123 * 234 456
+set tcp.fxin ?recarm 123 / 234 456
+
+set tcp [tcpFolderBalancer] ; проверить на валидность и добавить если так можно
+
+; проверить почему не работает:
+set tcp.custom.sectionLeft1 + + tcpfolderBalanceType==2 * Scale [tcpFolderBalancer{x}] [0] [tcp.custom.sectionNumber] [tcp.custom.sectionNumber{w} 0 sectionLeft1DrawW{0} h]
+set tcp.custom.sectionLeft1 ?visSections [0 0 0 0 255 100 100 150] ?sectionLeft1NotEmpty{0} [0 0 0 0 38 38 38 255] emptyTcpSecColor
+set valce vadue>0 + 1 . .
+; set tcp_LabelSize_min            scale==2 100 scale==1 90 
+; set tcp_LabelSize   ?tcp   0 .
+; set includeextra  !didshrink 0 ; вероятно ждёт, что didshrink должен быть скаляром.
+set include_extra show_side_sends&show_side_fx 0 1
+
+; def myDef whatever
+
+front mcp.*
+front mcp.custom.test mcp.custom.test mcp.custom.test
+  front mcp.bottom.*
+front mcp.bottom.font
+front mcp.bottom.font.*
+
+; macro m p1 p2
+;   set test 1
+;   whatever
+; endmacro
+
+define_parameter myParam "str" 5 0 10
+
+custom tcp.custom.folder_start '' 0 '' 'folder_start'
+custom tcp.custom.sectionLeft1 someIdentifier someIdentifier 1
+custom tcp.custom.sectionLeft2 hideSection Left2 2 DrawW thisLayout
+custom tcp.custom.tcpDiv
+set tcp.custom.tcpDiv.color * Scale [0 0 0 0 0 0 0 tcpDivOpacity{0}]
+
+layout "mylayout" "folder"
+endlayout
+
+layout "mylayout" "folder"
+
+endlayout
+
+Layout "1. Classic Top Aligned"
+
+endLayout
+
+  layout "1. Classic Top Aligned"
+  endLayout
+
+
+layout "mylayout" "folder"
+  set mcp.bottom.font [ 20 11 10.5 20 ] ; comment
+  set mcp.bottom.font [ 20 11 10.5 20 ]; comment
+  set mcp.bottom.font [ 20 11 10.5 20 ];comment
+  set mcp.bottom.font [ 20 11 10.5 20 ] ;comment
+  set mcp.bottom.font [20 hello{w} 10.5 9]
+  set mcp.bottom.font [trans.play{x} 9]
+endlayout
+
+layout "test" "test"
+
+  set hello 123
+
+  set hello 123 ; comment
+  ;comment
+endLayout

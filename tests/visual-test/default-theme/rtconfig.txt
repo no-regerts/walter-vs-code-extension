@@ -1,10 +1,3 @@
-; This file is intended for visual testing of all supported WALTER syntax-related features.
-; Run the 'Test syntax highlighting' launch option to verify the highlighting.
-; Additionally, press 'Ctrl + Shift + P' and select 'Developer: Inspect Editor Tokens and Scopes' to enable syntax debugging mode.
-; Hit 'Ctrl + R' to reload the window after you made some changes.
-; Note: syntax highlighting is highly dependent on the chosen theme, so make sure to test it on different themes.
-
-
 ; Copyright (C) 2015 and onward Cockos Inc
 ; LICENSE: LGPL v2 or later - http://www.gnu.org/licenses/lgpl.html
 
@@ -231,28 +224,8 @@ set textBrightnessMult                            * textBrightness{0} 0.01
 set Layout##thisLayout##-tcpVolumeLength         Layout##thisLayout##-tcpVolumeLength{0}<=40 20 .
 set Layout##thisLayout##-tcpFxparmVisflag1        !tcp_fxlist_enabled{0} -1 .
 set Layout##thisLayout##-tcpFxparmVisflag2        !tcp_sends_enabled{0} -1 .            
-set sectionMarginXYWH \
-  h<singleRowH{0} \
-    + \
-      * \
-        Scale \
-        - \
-          [sectionMargin{0}] \
-          * \
-            2 \
-            [0 0 sectionMargin{0}] \
-        - \
-          [0 ySqueeze{0}] \
-          * \
-            2 \
-            [0 0 0 ySqueeze{0}] \
-      * \
-        Scale \
-        + \
-          [sectionMargin{0} sectionMargin{0}] \
-          * \
-            -2 \
-            [0 0 sectionMargin{0} sectionMargin{0}]
+set sectionMarginXYWH                             h<singleRowH{0} + * Scale - [sectionMargin{0}] * 2 [0 0 sectionMargin{0}] - [0 ySqueeze{0}] * 2 [0 0 0 ySqueeze{0}] \
+                                                * Scale + [sectionMargin{0} sectionMargin{0}] * -2 [0 0 sectionMargin{0} sectionMargin{0}]
 
 ;-- TCP SECTIONS (pt.1) --    
 
