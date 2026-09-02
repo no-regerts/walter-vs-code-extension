@@ -59,9 +59,6 @@
 // extras — an array of tokens that may appear anywhere in the language. This is often used for whitespace and comments. The default value of extras is to accept whitespace. To control whitespace explicitly, specify extras: $ => [] in your grammar. See the section on using extras for more details.
 // inline — an array of rule names that should be automatically removed from the grammar by replacing all of their usages with a copy of their definition. This is useful for rules that are used in multiple places but for which you don't want to create syntax tree nodes at runtime.
 // conflicts — an array of arrays of rule names. Each inner array represents a set of rules that's involved in an LR(1) conflict that is intended to exist in the grammar. When these conflicts occur at runtime, Tree-sitter will use the GLR algorithm to explore all the possible interpretations. If multiple parses end up succeeding, Tree-sitter will pick the subtree whose corresponding rule has the highest total dynamic precedence.
-  // conflicts: $ => [
-  //   [$.array, $.array_pattern],
-  // ],
 // externals — an array of token names which can be returned by an external scanner. External scanners allow you to write custom C code which runs during the lexing process to handle lexical rules (e.g. Python's indentation tokens) that cannot be described by regular expressions.
 // precedences — an array of arrays of strings, where each array of strings defines named precedence levels in descending order. These names can be used in the prec functions to define precedence relative only to other names in the array, rather than globally. Can only be used with parse precedence, not lexical precedence.
 // word — the name of a token that will match keywords to the keyword extraction optimization.
@@ -98,7 +95,7 @@ module.exports = grammar({
     [$.commentStatement, $.emptyStatement],
     [$.frontCommand],
     [$.coordinateListItem, $.scalarValue],
-    [$.scalarProperty, $.layoutKeyword],
+    [$.predefinedScalarProperty, $.layoutKeyword],
     [$.customCommand],
     [$.expression, $.userProperty],
     [$.expression, $.negativeConditional],
@@ -125,6 +122,8 @@ module.exports = grammar({
 
     number: $ => /-?\d+(?:\.\d+)?/,
 
+    hexColor: $ => /[0-9a-f]{8}/i,
+
     string: $ => choice(
       $.singleQuoteString,
       $.doubleQuoteString,
@@ -137,14 +136,25 @@ module.exports = grammar({
     identifier: $ => /[a-z_][a-z0-9_]*/i,
 
     statement: $ => choice(
+      $.emptyStatement,
       $.commentStatement,
       $.commandStatement,
-      $.emptyStatement,
-      // TODO: theme config statement.
+      $.themeConfigStatement,
       // $.macroCallStatement,
     ),
 
-    commandStatement: $ => prec(100, seq(
+    emptyStatement: $ => seq(
+      optional($.space),
+      $.lineEnd,
+    ),
+
+    commentStatement: $ => seq(
+      optional($.space),
+      optional($.comment),
+      $.lineEnd,
+    ),
+
+    commandStatement: $ => seq(
       optional($.space),
       choice(
         $.clearCommand,
@@ -160,17 +170,106 @@ module.exports = grammar({
       optional($.space),
       optional($.comment),
       $.newLine,
-    )),
-
-    commentStatement: $ => seq(
-      optional($.space),
-      optional($.comment),
-      $.lineEnd,
     ),
 
-    emptyStatement: $ => seq(
+    themeConfigStatement: $ => seq(
       optional($.space),
-      $.lineEnd,
+      choice(
+        $.singleNumberConfigStatement,
+        $.doubleNumberConfigStatement,
+        $.quadripleNumberConfigStatement,
+        $.sinleColorConfigStatement,
+        $.tripleColorConfigStatement,
+        $.stringConfigStatement,
+      ),
+      optional($.space),
+      optional($.comment),
+      $.newLine,
+    ),
+    singleNumberConfigStatement: $ => seq(
+      $.singleNumberConfigKeyword,
+      $.space,
+      $.number,
+    ),
+    singleNumberConfigKeyword: $ => choice(
+      'version',
+      'use_pngs',
+      'use_overlays',
+      'tcp_showborders',
+      'mcp_showborders',
+      'trans_showborders',
+      'tcp_vupeakwidth',
+      'mcp_vupeakheight',
+      'mcp_mastervupeakheight',
+      'mcp_altmeterpos',
+      'tcp_master_minheight',
+      'no_meter_reclbl',
+      'mcp_min_height',
+      'tcp_voltext_flags',
+      'tcp_folderindent',
+      'envcp_min_height',
+      'tinttcp',
+      'peaksedges',
+      'want_os_type',
+    ),
+    doubleNumberConfigStatement: $ => seq(
+      $.doubleNumberConfigKeyword,
+      $.space,
+      $.number,
+      $.space,
+      $.number,
+    ),
+    doubleNumberConfigKeyword: $ => choice(
+      'mcp_voltext_flags',
+      'misc_dpi_translate',
+    ),
+    quadripleNumberConfigStatement: $ => seq(
+      $.quadripleNumberConfigKeyword,
+      $.space,
+      $.number,
+      $.space,
+      $.number,
+      $.space,
+      $.number,
+      $.space,
+      $.number,
+    ),
+    quadripleNumberConfigKeyword: $ => choice(
+      'tcp_heights',
+    ),
+    sinleColorConfigStatement: $ => seq(
+      $.sinleColorConfigKeyword,
+      $.space,
+      $.hexColor,
+    ),
+    sinleColorConfigKeyword: $ => choice(
+      'tcp_vol_zeroline',
+      'tcp_pan_zeroline',
+      'mcp_vol_zeroline',
+      'mcp_pan_zeroline',
+      'trans_speed_zeroline',
+      'gen_vol_zeroline',
+      'gen_pan_zeroline',
+    ),
+    tripleColorConfigStatement: $ => seq(
+      $.tripleColorConfigKeyword,
+      $.space,
+      $.hexColor,
+      $.space,
+      $.hexColor,
+      $.space,
+      $.hexColor,
+    ),
+    tripleColorConfigKeyword: $ => choice(
+      'item_volknobfg',
+    ),
+    stringConfigStatement: $ => seq(
+      $.stringConfigKeyword,
+      $.space,
+      $.string,
+    ),
+    stringConfigKeyword: $ => choice(
+      'adjuster_script',
     ),
 
     // macroCallStatement: $ => seq(
@@ -182,7 +281,9 @@ module.exports = grammar({
     //   $.newLine,
     // ),
 
-    // // Принимает только один параметр, т.е. clear trans.* tcp.* - нельзя.
+    ///////////////////////////////// COMMANDS /////////////////////////////////
+
+    // Принимает только один параметр, т.е. clear trans.* tcp.* - нельзя.
     clearCommand: $ => seq(
       /clear/i,
       $.space,
@@ -207,30 +308,31 @@ module.exports = grammar({
       $.expression,
     ),
 
-    // // defCommand: $ => seq(
-    // //   /def/i,
-    // //   $.identifier,
-    // //   repeat1($._anyToken), // TODO
-    // // ),
+    // defCommand: $ => seq(
+    //   /def/i,
+    //   $.identifier,
+    //   repeat1($._anyToken), // TODO
+    // ),
 
     frontCommand: $ => seq(
       /front/i,
       repeat1(seq($.space, $.layoutProperty)),
     ),
 
-    // // macroCommand: $ => seq(
-    // //   /macro/i,
-    // //   $.identifier,
-    // //   optional($.macroParameterList),
-    // //   optional($.macroBlock),
-    // //   /endmacro/i,
-    // // ),
-    // // macroParameterList: $ => seq(
-    // //   $.identifier,
-    // //   repeat($.identifier),
-    // // ),
-    // // macroBlock: $ => repeat1($._anyToken), // TODO
+    // macroCommand: $ => seq(
+    //   /macro/i,
+    //   $.identifier,
+    //   optional($.macroParameterList),
+    //   optional($.macroBlock),
+    //   /endmacro/i,
+    // ),
+    // macroParameterList: $ => seq(
+    //   $.identifier,
+    //   repeat($.identifier),
+    // ),
+    // macroBlock: $ => repeat1($._anyToken), // TODO
 
+    // TODO: сделать опциональные токены.
     defineParameterCommand: $ => seq(
       /define_parameter/i,
       $.space,
@@ -294,6 +396,7 @@ module.exports = grammar({
       optional($.space),
       '}',
     ),
+    atExpression: $ => seq('@', $.userProperty),
 
     expression: $ => choice(
       $.identifier,
@@ -304,14 +407,6 @@ module.exports = grammar({
       $.scalarValue,
       $.placeholder,
     ),
-    scalarValue: $ => choice(
-      $.number,
-      $.scalarProperty,
-      seq($.layoutProperty, $.accessExpression),
-      $.userProperty,
-      seq($.userProperty, $.accessExpression),
-    ),
-
     combinatorExpression: $ => choice(
       // $.wtf1, // +:
       // $.wtf2, // *:
@@ -368,7 +463,7 @@ module.exports = grammar({
       $.positiveConditional,
       $.negativeConditional,
       $.relationalConditional,
-      // $.bitwiseConditional,
+      $.bitwiseConditional,
     ),
     positiveConditional: $ => prec(1, seq(
       '?',
@@ -401,59 +496,20 @@ module.exports = grammar({
         seq($.space, $.placeholder),
       ),
     ),
-    // bitwiseConditional: $ => seq(
-    //   $.expression,
-    //   '&',
-    //   $.expression,
-    //   $.expression,
-    //   $.expression,
-    // ),
+    bitwiseConditional: $ => seq(
+      $.scalarValue, // TODO: заменить на expression или coordinateList?
+      '&',
+      $.scalarValue,
+      $.space,
+      $.expression,
+      $.space,
+      $.expression,
+    ),
 
     property: $ => choice(
       $.layoutProperty,
-      $.scalarProperty,
+      $.predefinedScalarProperty,
       $.userProperty,
-    ),
-    scalarProperty: $ => choice(
-      'w',
-      'h',
-      'reaper_version',
-      'os_type',
-      'folderstate',
-      'folderdepth',
-      'maxfolderdepth',
-      'mcp_maxfolderdepth',
-      'recarm',
-      'tcp_iconsize',
-      'mcp_iconsize',
-      'mcp_wantextmix',
-      'tracknch',
-      'trackpanmode',
-      'tcp_fxparms',
-      'tcp_fxembed',
-      'mcp_fxembed',
-      'tcp_sends_enabled',
-      'tcp_fxlist_enabled',
-      'trackpinned',
-      'tcp_hidden_overridden',
-      'send_cnt',
-      'fx_parm_cnt',
-      'fx_cnt',
-      'recfx_cnt',
-      'trackcolor_valid',
-      'trackcolor_r',
-      'trackcolor_g',
-      'trackcolor_b',
-      'mixer_visible',
-      'track_selected',
-      'trackidx',
-      'ntracks',
-      'trackfixedlanes',
-      'trans_flags',
-      'trans_docked',
-      'trans_center',
-      'envcp_type',
-      'env_selected',
     ),
     layoutKeyword: $ => choice(
       'arm',
@@ -547,6 +603,55 @@ module.exports = grammar({
         ),
       ),
     )),
-    userProperty: $ => $.identifier, // TODO: пользовательские поля не должны совпадать с layoutKeyword и scalarProperty.
+    predefinedScalarProperty: $ => choice(
+      'w',
+      'h',
+      'reaper_version',
+      'os_type',
+      'folderstate',
+      'folderdepth',
+      'maxfolderdepth',
+      'mcp_maxfolderdepth',
+      'recarm',
+      'tcp_iconsize',
+      'mcp_iconsize',
+      'mcp_wantextmix',
+      'tracknch',
+      'trackpanmode',
+      'tcp_fxparms',
+      'tcp_fxembed',
+      'mcp_fxembed',
+      'tcp_sends_enabled',
+      'tcp_fxlist_enabled',
+      'trackpinned',
+      'tcp_hidden_overridden',
+      'send_cnt',
+      'fx_parm_cnt',
+      'fx_cnt',
+      'recfx_cnt',
+      'trackcolor_valid',
+      'trackcolor_r',
+      'trackcolor_g',
+      'trackcolor_b',
+      'mixer_visible',
+      'track_selected',
+      'trackidx',
+      'ntracks',
+      'trackfixedlanes',
+      'trans_flags',
+      'trans_docked',
+      'trans_center',
+      'envcp_type',
+      'env_selected',
+    ),
+    scalarValue: $ => choice(
+      $.number,
+      $.predefinedScalarProperty,
+      seq($.layoutProperty, $.accessExpression),
+      $.userProperty,
+      seq($.userProperty, $.accessExpression),
+      seq($.userProperty, $.atExpression),
+    ),
+    userProperty: $ => $.identifier, // TODO: пользовательские поля не должны совпадать с layoutKeyword и predefinedScalarProperty.
   }
 });
