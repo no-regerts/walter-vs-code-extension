@@ -18,9 +18,6 @@ export class ExtensionController {
   }
 
   private setupDiagnostics = () => {
-    const diagnosticCollection =
-      vscode.languages.createDiagnosticCollection("myDiagCollection");
-
     this.walterParser.on("parsed", (payload) => {
       if (!this.currentDocument) return;
 
@@ -55,6 +52,8 @@ export class ExtensionController {
           ),
       );
 
+      const diagnosticCollection =
+        vscode.languages.createDiagnosticCollection();
       diagnosticCollection.clear();
       diagnosticCollection.set(this.currentDocument.uri, [
         ...errors,
@@ -77,7 +76,7 @@ export class ExtensionController {
             position.line,
             position.character,
           );
-          return new vscode.Hover(nodeInfo ?? '');
+          return new vscode.Hover(nodeInfo ?? "");
         }
       })(this.walterParser),
     );
@@ -116,12 +115,18 @@ export class ExtensionController {
         if (e.contentChanges.length === 0) return;
         if (!this.currentDocument) return;
 
-        const changes = (
-          e.contentChanges as vscode.TextDocumentContentChangeEvent[]
-        ).map((change) => {
-          const startIndex = e.document.offsetAt(change.range.start);
-          const oldEndIndex = e.document.offsetAt(change.range.end);
-          const newEndIndex = startIndex + Buffer.from(change.text).length;
+        // Сортируем правки от КОНЦА файла к НАЧАЛУ. // TODO
+        // Это критически важно, чтобы при последовательном вызове .edit() индексы предыдущих правок не плыли!
+        // const sortedChanges = [...e.contentChanges].sort(
+        //   (a, b) => b.rangeOffset - a.rangeOffset,
+        // );
+        const sortedChanges = [...e.contentChanges];
+
+        const changes = sortedChanges.map((change) => {
+          const startIndex = change.rangeOffset;
+          const oldEndIndex = change.rangeOffset + change.rangeLength;
+          const newEndIndex = startIndex + change.text.length;
+
           const startPosition = {
             row: change.range.start.line,
             column: change.range.start.character,
@@ -130,16 +135,15 @@ export class ExtensionController {
             row: change.range.end.line,
             column: change.range.end.character,
           };
-
           const lines = change.text.split("\n");
           const lineCount = lines.length - 1;
           const newEndPosition = {
             row: change.range.start.line + lineCount,
-            column: lines[lineCount].length,
+            column:
+              lineCount === 0
+                ? change.range.start.character + change.text.length
+                : lines[lineCount].length,
           };
-          if (lineCount === 0) {
-            newEndPosition.column += change.range.start.character;
-          }
 
           return {
             startIndex,
@@ -148,13 +152,10 @@ export class ExtensionController {
             startPosition,
             oldEndPosition,
             newEndPosition,
-          } as TreeEditData;
+          };
         });
 
-        this.walterParser.incrementalParse(
-          this.currentDocument.getText(),
-          changes,
-        );
+        this.walterParser.incrementalParse(e.document.getText(), changes);
       }),
     );
   };

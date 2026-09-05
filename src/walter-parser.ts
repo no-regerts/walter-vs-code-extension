@@ -8,7 +8,7 @@ export interface TreeEdit {
   startPosition: wts.Point; // The start position of the change.
   oldEndPosition: wts.Point; // The end position of the change before the edit.
   newEndPosition: wts.Point; // The end position of the change after the edit.
-};
+}
 
 export class WalterParser extends Observer {
   private parser: wts.Parser;
@@ -40,7 +40,30 @@ export class WalterParser extends Observer {
       this.currentAst!.edit(new wts.Edit(change));
     });
 
-    this.currentAst = this.parser.parse(documentText, this.currentAst);
+    this.currentAst = this.parser.parse(
+      (index: number, _position?: { row: number; column: number }) => {
+        return documentText.substring(index);
+      },
+      this.currentAst, // Передаем отредактированное старое дерево
+    );
+
+    // // Инкрементальный парсинг чанками через строки
+    // this.currentAst = this.parser.parse(
+    //   (_index: number, position?: { row: number; column: number }) => {
+    //     if (!position) return undefined;
+
+    //     const line = sourceLines[position.row];
+    //     if (line === undefined) return undefined; // Конец документа
+
+    //     // Возвращаем остаток текущей строки, начиная с запрашиваемой колонки.
+    //     // Tree-sitter получит только этот фрагмент, а при переходе на новую
+    //     // строку вызовет колбэк снова, уже с новым position.row.
+    //     // Важно добавить символ переноса строки, так как мы удалили его при split().
+    //     return line.slice(position.column) + "\n";
+    //   },
+    //   this.currentAst,
+    // );
+
     this.buildDiagnostics();
     this.notifyAll("parsed", {
       errors: this.currentErrors,
