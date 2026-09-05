@@ -64,7 +64,10 @@ module.exports = grammar({
 
     number: $ => /-?\d+(?:\.\d+)?/,
 
-    hexColor: $ => /[0-9a-f]{8}/i, // TODO: 6-digit hexes.
+    hexColor: $ => choice(
+      /[0-9a-f]{8}/i,
+      /[0-9a-f]{6}/i, // TODO: проверить, что 6-значные хексы работают для цветов.
+    ),
 
     string: $ => choice(
       $.singleQuoteString,
@@ -75,7 +78,7 @@ module.exports = grammar({
     doubleQuoteString: $ => /"[^\r\n"]*"/,
     backtickQuoteString: $ => /`[^\r\n`]*`/,
 
-    identifier: $ => /[a-z_#][a-z0-9_#]*/i,
+    identifier: $ => /[a-z_\-#][a-z0-9_\-#]*/i,
 
     statement: $ => choice(
       $.emptyLineStatement,

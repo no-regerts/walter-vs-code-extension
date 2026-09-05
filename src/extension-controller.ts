@@ -1,11 +1,13 @@
 import * as vscode from "vscode";
 import * as wts from "web-tree-sitter";
-import { TreeEdit as TreeEditData, WalterParser } from "./walter-parser.js";
+import { WalterParser } from "./walter-parser.js";
+import { StaticAnalizer } from "./static-analizer.js";
 
 export class ExtensionController {
   private context?: vscode.ExtensionContext;
   private currentDocument?: vscode.TextDocument;
   private walterParser!: WalterParser;
+  private staticAnalizer: StaticAnalizer = new StaticAnalizer();
   private disposables: vscode.Disposable[] = [];
   private currentText: string = "";
 
@@ -18,7 +20,9 @@ export class ExtensionController {
   }
 
   private setupDiagnostics = () => {
-    this.walterParser.on("parsed", (payload) => {
+    const diagnosticCollection = vscode.languages.createDiagnosticCollection();
+
+    this.staticAnalizer.on("finished", (payload) => {
       if (!this.currentDocument) return;
 
       const errorCaptures = payload.errors;
@@ -52,8 +56,6 @@ export class ExtensionController {
           ),
       );
 
-      const diagnosticCollection =
-        vscode.languages.createDiagnosticCollection();
       diagnosticCollection.clear();
       diagnosticCollection.set(this.currentDocument.uri, [
         ...errors,
@@ -91,7 +93,7 @@ export class ExtensionController {
 
     this.disposables.push(
       vscode.commands.registerCommand("walter.printErrors", () =>
-        this.walterParser.printErrors(),
+        this.staticAnalizer.printErrors(),
       ),
     );
   };
@@ -169,6 +171,11 @@ export class ExtensionController {
         .fsPath,
     );
     this.walterParser = new WalterParser(language);
+    this.walterParser.on(
+      "parsed",
+      (ast: wts.Tree) =>
+        (this.staticAnalizer.buildDiagnostics(language, ast)),
+    );
 
     this.setupDiagnostics();
     this.setupHoverProvider();

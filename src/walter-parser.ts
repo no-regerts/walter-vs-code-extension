@@ -1,7 +1,7 @@
 import * as wts from "web-tree-sitter";
 import { Observer } from "./utils/observer.js";
 
-export interface TreeEdit {
+export interface TreeEditData {
   startIndex: number; // The start index of the change.
   oldEndIndex: number; // The end index of the change before the edit.
   newEndIndex: number; // The end index of the change after the edit.
@@ -12,31 +12,22 @@ export interface TreeEdit {
 
 export class WalterParser extends Observer {
   private parser: wts.Parser;
-  private language: wts.Language;
   private currentAst: wts.Tree | null = null;
-  private currentErrors: wts.QueryCapture[] = [];
-  private currentWarnings: wts.QueryCapture[] = [];
 
-  constructor(language: wts.Language) {
+  constructor(private language: wts.Language) {
     super();
-    this.language = language;
     this.parser = new wts.Parser();
     this.parser.setLanguage(this.language);
   }
 
   public parseNewDocument(documentText: string) {
     this.parser.reset();
-
     this.currentAst = this.parser.parse(documentText);
-    this.buildDiagnostics();
-    this.notifyAll("parsed", {
-      errors: this.currentErrors,
-      warnings: this.currentWarnings,
-    });
+    this.notifyAll("parsed", this.currentAst);
   }
 
-  public incrementalParse(documentText: string, contentChanges: TreeEdit[]) {
-    contentChanges.forEach((change: TreeEdit) => {
+  public incrementalParse(documentText: string, contentChanges: TreeEditData[]) {
+    contentChanges.forEach((change: TreeEditData) => {
       this.currentAst!.edit(new wts.Edit(change));
     });
 
@@ -44,7 +35,7 @@ export class WalterParser extends Observer {
       (index: number, _position?: { row: number; column: number }) => {
         return documentText.substring(index);
       },
-      this.currentAst, // Передаем отредактированное старое дерево
+      this.currentAst,
     );
 
     // // Инкрементальный парсинг чанками через строки
@@ -64,30 +55,7 @@ export class WalterParser extends Observer {
     //   this.currentAst,
     // );
 
-    this.buildDiagnostics();
-    this.notifyAll("parsed", {
-      errors: this.currentErrors,
-      warnings: this.currentWarnings,
-    });
-  }
-
-  // TODO: move to StaticAnalizer.
-  private buildDiagnostics(): void {
-    this.currentErrors = [];
-    this.currentWarnings = [];
-
-    const errorQueryString = `
-      (ERROR) @error
-      (MISSING) @missing
-    `;
-    let query = new wts.Query(this.language, errorQueryString);
-    this.currentErrors = query.captures(this.currentAst!.rootNode);
-
-    const trailingSpacesQueryString = `
-    (trailingSpaces) @trailingSpaces
-    `;
-    query = new wts.Query(this.language, trailingSpacesQueryString);
-    this.currentWarnings = query.captures(this.currentAst!.rootNode);
+    this.notifyAll("parsed", this.currentAst);
   }
 
   public infoAtPosition(row: number, column: number) {
@@ -125,9 +93,5 @@ export class WalterParser extends Observer {
       }
     }
     printl(this.currentAst.rootNode);
-  }
-
-  public printErrors() {
-    console.log(this.currentErrors);
   }
 }

@@ -2,33 +2,38 @@ This extension provides full feature support for WALTER language in VS Code.
 
 ## Features
 + Lexical syntax highlighting.
++ Grammar error checking.
 + Bracket/quote matching.
 + Bracket/quote autoclosing.
 + Comment toggling.
 + Custom folding (by `;region` and `;endregion` markers).
 
-- Folding (for macros and layouts).
+- Semantic folding (for macros, layouts and long statements).
 - Semantic syntax highlighting.
 - Auto indentation.
 - Hover information:
   - Documentation for commands and built-in values.
   - Report spelling or linter errors in source code using diagnostics.
-- Auto completion:
+  - Documentation comments (jsdoc style or similar).
+- Auto completion/Intellisense:
   - For built-in values (tcp.size).
   - For built-in commands (custom, forward).
   - For user-defined variables.
-- Error checking:
-  - Parsing errors (unrecognized tokens).
+- Semantic error checking:
   - Identifier doesn't exist (either built-in or user-defined).
 - Linting:
-  - No dead code.
+  - No dead code (unused variables and macros, dead branches).
   - No trailing spaces.
   - No inconsistent whitespaces (mixing up tabs and spaces for indentation or comments).
   - No inconsistent quote marks (using different quote marks across the document).
-  - No dashes in variable names.
-  - no-consecutive-blank-lines
-  - consistent variable names (camelCase or _)
-  - max-line-length
+  - no-dashes-in-variable-names.
+  - no-consecutive-blank-lines.
+  - consistent-variable-names (camelCase or _).
+  - max-line-length.
+  - no-optional-parameters (`2>1 5`).
+  - foldernames-must-be-quoted-strings (no `layout 'name' folder`).
+  - validate-coord-lists (for example no unclamped attachment values, no negative sizes).
+  - no-layout-variable-look-alikes (e.g. tcp.label.myVar).
 - Jump to definition:
   - For variables.
   - For macros.
@@ -36,16 +41,13 @@ This extension provides full feature support for WALTER language in VS Code.
   - Adding indentations for layouts and macros.
   - Removing all trailing spaces.
 - Refactoring:
-  - Changing name of a user variable across the document.
-- Documentation comments.
+  - Change name of a user variable across the document.
 - Actions:
-  - Unravel code.
+  - Unravel/collapse code.
 - Find References.
 
 - Snippet completion.
 - Bracket autosurrounding.
-- Code folding.
-- Breadcrumbs.
 
 ## Extension Settings
 

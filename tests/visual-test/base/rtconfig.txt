@@ -50,10 +50,21 @@ set tcp [tcpFolderBalancer] ; проверить на валидность и д
 set tcp.custom.sectionLeft1 + + tcpfolderBalanceType==2 * Scale [tcpFolderBalancer{x}] [0] [tcp.custom.sectionNumber] [tcp.custom.sectionNumber{w} 0 sectionLeft1DrawW{0} h]
 set tcp.custom.sectionLeft1 ?visSections [0 0 0 0 255 100 100 150] ?sectionLeft1NotEmpty{0} [0 0 0 0 38 38 38 255] emptyTcpSecColor
 set valce vadue>0 + 1 . .
-; set tcp_LabelSize_min            scale==2 100 scale==1 90 
-; set tcp_LabelSize   ?tcp   0 .
-; set includeextra  !didshrink 0 ; вероятно ждёт, что didshrink должен быть скаляром.
-set include_extra show_side_sends&show_side_fx 0 1
+set tcp_LabelSize_min            scale==2 100 scale==1 90 ; scale - зарезервированное слово
+set include_extra !show_side_sends&show_side_fx 0 1
+; set tcp_LabelSize   ?tcp   0 . ; Должно ли работать без аксессора?
+; set tcp.label.margin                    * scale ?hide_tcp.recarm [5 0 1 0] [3 0 1 0] ; проверить, являются ли layoutProperty скалярными числами и какое число они дают, первое или соответствующее
+; set mcp.recmode + mcp_column_anchor h>327 [20 33 17 22 0 1 0 1][0] ; Допускается ли склеевать операнды - списки?
+; define_parameter Echolot_FTC 'Echolot_FTC version' 1 ; похоже должен работать только с одним параметром.
+; set mcp.io h>220 ?mcp_wantextmix&7 [0 284 78 24 0 1 0 1] [0 0 78 24 0 0 0 0] [0 0 78 24 0 0 0 0]
+
+; vertfont_topdown 1 ; является ли существующим свойством конфига
+; then master.tcp.custom.pin      19          0       0       reaper_version<700 ; можно ли передавать строки или выражения в макросы?
+; then tcp.infoblock  tcp_info_Size   1           0       !show_info 0 ; Проверить, передаются ли операции и условия в макросы как параметры.
+;   set tcp.label.margin                    * scale ?hide_tcp.recarm [5 0 1 0] [3 0 1 0] ; FTC MOD ; сломано, починить
+; set elem_diff * scale -46@x ; правильная подсветка, добавить в тесты.
+
+set mcp.recarm ?1 [0 177 20 20 0 1.0 0 1.0]
 
 set tcp.custom.sectionLeft1       \
   +                               \
@@ -66,7 +77,7 @@ set tcp.custom.sectionLeft1       \
       [tcp.custom.sectionNumber]  \
     [tcp.custom.sectionNumber{w} 0 sectionLeft1DrawW{0} h]
 
-; def myDef whatever
+def myDef whatever
 
 front mcp.*
 front mcp.custom.test mcp.custom.test mcp.custom.test
@@ -81,15 +92,19 @@ macro m p1 p2
 endmacro
 
 define_parameter myParam "str" 5 0 10
+define_parameter myParam "str" 4 4 4
 
 custom tcp.custom.folder_start '' 0 '' 'folder_start'
 ; custom tcp.custom.sectionLeft1 someIdentifier someIdentifier 1
 ; custom tcp.custom.sectionLeft2 hideSection Left2 2 DrawW thisLayout
-; custom tcp.custom.tcpDiv
-; set tcp.custom.tcpDiv.color * Scale [0 0 0 0 0 0 0 tcpDivOpacity{0}]
+custom tcp.custom.tcpDiv
+set tcp.custom.tcpDiv.color * Scale [0 0 0 0 0 0 0 tcpDivOpacity{0}]
 
 layout "mylayout" "folder"
 endlayout
+
+; Layout "4. TCP Separator" all-tcp-separator
+; endLayout
 
 layout "mylayout" "folder"
 
@@ -101,7 +116,6 @@ endLayout
 
   layout "1. Classic Top Aligned"
   endLayout
-
 
 layout "mylayout" "folder"
   set mcp.bottom.font [ 20 11 10.5 20 ] ; comment
@@ -119,5 +133,3 @@ layout "test" "test"
   set hello 123 ; comment
   ;comment
 endLayout
-
-set helloblya [ 1 2 3 4 ]
