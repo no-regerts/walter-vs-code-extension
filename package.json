@@ -1,13 +1,22 @@
 {
-  "name": "WALTER",
+  "name": "walter",
   "displayName": "WALTER",
-  "description": "Provides full feature support for WALTER language",
-  "version": "0.0.1",
+  "description": "Adds full language support for WALTER",
+  "publisher": "StanislavYegorov",
+  "version": "1.0.0",
+  "license": "MIT",
   "engines": {
     "vscode": "^1.134.0"
   },
   "categories": [
-    "Programming Languages"
+    "Programming Languages",
+    "Linters",
+    "Formatters",
+    "Other"
+  ],
+  "keywords": [
+    "WALTER",
+    "REAPER"
   ],
   "main": "./out/src/extension.js",
   "type": "module",
@@ -24,8 +33,7 @@
     "test": "npm run validate-syntax-grammar && npm run test-syntax-grammar && vscode-test && tree-sitter test",
     "parser:build": "npm --prefix parser run generate && npm --prefix parser run build",
     "build": "npm run parser:build && npm run compile && npm run test",
-    "vscode:package": "npm run build && vsce package",
-    "vscode:publish": "npm run build && vsce publish"
+    "package": "npm run build && vsce package"
   },
   "contributes": {
     "commands": [
@@ -70,6 +78,7 @@
     "@types/vscode": "^1.134.0",
     "@vscode/test-cli": "^0.0.15",
     "@vscode/test-electron": "^3.0.0",
+    "@vscode/vsce": "^3.9.2",
     "eslint": "^10.5.0",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.61.1",
