@@ -1,11 +1,21 @@
 import * as wts from "web-tree-sitter";
-import { Observer } from "./observer.js";
+import { Observer } from "./utils/observer.js";
+
+export interface TreeEdit {
+  startIndex: number; // The start index of the change.
+  oldEndIndex: number; // The end index of the change before the edit.
+  newEndIndex: number; // The end index of the change after the edit.
+  startPosition: wts.Point; // The start position of the change.
+  oldEndPosition: wts.Point; // The end position of the change before the edit.
+  newEndPosition: wts.Point; // The end position of the change after the edit.
+};
 
 export class WalterParser extends Observer {
   private parser: wts.Parser;
   private language: wts.Language;
   private currentAst: wts.Tree | null = null;
   private currentErrors: wts.QueryCapture[] = [];
+  private currentWarnings: wts.QueryCapture[] = [];
 
   constructor(language: wts.Language) {
     super();
@@ -14,53 +24,47 @@ export class WalterParser extends Observer {
     this.parser.setLanguage(this.language);
   }
 
-  public parseNewDocument(text: string) {
+  public parseNewDocument(documentText: string) {
     this.parser.reset();
-    this.currentErrors = [];
 
-    this.currentAst = this.parser.parse(text);
+    this.currentAst = this.parser.parse(documentText);
     this.buildDiagnostics();
-    this.notifyAll("parsed", this.currentErrors);
+    this.notifyAll("parsed", {
+      errors: this.currentErrors,
+      warnings: this.currentWarnings,
+    });
   }
 
-  public parseIncrementally(text: string, _edits: any[]) {
-    // TODO: perform tree edits to the current AST here...
+  public incrementalParse(documentText: string, contentChanges: TreeEdit[]) {
+    contentChanges.forEach((change: TreeEdit) => {
+      this.currentAst!.edit(new wts.Edit(change));
+    });
 
-    this.currentAst = this.parser.parse(text, this.currentAst);
+    this.currentAst = this.parser.parse(documentText, this.currentAst);
+    this.buildDiagnostics();
+    this.notifyAll("parsed", {
+      errors: this.currentErrors,
+      warnings: this.currentWarnings,
+    });
   }
-
-  // private editTree() {
-  //   const newEdit: wts.Edit = {
-  //     startIndex: 0,
-  //     oldEndIndex: 3,
-  //     newEndIndex: 5,
-  //     startPosition: { row: 0, column: 0 },
-  //     oldEndPosition: { row: 0, column: 3 },
-  //     newEndPosition: { row: 0, column: 5 },
-  //     editPoint:
-  //     editRange:
-  //   };
-
-  //   this.currentAst!.edit(newEdit);
-  // }
 
   // TODO: move to StaticAnalizer.
   private buildDiagnostics(): void {
-    //   У ERROR есть:
-    // startPosition
-    // endPosition
-    // дочерние узлы
-    // соседние узлы
-    // родитель
-    // типы узлов вокруг него.
-    // А ещё есть очень полезная вещь — MISSING.
-    //   */
+    this.currentErrors = [];
+    this.currentWarnings = [];
+
     const errorQueryString = `
       (ERROR) @error
       (MISSING) @missing
     `;
-    const query = new wts.Query(this.language, errorQueryString);
+    let query = new wts.Query(this.language, errorQueryString);
     this.currentErrors = query.captures(this.currentAst!.rootNode);
+
+    const trailingSpacesQueryString = `
+    (trailingSpaces) @trailingSpaces
+    `;
+    query = new wts.Query(this.language, trailingSpacesQueryString);
+    this.currentWarnings = query.captures(this.currentAst!.rootNode);
   }
 
   public infoAtPosition(row: number, column: number) {
@@ -70,6 +74,8 @@ export class WalterParser extends Observer {
     });
     if (!node) return;
 
+    const lastNode = node;
+
     const result: string[] = [];
 
     while (node) {
@@ -77,10 +83,12 @@ export class WalterParser extends Observer {
       node = node.parent;
     }
 
-    return result.reverse().join(">>>");
+    return `${result.reverse().join(">")}>${lastNode.text}`;
   }
 
   public printAst() {
+    if (!this.currentAst) return;
+
     function printl(node: wts.Node, indent = "") {
       console.log(
         `${indent}${node.type} ` +
@@ -93,7 +101,7 @@ export class WalterParser extends Observer {
         printl(child, indent + "  ");
       }
     }
-    printl(this.currentAst!.rootNode);
+    printl(this.currentAst.rootNode);
   }
 
   public printErrors() {
