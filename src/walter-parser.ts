@@ -20,20 +20,20 @@ export class WalterParser extends Observer {
     this.parser.setLanguage(this.language);
   }
 
-  public parseNewDocument(documentText: string) {
+  public parseNewDocument = (documentText: string) => {
     this.parser.reset();
     this.currentAst = this.parser.parse(documentText);
     this.notifyAll("parsed", this.currentAst);
-  }
+  };
 
-  public incrementalParse(documentText: string, contentChanges: TreeEditData[]) {
-    contentChanges.forEach((change: TreeEditData) => {
+  public incrementalParse = (newSourceCode: string, changes: TreeEditData[]) => {
+    changes.forEach((change: TreeEditData) => {
       this.currentAst!.edit(new wts.Edit(change));
     });
 
     this.currentAst = this.parser.parse(
       (index: number, _position?: { row: number; column: number }) => {
-        return documentText.substring(index);
+        return newSourceCode.substring(index);
       },
       this.currentAst,
     );
@@ -56,9 +56,9 @@ export class WalterParser extends Observer {
     // );
 
     this.notifyAll("parsed", this.currentAst);
-  }
+  };
 
-  public infoAtPosition(row: number, column: number) {
+  public infoAtPosition = (row: number, column: number) => {
     let node = this.currentAst?.rootNode.descendantForPosition({
       row: row,
       column: column,
@@ -75,9 +75,9 @@ export class WalterParser extends Observer {
     }
 
     return `${result.reverse().join(">")}>${lastNode.text}`;
-  }
+  };
 
-  public printAst() {
+  public printAst = () => {
     if (!this.currentAst) return;
 
     function printl(node: wts.Node, indent = "") {
@@ -93,5 +93,5 @@ export class WalterParser extends Observer {
       }
     }
     printl(this.currentAst.rootNode);
-  }
+  };
 }

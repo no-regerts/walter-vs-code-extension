@@ -2,22 +2,66 @@ import * as vscode from "vscode";
 import * as wts from "web-tree-sitter";
 import { WalterParser } from "./walter-parser.js";
 import { StaticAnalizer } from "./static-analizer.js";
+import { WalterHoverProvider } from "./walter-hover-provider.js";
 
 export class ExtensionController {
   private context?: vscode.ExtensionContext;
-  private currentDocument?: vscode.TextDocument;
+  private disposables: vscode.Disposable[] = [];
+
   private walterParser!: WalterParser;
   private staticAnalizer: StaticAnalizer = new StaticAnalizer();
-  private disposables: vscode.Disposable[] = [];
-  private currentText: string = "";
 
-  extractTextFromEditorAndParse() {
+  private currentDocument?: vscode.TextDocument;
+  private currentText: string = ""; // TODO: remove this?
+
+  private throttlerTimerId?: ReturnType<typeof setTimeout>;
+  private isThrottled: boolean = false;
+  private accumulatedChanges: vscode.TextDocumentContentChangeEvent[] = [];
+
+  private extractTextFromEditorAndParse = () => {
     const editor = vscode.window.activeTextEditor;
     if (!editor) return;
     this.currentDocument = editor.document;
     this.currentText = this.currentDocument.getText();
     this.walterParser.parseNewDocument(this.currentText);
-  }
+  };
+
+  private convertTextDocumentChangesToTreeEditData = (
+    changes: readonly vscode.TextDocumentContentChangeEvent[],
+  ) => {
+    return changes.map((change) => {
+      const startIndex = change.rangeOffset;
+      const oldEndIndex = change.rangeOffset + change.rangeLength;
+      const newEndIndex = startIndex + change.text.length;
+
+      const startPosition = {
+        row: change.range.start.line,
+        column: change.range.start.character,
+      };
+      const oldEndPosition = {
+        row: change.range.end.line,
+        column: change.range.end.character,
+      };
+      const lines = change.text.split("\n");
+      const lineCount = lines.length - 1;
+      const newEndPosition = {
+        row: change.range.start.line + lineCount,
+        column:
+          lineCount === 0
+            ? change.range.start.character + change.text.length
+            : lines[lineCount].length,
+      };
+
+      return {
+        startIndex,
+        oldEndIndex,
+        newEndIndex,
+        startPosition,
+        oldEndPosition,
+        newEndPosition,
+      };
+    });
+  };
 
   private setupDiagnostics = () => {
     const diagnosticCollection = vscode.languages.createDiagnosticCollection();
@@ -51,7 +95,7 @@ export class ExtensionController {
               capture.node.endPosition.row,
               capture.node.endPosition.column,
             ),
-            `Remove trailing spaces.`,
+            `${capture.name}`,
             vscode.DiagnosticSeverity.Warning,
           ),
       );
@@ -65,23 +109,8 @@ export class ExtensionController {
   };
 
   private setupHoverProvider = () => {
-    vscode.languages.registerHoverProvider(
-      "walter",
-      new (class implements vscode.HoverProvider {
-        constructor(private walterParser: WalterParser) {}
-        provideHover(
-          _document: vscode.TextDocument,
-          position: vscode.Position,
-          _token: vscode.CancellationToken,
-        ): vscode.ProviderResult<vscode.Hover> {
-          const nodeInfo = this.walterParser.infoAtPosition(
-            position.line,
-            position.character,
-          );
-          return new vscode.Hover(nodeInfo ?? "");
-        }
-      })(this.walterParser),
-    );
+    const hp = new WalterHoverProvider(this.walterParser);
+    vscode.languages.registerHoverProvider("walter", hp);
   };
 
   private setupCommnads = () => {
@@ -99,14 +128,19 @@ export class ExtensionController {
   };
 
   private setupEditorBindings = () => {
-    // Executes at startup to process the already opened document:
-    (() => {
-      this.extractTextFromEditorAndParse();
-    })();
+    // Process the already opened document:
+    this.extractTextFromEditorAndParse();
 
     // On swithcing editors:
     this.disposables.push(
-      vscode.window.onDidChangeActiveTextEditor(() => {
+      vscode.window.onDidChangeActiveTextEditor((editor) => {
+        // Reset the accumulated changes and prepare to parse a new document:
+        this.accumulatedChanges = [];
+        this.throttlerTimerId?.close();
+        this.isThrottled = false;
+
+        if (editor?.document.languageId !== "walter") return;
+
         this.extractTextFromEditorAndParse();
       }),
     );
@@ -115,49 +149,22 @@ export class ExtensionController {
     this.disposables.push(
       vscode.workspace.onDidChangeTextDocument((e) => {
         if (e.contentChanges.length === 0) return;
+        if (e.document.languageId !== "walter") return;
         if (!this.currentDocument) return;
 
-        // Сортируем правки от КОНЦА файла к НАЧАЛУ. // TODO
-        // Это критически важно, чтобы при последовательном вызове .edit() индексы предыдущих правок не плыли!
-        // const sortedChanges = [...e.contentChanges].sort(
-        //   (a, b) => b.rangeOffset - a.rangeOffset,
-        // );
-        const sortedChanges = [...e.contentChanges];
+        this.accumulatedChanges.push(...e.contentChanges);
+        if (this.isThrottled) return;
+        this.isThrottled = true;
 
-        const changes = sortedChanges.map((change) => {
-          const startIndex = change.rangeOffset;
-          const oldEndIndex = change.rangeOffset + change.rangeLength;
-          const newEndIndex = startIndex + change.text.length;
+        this.throttlerTimerId = setTimeout(() => {
+          const changes = this.convertTextDocumentChangesToTreeEditData(
+            this.accumulatedChanges,
+          );
+          this.walterParser.incrementalParse(e.document.getText(), changes);
 
-          const startPosition = {
-            row: change.range.start.line,
-            column: change.range.start.character,
-          };
-          const oldEndPosition = {
-            row: change.range.end.line,
-            column: change.range.end.character,
-          };
-          const lines = change.text.split("\n");
-          const lineCount = lines.length - 1;
-          const newEndPosition = {
-            row: change.range.start.line + lineCount,
-            column:
-              lineCount === 0
-                ? change.range.start.character + change.text.length
-                : lines[lineCount].length,
-          };
-
-          return {
-            startIndex,
-            oldEndIndex,
-            newEndIndex,
-            startPosition,
-            oldEndPosition,
-            newEndPosition,
-          };
-        });
-
-        this.walterParser.incrementalParse(e.document.getText(), changes);
+          this.isThrottled = false;
+          this.accumulatedChanges = [];
+        }, 200);
       }),
     );
   };
@@ -165,16 +172,20 @@ export class ExtensionController {
   public activate = async (context: vscode.ExtensionContext) => {
     this.context = context;
 
+    // const config = vscode.workspace.getConfiguration('myCustomExtension');
+    // const isFeatureEnabled = config.get<boolean>('enableFeature');
+    // if (isFeatureEnabled) {
+    //     console.log(`Extension active. Token is: ${apiToken}`);
+    // }
+
     await wts.Parser.init();
     const language = await wts.Language.load(
       vscode.Uri.joinPath(context.extensionUri, "parser", "walter-parser.wasm")
         .fsPath,
     );
     this.walterParser = new WalterParser(language);
-    this.walterParser.on(
-      "parsed",
-      (ast: wts.Tree) =>
-        (this.staticAnalizer.buildDiagnostics(language, ast)),
+    this.walterParser.on("parsed", (ast: wts.Tree) =>
+      this.staticAnalizer.init(language, ast),
     );
 
     this.setupDiagnostics();

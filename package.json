@@ -20,9 +20,6 @@
   ],
   "main": "./out/src/extension.js",
   "type": "module",
-  "activationEvents": [
-    "onStartupFinished"
-  ],
   "scripts": {
     "lint": "eslint src",
     "watch": "tsc -watch -p ./",
@@ -36,6 +33,15 @@
     "package": "npm run build && vsce package"
   },
   "contributes": {
+    "configuration": {
+      "properties": {
+        "WALTER.enableParser": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enables or disables the core feature of this extension."
+        }
+      }
+    },
     "commands": [
       {
         "command": "walter.printAst",
