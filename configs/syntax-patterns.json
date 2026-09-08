@@ -38,7 +38,7 @@
     },
     {
       "name": "constant.numeric.walter",
-      "match": "(?i)(?:[a-f0-9]{8})|(?:\\d+\\.?\\d*)"
+      "match": "(?i)(?:[a-f0-9]{8})|(?:[a-f0-9]{6})|(?:\\d+\\.?\\d*)"
     },
     {
       "name": "variable.other.walter",
