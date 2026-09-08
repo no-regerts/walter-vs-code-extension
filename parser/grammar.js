@@ -1,5 +1,11 @@
 // Приоритетность всех отдельных команд (setCommand, ...) должна быть выше, чем у macroCallStatement.
 
+// Унарные минусы перед идентификаторами не поддерживаются:
+// set scalar -20
+// set trans.play [ scalar . . .] // сдвинет кнопку влево на 20.
+// set scalar 20
+// set trans.play [ -scalar . . .] // сдвинет кнопку на значение идентификатора '-scalar', а не 'scalar'.
+
 const spaceRegex = /[^a-z0-9_+\-*/\\@&!?<>='"`;:.,(){}\[\]\r\n]+/i;
 
 function repeatUpTo(max, rule) {
@@ -26,7 +32,7 @@ module.exports = grammar({
     [$.frontCommand],
     [$.customCommand],
     [$.relationalConditional],
-    [$.positiveConditional],
+    [$.normalConditional],
     [$.negativeConditional],
     [$.bitwiseConditional],
     [$.additionExpression],
@@ -34,14 +40,17 @@ module.exports = grammar({
     [$.multiplicationExpression],
     [$.divisionExpression],
     [$.macroCallStatement, $.property],
-    [$.wtf1Expression],
-    [$.wtf2Expression],
+    [$.weightedSumExpression],
+    [$.offsetProductExpression],
     [$.coordinateListItem, $.scalarValue],
-    [$.property, $.scalarValue],
     [$.expression, $.negativeConditional],
     [$.expression, $.relationalConditional],
     [$.expression, $.bitwiseConditional],
     [$.space, $.trailingSpaces],
+    [$.defineParameterCommand],
+    [$.expression, $.scalarValue],
+    [$.property],
+    [$.scalarValue],
   ],
 
   word: $ => $.identifier,
@@ -62,7 +71,8 @@ module.exports = grammar({
 
     comment: $ => /;[^\r\n]*/,
 
-    number: $ => /-?\d+(?:\.\d+)?/,
+    number: $ => seq(optional($.minus), /\d+(?:\.\d+)?/),
+    minus: $ => '-', // Используется, чтобы устранить неоднозначность между отрицательными числами и идентификаторами, начинающимися на '-'.
 
     hexColor: $ => choice(
       /[0-9a-f]{8}/i,
@@ -78,7 +88,7 @@ module.exports = grammar({
     doubleQuoteString: $ => /"[^\r\n"]*"/,
     backtickQuoteString: $ => /`[^\r\n`]*`/,
 
-    identifier: $ => /[a-z_\-#][a-z0-9_\-#]*/i,
+    identifier: $ => /[a-z_#][a-z0-9_#]*/i,
 
     statement: $ => choice(
       $.emptyLineStatement,
@@ -235,13 +245,14 @@ module.exports = grammar({
       $.newLine,
     )),
     
-        ///////////////////////////////// COMMANDS /////////////////////////////////
+    ///////////////////////////////// COMMANDS /////////////////////////////////
 
     // Checked: принимает только один параметр, т.е. reset trans.* tcp.* - нельзя.
     clearCommand: $ => seq(
       token(prec(2, /clear/i)),
       $.space,
       $.property,
+      optional(seq('.', '*')),
     ),
     
     // Checked: принимает только один параметр, т.е. reset trans.* tcp.* - нельзя.
@@ -249,6 +260,7 @@ module.exports = grammar({
       token(prec(2, /reset/i)),
       $.space,
       $.property,
+      optional(seq('.', '*')),
     ),
     
     setCommand: $ => seq(
@@ -279,8 +291,8 @@ module.exports = grammar({
           $.identifier,
           repeat(seq($.space, $.identifier)),
         ),
-      )), 
-      seq(optional($.space), $.newLine),
+      )),
+      seq(optional($.space), optional($.comment), $.newLine),
       optional(repeat($.statement)),
       seq(optional($.space), token(/endmacro/i)),
     ),
@@ -289,15 +301,15 @@ module.exports = grammar({
     defineParameterCommand: $ => seq(
       token(prec(2, /define_parameter/i)),
       $.space,
-      $.identifier, // Checked: the documentation says that strings could be used for name too, but for the consistency we allow only identifiers.
+      $.property, // Checked: the documentation says that strings could be used for name too, but for the consistency we allow only identifiers.
       $.space,
-      $.string, // Description.
+      choice($.string, $.identifier), // Description. Checked: if used inside macros, then all formal parameters might be identifiers. TODO: apply this rule for all commands?
       $.space,
       choice($.number, $.identifier), // Default value.
-      $.space,
-      choice($.number, $.identifier), // Minimum value.
-      $.space,
-      choice($.number, $.identifier), // Maximum value.
+      optional(seq(
+        $.space, choice($.number, $.identifier), // Minimum value.
+        $.space, choice($.number, $.identifier), // Maximum value.
+      )),
     ),
     
     customCommand: $ => seq(
@@ -305,7 +317,7 @@ module.exports = grammar({
       $.space,
       $.property,
       optional(seq($.space, $.string)),
-      optional(seq($.space, $.number)),
+      optional(seq($.space, choice($.number, $.identifier))), // ID. Checked: REAPER supports both numbers and [_a-zA-Z0-9].
       optional(seq($.space, $.string)),
       optional(seq($.space, $.string)),
     ),
@@ -315,7 +327,7 @@ module.exports = grammar({
       $.space,
       $.string,
       optional(seq($.space, $.string)),
-      seq(optional($.space), $.newLine), // Пробелы после имени папки и перевод строки.
+      seq(optional($.space), optional($.comment), $.newLine), // Пробелы после имени папки и перевод строки.
       optional(repeat($.statement)),
       seq(optional($.space), token(prec(2, /endlayout/i))),
     ),
@@ -354,25 +366,26 @@ module.exports = grammar({
 
     // TODO: throw away all entries that are not expressions.
     expression: $ => choice(
-      $.placeholder, // Checked: set var 2>1 5 .
+      $.placeholder, // Checked: 'set var 2>1 5 .' is a valid statement.
       $.property,
       $.scalarValue,
       $.combinatorExpression,
       $.conditionalExpression,
       $.coordinateList,
-      seq($.number, $.atExpression),
+      seq($.scalarValue, $.atExpression),
       seq($.property, $.accessExpression, $.atExpression),
+      seq($.property, $.atExpression), // coordlist@x is a shorthand for coordlist{x}@x, as described in the documentation.
     ),
+
     combinatorExpression: $ => choice(
-      $.wtf1Expression, // +:
-      $.wtf2Expression, // *:
+      $.weightedSumExpression, // +:
+      $.offsetProductExpression, // *:
       $.additionExpression,
       $.subtractionExpression,
       $.multiplicationExpression,
       $.divisionExpression,
     ),
-
-    wtf1Expression: $ => seq(
+    weightedSumExpression: $ => seq(
       '+:',
       $.scalarValue,
       ':',
@@ -381,7 +394,7 @@ module.exports = grammar({
       $.expression,
       optional(seq($.space, $.expression)),
     ),
-    wtf2Expression: $ => seq(
+    offsetProductExpression: $ => seq(
       '*:',
       $.scalarValue,
       ':',
@@ -397,7 +410,7 @@ module.exports = grammar({
       optional(seq($.space, $.expression)),
     ),
     subtractionExpression: $ => seq(
-      '-',
+      $.minus,
       $.space,
       $.expression,
       optional(seq($.space, $.expression)),
@@ -416,18 +429,12 @@ module.exports = grammar({
     ),
 
     conditionalExpression: $ => choice(
-      $.positiveConditional,
+      $.normalConditional,
       $.negativeConditional,
       $.relationalConditional,
       $.bitwiseConditional,
-      $.negatedConditionalExpression,
-      // $.negatedBitwiseConditional,
     ),
-    negatedConditionalExpression: $ => seq(
-      '!',
-      $.conditionalExpression,
-    ),
-    positiveConditional: $ => prec(1, seq(
+    normalConditional: $ => prec(1, seq(
       '?',
       $.scalarValue,
       $.space,
@@ -469,22 +476,60 @@ module.exports = grammar({
         seq($.space, $.placeholder),
       )),
     ),
-    // negatedBitwiseConditional: $ => seq(
-    //   '!',
-    //   $.bitwiseConditional,
-    // ),
-
-    property: $ => seq(
-      $.identifier, // Predefined and user scalar properties...
-      repeat(seq('.', $.identifier)), // ...and these are the layout properties.
-      optional(seq('.', '*')),
-    ),
 
     scalarValue: $ => choice(
       $.number,
-      $.identifier, // TODO: temp replacement for scalar-only properties. 
+      $.property,
+      $.predefinedScalarProperty,
+      seq($.scalarValue, $.accessExpression), // Для ситуаций вроде w{0}. Технически это не ошибка, поэтому разрешаем.
       seq($.property, $.accessExpression),
-      seq($.property, $.atExpression),
+    ),
+
+    // For both user-defined (myVar, my_var) and built-in (tcp.mute) properties
+    property: $ => seq(
+      $.identifier,
+      repeat(seq('.', $.identifier)),
+    ),
+    predefinedScalarProperty: $ => choice(
+      token('w'),
+      token('h'),
+      token('reaper_version'),
+      token('os_type'),
+      token('folderstate'),
+      token('folderdepth'),
+      token('maxfolderdepth'),
+      token('mcp_maxfolderdepth'),
+      token('recarm'),
+      token('tcp_iconsize'),
+      token('mcp_iconsize'),
+      token('mcp_wantextmix'),
+      token('tracknch'),
+      token('trackpanmode'),
+      token('tcp_fxparms'),
+      token('tcp_fxembed'),
+      token('mcp_fxembed'),
+      token('tcp_sends_enabled'),
+      token('tcp_fxlist_enabled'),
+      token('trackpinned'),
+      token('tcp_hidden_overridden'),
+      token('send_cnt'),
+      token('fx_parm_cnt'),
+      token('fx_cnt'),
+      token('recfx_cnt'),
+      token('trackcolor_valid'),
+      token('trackcolor_r'),
+      token('trackcolor_g'),
+      token('trackcolor_b'),
+      token('mixer_visible'),
+      token('track_selected'),
+      token('trackidx'),
+      token('ntracks'),
+      token('trackfixedlanes'),
+      token('trans_flags'),
+      token('trans_docked'),
+      token('trans_center'),
+      token('envcp_type'),
+      token('env_selected'),
     ),
   }
 });
