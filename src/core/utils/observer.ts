@@ -7,7 +7,7 @@ export class Observer {
 
   protected notifyAll(type: string, payload: any) {
     this.listeners
-      .filter(i => i.type == type)
+      .filter(i => i.type === type)
       .forEach((listener) => listener.cb(payload));
   }
 }

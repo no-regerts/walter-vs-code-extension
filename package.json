@@ -1,10 +1,11 @@
 {
   "name": "walter",
   "displayName": "WALTER",
-  "description": "Adds full language support for WALTER",
+  "description": "Language support for WALTER",
   "publisher": "StanislavYegorov",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "license": "MIT",
+  "icon": "./assets/extension-icon.png",
   "engines": {
     "vscode": "^1.134.0"
   },
@@ -50,11 +51,13 @@
     "commands": [
       {
         "command": "walter.printAst",
-        "title": "Print AST"
+        "title": "Print AST",
+        "when": "editorLangId == python"
       },
       {
         "command": "walter.printErrors",
-        "title": "Print Errors"
+        "title": "Print Errors",
+        "when": "editorLangId == python"
       }
     ],
     "languages": [
@@ -64,8 +67,8 @@
           "rtconfig.txt"
         ],
         "icon": {
-          "light": "./assets/walter-icon.png",
-          "dark": "./assets/walter-icon.png"
+          "light": "./assets/file-icon.png",
+          "dark": "./assets/file-icon.png"
         },
         "configuration": "./configs/language-configuration.json"
       }

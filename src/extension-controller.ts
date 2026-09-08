@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import * as wts from "web-tree-sitter";
-import { WalterParser } from "./walter-parser.js";
-import { StaticAnalizer } from "./static-analizer.js";
+import { WalterParser } from "./core/walter-parser.js";
+import { StaticAnalizer } from "./core/static-analizer.js";
 import { WalterHoverProvider } from "./walter-hover-provider.js";
 
 export class ExtensionController {
@@ -13,7 +13,6 @@ export class ExtensionController {
   private staticAnalizer: StaticAnalizer = new StaticAnalizer();
 
   private currentDocument?: vscode.TextDocument;
-  private currentText: string = ""; // TODO: remove this?
 
   private parserInterval?: number;
   private throttlerTimerId?: ReturnType<typeof setTimeout>;
@@ -24,8 +23,7 @@ export class ExtensionController {
     const editor = vscode.window.activeTextEditor;
     if (!editor) return;
     this.currentDocument = editor.document;
-    this.currentText = this.currentDocument.getText();
-    this.walterParser.parseNewDocument(this.currentText);
+    this.walterParser.parseNewDocument(this.currentDocument.getText());
   };
 
   private convertTextDocumentChangesToTreeEditData = (
@@ -115,6 +113,11 @@ export class ExtensionController {
     vscode.languages.registerHoverProvider("walter", hp);
   };
 
+  private setupFoldingRangeProvider = () => {
+    // TODO
+    // registerFoldingRangeProvider(selector: DocumentSelector, provider: FoldingRangeProvider): Disposable
+  };
+
   private setupCommnads = () => {
     this.disposables.push(
       vscode.commands.registerCommand("walter.printAst", () =>
@@ -174,17 +177,18 @@ export class ExtensionController {
   public activate = async (context: vscode.ExtensionContext) => {
     this.context = context;
 
-    const config = vscode.workspace.getConfiguration('WALTER');
-    this.isParserEnabled = config.get<boolean>('enableParser');
-    this.parserInterval = config.get<number>('parserInterval');
-    console.log(this.isParserEnabled, this.parserInterval);
+    const config = vscode.workspace.getConfiguration("WALTER");
+    this.isParserEnabled = config.get<boolean>("enableParser");
+    this.parserInterval = config.get<number>("parserInterval");
     if (!this.isParserEnabled) return;
 
     await wts.Parser.init();
-    const language = await wts.Language.load(
-      vscode.Uri.joinPath(context.extensionUri, "parser", "walter-parser.wasm")
-        .fsPath,
+    const wasmPath = vscode.Uri.joinPath(
+      context.extensionUri,
+      "out",
+      "walter-parser.wasm",
     );
+    const language = await wts.Language.load(wasmPath.fsPath);
     this.walterParser = new WalterParser(language);
     this.walterParser.on("parsed", (ast: wts.Tree) =>
       this.staticAnalizer.init(language, ast),
