@@ -8,12 +8,14 @@ export class ExtensionController {
   private context?: vscode.ExtensionContext;
   private disposables: vscode.Disposable[] = [];
 
+  private isParserEnabled?: boolean;
   private walterParser!: WalterParser;
   private staticAnalizer: StaticAnalizer = new StaticAnalizer();
 
   private currentDocument?: vscode.TextDocument;
   private currentText: string = ""; // TODO: remove this?
 
+  private parserInterval?: number;
   private throttlerTimerId?: ReturnType<typeof setTimeout>;
   private isThrottled: boolean = false;
   private accumulatedChanges: vscode.TextDocumentContentChangeEvent[] = [];
@@ -164,7 +166,7 @@ export class ExtensionController {
 
           this.isThrottled = false;
           this.accumulatedChanges = [];
-        }, 200);
+        }, this.parserInterval || 200);
       }),
     );
   };
@@ -172,11 +174,11 @@ export class ExtensionController {
   public activate = async (context: vscode.ExtensionContext) => {
     this.context = context;
 
-    // const config = vscode.workspace.getConfiguration('myCustomExtension');
-    // const isFeatureEnabled = config.get<boolean>('enableFeature');
-    // if (isFeatureEnabled) {
-    //     console.log(`Extension active. Token is: ${apiToken}`);
-    // }
+    const config = vscode.workspace.getConfiguration('WALTER');
+    this.isParserEnabled = config.get<boolean>('enableParser');
+    this.parserInterval = config.get<number>('parserInterval');
+    console.log(this.isParserEnabled, this.parserInterval);
+    if (!this.isParserEnabled) return;
 
     await wts.Parser.init();
     const language = await wts.Language.load(

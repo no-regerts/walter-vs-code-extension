@@ -38,7 +38,12 @@
         "WALTER.enableParser": {
           "type": "boolean",
           "default": true,
-          "description": "Enables or disables the core feature of this extension."
+          "description": "Enables or disables the core feature of this extension (restart required)"
+        },
+        "WALTER.parserInterval": {
+          "type": "number",
+          "default": 200,
+          "description": "Timeout between parsing events during typing (restart required)"
         }
       }
     },
