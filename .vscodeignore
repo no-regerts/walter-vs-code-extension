@@ -10,3 +10,5 @@ src/**
 **/*.ts
 **/.vscode-test.*
 notes.md
+file-icon.af
+extension-icon.af
