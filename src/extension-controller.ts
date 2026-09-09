@@ -185,7 +185,7 @@ export class ExtensionController {
     await wts.Parser.init();
     const wasmPath = vscode.Uri.joinPath(
       context.extensionUri,
-      "out",
+      "generated",
       "walter-parser.wasm",
     );
     const language = await wts.Language.load(wasmPath.fsPath);

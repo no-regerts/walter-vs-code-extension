@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "generate": "tree-sitter generate",
-    "build": "tree-sitter build --wasm -o ../out/walter-parser.wasm"
+    "build": "tree-sitter build --wasm -o ../generated/walter-parser.wasm"
   },
   "devDependencies": {
     "tree-sitter-cli": "^0.26.13"

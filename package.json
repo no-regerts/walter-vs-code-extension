@@ -19,7 +19,7 @@
     "WALTER",
     "REAPER"
   ],
-  "main": "./out/src/extension.js",
+  "main": "./generated/src/extension.js",
   "type": "module",
   "scripts": {
     "lint": "eslint src",
