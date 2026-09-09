@@ -5,7 +5,7 @@
   "publisher": "StanislavYegorov",
   "version": "0.0.1",
   "license": "MIT",
-  "icon": "./assets/extension-icon.png",
+  "icon": "./assets/icons/extension-icon.png",
   "engines": {
     "vscode": "^1.134.0"
   },
@@ -67,8 +67,8 @@
           "rtconfig.txt"
         ],
         "icon": {
-          "light": "./assets/file-icon.png",
-          "dark": "./assets/file-icon.png"
+          "light": "./assets/icons/file-icon.png",
+          "dark": "./assets/icons/file-icon.png"
         },
         "configuration": "./configs/language-configuration.json"
       }

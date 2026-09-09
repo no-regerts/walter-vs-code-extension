@@ -14,7 +14,7 @@ tcp_folderindent 0
 tcp_heights 4 25 54 64
 tcp_master_minheight 32
 envcp_min_height 27
-mcp_min_height 220 80
+mcp_min_height 220
 misc_dpi_translate 50 100
 misc_dpi_translate 134 150
 misc_dpi_translate 174 200
@@ -52,7 +52,7 @@ set cColorTextOnDark                            cColorBrightness{0}<85 + [100 10
 set customColorRatio                             ?trackcolor_valid / customColorDepthParam{0} 100 0
 set selectColRatio                                 ?track_selected / selectStrength{0} 100 0
 
-#>---------------------------- TRACK CONTROL PANELS -----------------------------------
+;---------------------------- TRACK CONTROL PANELS -----------------------------------
 
 macro flowProxy index
 
@@ -66,20 +66,20 @@ macro flowProxy index
                         tcpFlowLocation##index==8 tcpInputBlock    \
                         tcpFlowLocation##index==9 tcp.env \
                         tcpFlowLocation##index==10 tcp.phase
-    
+
     set thisWs * Scale proxy##index{2}
     set thisHs * Scale 20
-    
+
     set thisXMargin * Scale xMargin
     set thisYMargin * Scale yMargin
-    
+
     set proxy##index + + [previous previous] [previous{2} 0 thisWs thisHs] proxy##index{2}>0 [thisXMargin] [0] ; position it at the end of the current row
     ; OH NO ITS HIDE set flowProxy 1 ?hide_##this{0} + [previous] [previous{2} . 0 .] . ; apply hide by setting w to zero and ignoring both thisXMargin and xOffs
-    
+
     set sectionRHS + tcpSectionMainMargin{0} tcpSectionMainMargin{2}
     set thisRHS + proxy##index{0} proxy##index{2}
     set thisBS + proxy##index{1} proxy##index{3}
-    
+
 ; if it'll fit in this row, its already there now, use it to possbly set a new biggestY
     set biggestY thisRHS{0}<=sectionRHS{0} thisBS{0}>biggestY{0} thisBS{0} .  
 
@@ -90,7 +90,7 @@ macro flowProxy index
     set biggestY thisRHS{0}>sectionRHS{0} + proxy##index{1} proxy##index{3}
 ; it didn't fit in the row, so it was used to start the next row, so the containing section will now need extra height.
     set tcp.custom.sectionMain thisRHS{0}>sectionRHS{0} - + [0 0 0 proxy##index{1}] [tcp.custom.sectionMain tcp.custom.sectionMain tcp.custom.sectionMain proxy##index] [0 0 0 tcp.custom.sectionMain{1}]
-    
+
 ; -- cull if it extends below the height of the panel --    
     set thisBS + proxy##index{1} proxy##index{3} ; do that again because it might have moved rows
     set panelBottom - h sectionMargin{0}
@@ -100,17 +100,17 @@ macro flowProxy index
                             proxy##index{1}>thisYMarginPlus10{0} [proxy##index proxy##index 0 0] . \
                             [proxy##index proxy##index 0 proxy##index] \
                     !previous{3} [proxy##index proxy##index 0 0] .   ; cull method is to set width to zero
-    
+
 ; -- cull if it is itself too wide for the section
     set thisWPlusMargin + proxy##index{2} * Scale sectionMargin{0}
     set proxy##index thisWPlusMargin{0}>tcp.custom.sectionMain{2} [proxy##index proxy##index 0 0] .
-    
+
 ; -- cull if previous element is zero height
     set proxy##index previous{3}==0 [proxy##index proxy##index 0 0] .
-    
+
 ; -- this is the new previous    
     set previous proxy##index
-    
+
 endmacro
 
 
@@ -140,25 +140,25 @@ endmacro
 
 macro hideSection sec locIdx var thisLayout
     set showParam                                ?actingParamCount{0} 1 0
-    set showParam                                Layout##thisLayout##-tcpFxparmVisflag1==1 ?actingFxCount{0} ?tcp_fxlist_enabled{0} 1 
-    set showParam                                Layout##thisLayout##-tcpFxparmVisflag2==1 ?actingSendCount{0} ?tcp_sends_enabled{0} 1
-    set showParam                                Layout##thisLayout##-tcpFxembedLocation{0}==Layout##thisLayout##-tcpFxparmLocation{0} 1
-    
-    set section##sec##var                         Layout##thisLayout##-tcpFxparmLocation{0}==locIdx !showParam{0} 0 . \
-                                                 Layout##thisLayout##-tcpFxLocation{0}==locIdx !actingFxCount{0} 0 !tcp_fxlist_enabled{0} 0 . \
-                                                 Layout##thisLayout##-tcpSendLocation{0}==locIdx !actingSendCount{0} 0 !tcp_sends_enabled{0} 0 . \
-                                                 Layout##thisLayout##-tcpFxembedLocation{0}==locIdx !actingEmbeddedUiCount{0} 0 . \
+    set showParam                                Layout##thisLayout##_tcpFxparmVisflag1==1 ?actingFxCount{0} ?tcp_fxlist_enabled{0} 1 
+    set showParam                                Layout##thisLayout##_tcpFxparmVisflag2==1 ?actingSendCount{0} ?tcp_sends_enabled{0} 1
+    set showParam                                Layout##thisLayout##_tcpFxembedLocation{0}==Layout##thisLayout##_tcpFxparmLocation{0} 1
+
+    set section##sec##var                         Layout##thisLayout##_tcpFxparmLocation{0}==locIdx !showParam{0} 0 . \
+                                                 Layout##thisLayout##_tcpFxLocation{0}==locIdx !actingFxCount{0} 0 !tcp_fxlist_enabled{0} 0 . \
+                                                 Layout##thisLayout##_tcpSendLocation{0}==locIdx !actingSendCount{0} 0 !tcp_sends_enabled{0} 0 . \
+                                                 Layout##thisLayout##_tcpFxembedLocation{0}==locIdx !actingEmbeddedUiCount{0} 0 . \
                                                  0 
-                                                
+
     set showParamT                                ?fx_parm_cnt 1 0
-    set showParamT                                Layout##thisLayout##-tcpFxparmVisflag1==1 ?fx_cnt ?tcp_fxlist_enabled{0} 1 
-    set showParamT                                Layout##thisLayout##-tcpFxparmVisflag2==1 ?send_cnt ?tcp_sends_enabled{0} 1
-    set showParamT                                Layout##thisLayout##-tcpFxembedLocation{0}==Layout##thisLayout##-tcpFxparmLocation{0} 1        
-                                                
-    set section##sec##NotEmpty                    Layout##thisLayout##-tcpFxparmLocation{0}==locIdx !showParamT{0} 0 1 \
-                                                 Layout##thisLayout##-tcpFxLocation{0}==locIdx !fx_cnt 0 !tcp_fxlist_enabled{0} 0 1 \
-                                                 Layout##thisLayout##-tcpSendLocation{0}==locIdx !send_cnt 0 !tcp_sends_enabled{0} 0 1 \
-                                                 Layout##thisLayout##-tcpFxembedLocation{0}==locIdx !tcp_fxembed 0 1 \
+    set showParamT                                Layout##thisLayout##_tcpFxparmVisflag1==1 ?fx_cnt ?tcp_fxlist_enabled{0} 1 
+    set showParamT                                Layout##thisLayout##_tcpFxparmVisflag2==1 ?send_cnt ?tcp_sends_enabled{0} 1
+    set showParamT                                Layout##thisLayout##_tcpFxembedLocation{0}==Layout##thisLayout##_tcpFxparmLocation{0} 1        
+
+    set section##sec##NotEmpty                    Layout##thisLayout##_tcpFxparmLocation{0}==locIdx !showParamT{0} 0 1 \
+                                                 Layout##thisLayout##_tcpFxLocation{0}==locIdx !fx_cnt 0 !tcp_fxlist_enabled{0} 0 1 \
+                                                 Layout##thisLayout##_tcpSendLocation{0}==locIdx !send_cnt 0 !tcp_sends_enabled{0} 0 1 \
+                                                 Layout##thisLayout##_tcpFxembedLocation{0}==locIdx !tcp_fxembed 0 1 \
                                                  0
 endmacro
 
@@ -221,9 +221,9 @@ set ySqueeze                                     h<singleRowH{0} - * Scale secti
 set supercollapsedMinH                            * Scale 5                          
 set supercollapsedH                                h<supercollapsedMinH{0} 1 0
 set textBrightnessMult                            * textBrightness{0} 0.01
-set Layout##thisLayout##-tcpVolumeLength         Layout##thisLayout##-tcpVolumeLength{0}<=40 20 .
-set Layout##thisLayout##-tcpFxparmVisflag1        !tcp_fxlist_enabled{0} -1 .
-set Layout##thisLayout##-tcpFxparmVisflag2        !tcp_sends_enabled{0} -1 .            
+set Layout##thisLayout##_tcpVolumeLength         Layout##thisLayout##_tcpVolumeLength{0}<=40 20 .
+set Layout##thisLayout##_tcpFxparmVisflag1        !tcp_fxlist_enabled{0} -1 .
+set Layout##thisLayout##_tcpFxparmVisflag2        !tcp_sends_enabled{0} -1 .            
 set sectionMarginXYWH                             h<singleRowH{0} + * Scale - [sectionMargin{0}] * 2 [0 0 sectionMargin{0}] - [0 ySqueeze{0}] * 2 [0 0 0 ySqueeze{0}] \
                                                 * Scale + [sectionMargin{0} sectionMargin{0}] * -2 [0 0 sectionMargin{0} sectionMargin{0}]
 
@@ -231,11 +231,11 @@ set sectionMarginXYWH                             h<singleRowH{0} + * Scale - [s
 
 set thisTcpfolderIndent                            * - maxfolderdepth - maxfolderdepth folderdepth tcpfolderIndentSize
 set tcpFolderBalancer                            tcpfolderBalanceType>0 * - maxfolderdepth ?trackpinned [0] folderdepth tcpfolderIndentSize
-set thisTcpLabelLength                            + Layout##thisLayout##-tcpLabelLength tcpfolderBalanceType==1 tcpFolderBalancer 0
-set actingParamCount                            + fx_parm_cnt ?fx_parm_cnt 0 ?Layout##thisLayout##-tcpFxparmPin{0} 1 0
-set actingFxCount                                + fx_cnt ?fx_cnt 0 ?Layout##thisLayout##-tcpFxPin{0} 1 0
-set actingSendCount                             + send_cnt ?send_cnt 0 ?Layout##thisLayout##-tcpSendPin{0} 1 0
-set actingEmbeddedUiCount                        + tcp_fxembed ?tcp_fxembed 0 ?Layout##thisLayout##-tcpFxembedPin{0} 1 0
+set thisTcpLabelLength                            + Layout##thisLayout##_tcpLabelLength tcpfolderBalanceType==1 tcpFolderBalancer 0
+set actingParamCount                            + fx_parm_cnt ?fx_parm_cnt 0 ?Layout##thisLayout##_tcpFxparmPin{0} 1 0
+set actingFxCount                                + fx_cnt ?fx_cnt 0 ?Layout##thisLayout##_tcpFxPin{0} 1 0
+set actingSendCount                             + send_cnt ?send_cnt 0 ?Layout##thisLayout##_tcpSendPin{0} 1 0
+set actingEmbeddedUiCount                        + tcp_fxembed ?tcp_fxembed 0 ?Layout##thisLayout##_tcpFxembedPin{0} 1 0
 
 custom tcp.custom.tcpDiv
     set tcp.custom.tcpDiv                         - + * Scale trackpinned==2 [0] * [1 0 -1] thisTcpfolderIndent [0 h w 1] [0 1] 
@@ -259,7 +259,7 @@ custom tcp.custom.pinned                        '' 0 '' 'tcp_pinned'
 set tcp.trackidx                                ?supercollapsedH{0} [0] + tcp.custom.sectionNumber ?trackpinned [0] * Scale folderstate==1 [0 16 0 -16] folderstate<0 [0 0 0 -10] [0]
     set tcp.trackidx.margin                          + [0 0 0 0 0.5] * Scale + ?selDot{0} [0 0 4] [0] \
                                                                           trackidx<100 [-1000 0 -1000 0] \
-                                                                                    folderstate=0 [0 -10 0 -10] [0]                                                    
+                                                                                    folderstate==0 [0 -10 0 -10] [0]                                                    
     set tcp.trackidx.color                         tcpSectionNumberBrightness{0}>128 - [150 150 150] * textBrightnessMult{0} [100 100 100]  + * textBrightnessMult{0} [110 110 110] [120 120 120] 
     set tcp.trackidx.font                        trackidx<100 Scale{0}==1 [3] Scale{0}==1.5 [8] [13] Scale{0}==1 [1] Scale{0}==1.5 [6] [11]
 set tcp.dragdropinfo                             + [0 tcp.custom.sectionNumber{2}] * Scale [thisTcpfolderIndent thisTcpfolderIndent]    
@@ -270,57 +270,57 @@ custom tcp.custom.sectionNumberDiv
     set tcp.custom.sectionNumberDiv                + + [tcp.custom.sectionNumber tcp.custom.sectionNumber 1 tcp.custom.sectionNumber] [tcp.custom.sectionNumber{2}] [-1]
     set tcp.custom.sectionNumberDiv.color        * Scale [0 0 0 0 0 0 0 tcpDivOpacity{0}]
     front tcp.custom.sectionNumberDiv
-    
+
 custom tcp.custom.tcp_selectionDot                 '' 0 '' 'tcp_selectionDot'
 set tcp.custom.tcp_selectionDot                 !selDot{0} [0] ?track_selected [0] + + [tcp.custom.sectionNumber] - [tcp.custom.sectionNumber{2} tcp.custom.sectionNumber{3}] * 0.5 [0 tcp.custom.sectionNumber{3}] * Scale [-4 -4 8 8]
 custom tcp.custom.tcp_selectionDotSel            '' 0 '' 'tcp_selectionDot_sel'    
 set tcp.custom.tcp_selectionDotSel                 !selDot{0} [0] !track_selected [0] + + [tcp.custom.sectionNumber] - [tcp.custom.sectionNumber{2} tcp.custom.sectionNumber{3}] * 0.5 [0 tcp.custom.sectionNumber{3}] * Scale [-4 -4 8 8]
 front tcp.custom.tcp_selectionDot tcp.custom.tcp_selectionDotSel    
 
-set sectionLeft1Minimise                         ?supercollapsedH{0} 1 Layout##thisLayout##-tcpFxparmLocation{0}==1 0 Layout##thisLayout##-tcpFxLocation{0}==1 0 \
-                                                    Layout##thisLayout##-tcpSendLocation{0}==1 0 Layout##thisLayout##-tcpFxembedLocation{0}==1 0 1
-set sectionLeft2Minimise                         ?supercollapsedH{0} 1 Layout##thisLayout##-tcpFxparmLocation{0}==2 0 Layout##thisLayout##-tcpFxLocation{0}==2 0 \
-                                                    Layout##thisLayout##-tcpSendLocation{0}==2 0 Layout##thisLayout##-tcpFxembedLocation{0}==2 0 1
-set sectionLeft3Minimise                         ?supercollapsedH{0} 1 Layout##thisLayout##-tcpFxparmLocation{0}==3 0 Layout##thisLayout##-tcpFxLocation{0}==3 0 \
-                                                    Layout##thisLayout##-tcpSendLocation{0}==3 0 Layout##thisLayout##-tcpFxembedLocation{0}==3 0 1
-set sectionBottomMinimise                        Layout##thisLayout##-tcpFxparmLocation{0}==4 0 Layout##thisLayout##-tcpFxLocation{0}==4 0 \
-                                                    Layout##thisLayout##-tcpSendLocation{0}==4 0 Layout##thisLayout##-tcpFxembedLocation{0}==4 0 1
-set sectionRight1Minimise                         ?supercollapsedH{0} 1 Layout##thisLayout##-tcpFxparmLocation{0}==7 0 Layout##thisLayout##-tcpFxLocation{0}==7 0 \
-                                                    Layout##thisLayout##-tcpSendLocation{0}==7 0 Layout##thisLayout##-tcpFxembedLocation{0}==7 0 1
-set sectionRight2Minimise                         ?supercollapsedH{0} 1 Layout##thisLayout##-tcpFxparmLocation{0}==8 0 Layout##thisLayout##-tcpFxLocation{0}==8 0 \
-                                                    Layout##thisLayout##-tcpSendLocation{0}==8 0 Layout##thisLayout##-tcpFxembedLocation{0}==8 0 1
-set sectionRight3Minimise                         ?supercollapsedH{0} 1 Layout##thisLayout##-tcpFxparmLocation{0}==9 0 Layout##thisLayout##-tcpFxLocation{0}==9 0 \
-                                                    Layout##thisLayout##-tcpSendLocation{0}==9 0 Layout##thisLayout##-tcpFxembedLocation{0}==9 0 1
+set sectionLeft1Minimise                         ?supercollapsedH{0} 1 Layout##thisLayout##_tcpFxparmLocation{0}==1 0 Layout##thisLayout##_tcpFxLocation{0}==1 0 \
+                                                    Layout##thisLayout##_tcpSendLocation{0}==1 0 Layout##thisLayout##_tcpFxembedLocation{0}==1 0 1
+set sectionLeft2Minimise                         ?supercollapsedH{0} 1 Layout##thisLayout##_tcpFxparmLocation{0}==2 0 Layout##thisLayout##_tcpFxLocation{0}==2 0 \
+                                                    Layout##thisLayout##_tcpSendLocation{0}==2 0 Layout##thisLayout##_tcpFxembedLocation{0}==2 0 1
+set sectionLeft3Minimise                         ?supercollapsedH{0} 1 Layout##thisLayout##_tcpFxparmLocation{0}==3 0 Layout##thisLayout##_tcpFxLocation{0}==3 0 \
+                                                    Layout##thisLayout##_tcpSendLocation{0}==3 0 Layout##thisLayout##_tcpFxembedLocation{0}==3 0 1
+set sectionBottomMinimise                        Layout##thisLayout##_tcpFxparmLocation{0}==4 0 Layout##thisLayout##_tcpFxLocation{0}==4 0 \
+                                                    Layout##thisLayout##_tcpSendLocation{0}==4 0 Layout##thisLayout##_tcpFxembedLocation{0}==4 0 1
+set sectionRight1Minimise                         ?supercollapsedH{0} 1 Layout##thisLayout##_tcpFxparmLocation{0}==7 0 Layout##thisLayout##_tcpFxLocation{0}==7 0 \
+                                                    Layout##thisLayout##_tcpSendLocation{0}==7 0 Layout##thisLayout##_tcpFxembedLocation{0}==7 0 1
+set sectionRight2Minimise                         ?supercollapsedH{0} 1 Layout##thisLayout##_tcpFxparmLocation{0}==8 0 Layout##thisLayout##_tcpFxLocation{0}==8 0 \
+                                                    Layout##thisLayout##_tcpSendLocation{0}==8 0 Layout##thisLayout##_tcpFxembedLocation{0}==8 0 1
+set sectionRight3Minimise                         ?supercollapsedH{0} 1 Layout##thisLayout##_tcpFxparmLocation{0}==9 0 Layout##thisLayout##_tcpFxLocation{0}==9 0 \
+                                                    Layout##thisLayout##_tcpSendLocation{0}==9 0 Layout##thisLayout##_tcpFxembedLocation{0}==9 0 1
 
 set emptyTcpSecColor                            [0 0 0 0 38 38 38 emptyTcpSecOpacity{0}]
 custom tcp.custom.sectionLeft1
-    set sectionLeft1DrawW                         ?sectionLeft1Minimise{0} 0 * Scale Layout##thisLayout##-sectionLeftW{0}
+    set sectionLeft1DrawW                         ?sectionLeft1Minimise{0} 0 * Scale Layout##thisLayout##_sectionLeftW{0}
     hideSection Left1 1    DrawW thisLayout                                        
     set tcp.custom.sectionLeft1                 + + tcpfolderBalanceType==2 * Scale [tcpFolderBalancer] [0] [tcp.custom.sectionNumber] [tcp.custom.sectionNumber{w} 0 sectionLeft1DrawW{0} h] 
     set tcp.custom.sectionLeft1                 tcp.custom.sectionLeft1{2}<0 [. . 0 .] ; preventing negative width
     set tcp.custom.sectionLeft1.color             ?visSections [0 0 0 0 255 100 100 150] ?sectionLeft1NotEmpty{0} [0 0 0 0 38 38 38 255] emptyTcpSecColor
-    
+
 custom tcp.custom.sectionLeft2
-    set sectionLeft2DrawW                         ?sectionLeft2Minimise{0} 0 * Scale Layout##thisLayout##-sectionLeftW{0}
+    set sectionLeft2DrawW                         ?sectionLeft2Minimise{0} 0 * Scale Layout##thisLayout##_sectionLeftW{0}
     hideSection Left2 2    DrawW thisLayout 
     set tcp.custom.sectionLeft2                 + [tcp.custom.sectionLeft1] [tcp.custom.sectionLeft1{w} 0 sectionLeft2DrawW{0} h] 
     set tcp.custom.sectionLeft2                 tcp.custom.sectionLeft2{2}<0 [. . 0 .] ; preventing negative width
     set tcp.custom.sectionLeft2.color             ?visSections [0 0 0 0 255 50 50 100] ?sectionLeft2NotEmpty{0} [0 0 0 0 38 38 38 255] emptyTcpSecColor
-    
+
 custom tcp.custom.sectionLeft3
-    set sectionLeft3DrawW                         ?sectionLeft3Minimise{0} 0 * Scale Layout##thisLayout##-sectionLeftW{0}
+    set sectionLeft3DrawW                         ?sectionLeft3Minimise{0} 0 * Scale Layout##thisLayout##_sectionLeftW{0}
     hideSection Left3 3 DrawW thisLayout
     set tcp.custom.sectionLeft3                 + [tcp.custom.sectionLeft2] [tcp.custom.sectionLeft2{w} 0 sectionLeft3DrawW{0} h] 
     set tcp.custom.sectionLeft3                 tcp.custom.sectionLeft3{2}<0 [. . 0 .] ; preventing negative width
     set tcp.custom.sectionLeft3.color             ?visSections [0 0 0 0 255 150 150 200] ?sectionLeft3NotEmpty{0} [0 0 0 0 38 38 38 255] emptyTcpSecColor
-    
+
 ; Calculate sectionRight widths now so that sectionMain can use them
-    set sectionRight1DrawW                         ?sectionRight1Minimise{0} 0 Layout##thisLayout##-sectionRightW{0}
+    set sectionRight1DrawW                         ?sectionRight1Minimise{0} 0 Layout##thisLayout##_sectionRightW{0}
     hideSection Right1 7 DrawW thisLayout                                                
-    set sectionRight2DrawW                         ?sectionRight2Minimise{0} 0 Layout##thisLayout##-sectionRightW{0}
+    set sectionRight2DrawW                         ?sectionRight2Minimise{0} 0 Layout##thisLayout##_sectionRightW{0}
     hideSection                                 Right2 8 DrawW thisLayout
-                                                
-    set sectionRight3DrawW                         ?sectionRight3Minimise{0} 0 Layout##thisLayout##-sectionRightW{0}
+
+    set sectionRight3DrawW                         ?sectionRight3Minimise{0} 0 Layout##thisLayout##_sectionRightW{0}
     hideSection                                 Right3 9 DrawW thisLayout
 
 custom tcp.custom.sectionMain
@@ -329,7 +329,7 @@ custom tcp.custom.sectionMain
                                                     * -1 \
                                                         + + + + [0 0 tcp.custom.sectionLeft3{0}] [0 0 tcp.custom.sectionLeft3{2}] \
                                                         * Scale + + [0 0 sectionRight1DrawW{0}] [0 0 sectionRight2DrawW{0}] [0 0 sectionRight3DrawW{0}] \
-                                                        * Scale [0 0 Layout##thisLayout##-tcpMeterWidth{0}]    
+                                                        * Scale [0 0 Layout##thisLayout##_tcpMeterWidth{0}]    
     set tcp.custom.sectionMain.color             ?visSections [0 0 0 0 50 50 255 100] [0]
 ; Calculate resulting color for use in text brightness judgement    
 set tcpMainSecCol                                + * - 1 selectColRatio + \
@@ -340,28 +340,28 @@ brightnessFromRGB                                 tcpMainSecCol{0} tcpMainSecCol
 
 ;-- HIDING-- for assorted reasons
 
-doHideLogic                                     tcpLabelBlock Layout##thisLayout##-hideTcpLabelBlock{0}    
-doHideLogic                                     tcp.recmon Layout##thisLayout##-hideTcpRecmon{0}
+doHideLogic                                     tcpLabelBlock Layout##thisLayout##_hideTcpLabelBlock{0}    
+doHideLogic                                     tcp.recmon Layout##thisLayout##_hideTcpRecmon{0}
 set tcpRecmonW                                  ?hide_tcp.recmon{0} 0 14 
-doHideLogic                                     labelsValues Layout##thisLayout##-hideTcpLabelsValues{0}
+doHideLogic                                     labelsValues Layout##thisLayout##_hideTcpLabelsValues{0}
 set hide_tcp.volume.label                       !hide_labelsValues{0} 0 1
-doHideLogic                                     tcpMSBlock Layout##thisLayout##-hideTcpMSBlock{0}
-doHideLogic                                     tcp.io Layout##thisLayout##-hideTcpIo{0}
-doHideLogic                                     tcpFxBlock Layout##thisLayout##-hideTcpFxBlock{0}
-doHideLogic                                     tcpPanBlock Layout##thisLayout##-hideTcpPanBlock{0}
-doHideLogic                                     tcp.recmode Layout##thisLayout##-hideTcpRecmode{0}
-doHideLogic                                     tcpInputBlock Layout##thisLayout##-hideTcpInputBlock{0}
-doHideLogic                                     tcp.env Layout##thisLayout##-hideTcpEnv{0}
-doHideLogic                                     tcp.phase Layout##thisLayout##-hideTcpPhase{0}
-doHideLogic                                     meterValues Layout##thisLayout##-hideTcpMeterValues{0}
+doHideLogic                                     tcpMSBlock Layout##thisLayout##_hideTcpMSBlock{0}
+doHideLogic                                     tcp.io Layout##thisLayout##_hideTcpIo{0}
+doHideLogic                                     tcpFxBlock Layout##thisLayout##_hideTcpFxBlock{0}
+doHideLogic                                     tcpPanBlock Layout##thisLayout##_hideTcpPanBlock{0}
+doHideLogic                                     tcp.recmode Layout##thisLayout##_hideTcpRecmode{0}
+doHideLogic                                     tcpInputBlock Layout##thisLayout##_hideTcpInputBlock{0}
+doHideLogic                                     tcp.env Layout##thisLayout##_hideTcpEnv{0}
+doHideLogic                                     tcp.phase Layout##thisLayout##_hideTcpPhase{0}
+doHideLogic                                     meterValues Layout##thisLayout##_hideTcpMeterValues{0}
 set hide_tcpInfoBlock                           ?supercollapsedH{0} [1] 
 set hide_tcpInfoBlock                           !feature_check_infoblock [1] ; always treat infoblock as hidden if not supported by reaper
 
 ;-- TCP SECTIONS (pt.2) --    
 
-set tcpLabelBlockW                                + + + thisTcpLabelLength{0} Layout##thisLayout##-tcpVolumeLength{0} 20 tcpRecmonW{0} ; 20 is the recarm width
-set tcpLabelBlockW                                !hide_tcp.volume.label{0} ?Layout##thisLayout##-useInfoBlock{0} + tcpLabelBlockW 48 ; create space in LabelBlock for volume label when infoBlock is using its flow slot
-set tcpInputBlockW                                + 20 Layout##thisLayout##-tcpRecinputLength{0} ; 20 is the width of tcp.fxin
+set tcpLabelBlockW                                + + + thisTcpLabelLength{0} Layout##thisLayout##_tcpVolumeLength{0} 20 tcpRecmonW{0} ; 20 is the recarm width
+set tcpLabelBlockW                                !hide_tcp.volume.label{0} ?Layout##thisLayout##_useInfoBlock{0} + tcpLabelBlockW 48 ; create space in LabelBlock for volume label when infoBlock is using its flow slot
+set tcpInputBlockW                                + 20 Layout##thisLayout##_tcpRecinputLength{0} ; 20 is the width of tcp.fxin
 set hide_panValues                                !hide_labelsValues{0} 0 1
 set tcpPanBlockW                                trackpanmode<=3 !hide_panValues{0} 58 20 trackpanmode==5 !hide_panValues{0} 80 42 trackpanmode==6 !hide_panValues{0} 100 60
 set longestTcpBlock                                * Scale + + sectionMargin{0} sectionMargin{0} tcpLabelBlockW{0}>tcpInputBlockW{0} tcpLabelBlockW{0} tcpInputBlockW{0}
@@ -371,7 +371,7 @@ set tcp.custom.sectionMain                         tcp.custom.sectionMain{2}<lon
 custom tcp.custom.sectionRight1
     set tcp.custom.sectionRight1                 + + [tcp.custom.sectionMain 0 0 h] [tcp.custom.sectionMain{2}] * Scale [0 0 sectionRight1DrawW{0}]
     set tcp.custom.sectionRight1.color             ?visSections [0 0 0 0 255 255 100 150] ?sectionRight1NotEmpty{0} [0 0 0 0 38 38 38 255] emptyTcpSecColor
-    
+
 custom tcp.custom.sectionRight2
     set tcp.custom.sectionRight2                 + + [tcp.custom.sectionRight1 0 0 h] [tcp.custom.sectionRight1{2}] * Scale [0 0 sectionRight2DrawW{0}]
     set tcp.custom.sectionRight2.color             ?visSections [0 0 0 0 255 200 100 200] ?sectionRight2NotEmpty{0} [0 0 0 0 38 38 38 255] emptyTcpSecColor
@@ -381,9 +381,9 @@ custom tcp.custom.sectionRight3
     set tcp.custom.sectionRight3.color             ?visSections [0 0 0 0 255 255 200 150] ?sectionRight3NotEmpty{0} [0 0 0 0 38 38 38 255] emptyTcpSecColor    
 
 custom tcp.custom.sectionMeter
-    set tcp.custom.sectionMeter                 + + [tcp.custom.sectionRight3 0 0 h] [tcp.custom.sectionRight3{2}] * Scale [0 0 Layout##thisLayout##-tcpMeterWidth{0}]
+    set tcp.custom.sectionMeter                 + + [tcp.custom.sectionRight3 0 0 h] [tcp.custom.sectionRight3{2}] * Scale [0 0 Layout##thisLayout##_tcpMeterWidth{0}]
     set tcp.custom.sectionMeter.color             ?visSections [0 0 0 0 10 255 10 255] [0 0 0 0 38 38 38 255]
-    
+
 ; Add margins to sections
 set tcpSectionLeft1Margin                         + tcp.custom.sectionLeft1 sectionMarginXYWH    
 set tcpSectionLeft2Margin                         + tcp.custom.sectionLeft2 sectionMarginXYWH    
@@ -391,12 +391,12 @@ set tcpSectionLeft3Margin                         + tcp.custom.sectionLeft3 sect
 set tcpSectionRight1Margin                         + tcp.custom.sectionRight1 sectionMarginXYWH    
 set tcpSectionRight2Margin                         + tcp.custom.sectionRight2 sectionMarginXYWH    
 set tcpSectionRight3Margin                         + tcp.custom.sectionRight3 sectionMarginXYWH    
-    
+
 ;------------------
 
-set tcp.meter                                     + + tcp.custom.sectionMeter * Scale [Layout##thisLayout##-tcpMeterBorder{0} Layout##thisLayout##-tcpMeterBorder{0}] \
-                                                    * -2 * Scale [0 0 Layout##thisLayout##-tcpMeterBorder{0} Layout##thisLayout##-tcpMeterBorder{0}]
-    set tcp.meter.vu.div                        [Layout##thisLayout##-tcpMeterBorder{0}]
+set tcp.meter                                     + + tcp.custom.sectionMeter * Scale [Layout##thisLayout##_tcpMeterBorder{0} Layout##thisLayout##_tcpMeterBorder{0}] \
+                                                    * -2 * Scale [0 0 Layout##thisLayout##_tcpMeterBorder{0} Layout##thisLayout##_tcpMeterBorder{0}]
+    set tcp.meter.vu.div                        [Layout##thisLayout##_tcpMeterBorder{0}]
     set tcp.meter.readout.color                 ?hide_meterValues{0} [0 0 0 0 0 0 0 0] * textBrightnessMult{0} [100 100 100 255 255 183 171 255]
     set tcp.meter.scale.color.lit.bottom        ?hide_meterValues{0} [0 0 0 0 0 0 0 0] [0 0 0 170 0 0 0 0]
     set tcp.meter.scale.color.lit.top           ?hide_meterValues{0} [0 0 0 0 0 0 0 0] [0 0 0 170 0 0 0 0]
@@ -404,7 +404,7 @@ set tcp.meter                                     + + tcp.custom.sectionMeter * 
     set tcp.meter.scale.color.unlit.top         ?hide_meterValues{0} [0 0 0 0 0 0 0 0] ?recarm [255 64 0 255 0 0 0 0] + * - textBrightnessMult{0} 1 [0 0 0 100] [255 255 255 60 0 0 0 0]
 
 ;-- POPULATE MAIN --
-    
+
 ;reset values for 'follow' macro
 set biggestY 0
 set xOffs 0
@@ -415,14 +415,14 @@ custom tcp.custom.labelBlock
 custom tcp.custom.inputBlock
 
 set tcpLabelBlock                             ?hide_tcpLabelBlock{0} [0 0 0] [0 0 tcpLabelBlockW{0}]
-set tcpInfoblockBlock                       ?hide_tcpInfoBlock{0} [0 0 0] ?Layout##thisLayout##-useInfoBlock{0} [0 0 60] ?hide_tcp.volume.label{0} [0 0 0] [0 0 48]
+set tcpInfoblockBlock                       ?hide_tcpInfoBlock{0} [0 0 0] ?Layout##thisLayout##_useInfoBlock{0} [0 0 60] ?hide_tcp.volume.label{0} [0 0 0] [0 0 48]
 set tcpMSBlock                                ?hide_tcpMSBlock{0} [0 0 0] [0 0 39]
 set tcp.io                                    ?hide_tcp.io{0} [0 0 0] [0 0 30]
 set tcpFxBlock                                ?hide_tcpFxBlock{0} [0 0 0] [0 0 36]
 set tcpPanBlock                                ?hide_tcpPanBlock{0} [0 0 0] [0 0 tcpPanBlockW]
 set tcp.recmode                                ?hide_tcp.recmode{0} [0 0 0] [0 0 42]
 set tcpInputBlock                            ?hide_tcpInputBlock{0} [0 0 0] [0 0 tcpInputBlockW{0}]
-set tcp.env                                 ?hide_tcp.env{0} [0 0 0] ?Layout##thisLayout##-useInfoBlock{0} [0 0 20] [0 0 40]
+set tcp.env                                 ?hide_tcp.env{0} [0 0 0] ?Layout##thisLayout##_useInfoBlock{0} [0 0 20] [0 0 40]
 set tcp.phase                                 ?hide_tcp.phase{0} [0 0 0] [0 0 16]
 set previous                                 + [tcpSectionMainMargin tcpSectionMainMargin] * Scale - [0 0 0 20] [xMargin{0}] ; mainNullElement
 
@@ -459,21 +459,21 @@ set tcp.recarm                                     !tcpLabelBlock{2} [0] + [tcpL
 set tcp.recmon                                    !tcpLabelBlock{2} [0] + [tcp.recarm tcp.recarm] + [tcp.recarm{2}] * Scale [0 0 tcpRecmonW{0} 20] 
 set tcp.label                                    !tcpLabelBlock{2} [0] + [tcp.recmon tcp.recmon] + [tcp.recmon{2}] * Scale - [0 0 thisTcpLabelLength{0} 20] [0 0 6] 
     set tcp.label.margin                         * Scale tcp_hidden_overridden==1 [22 0 2 0] [6 0 2 0]
-    set tcp.label.font                             + Layout##thisLayout##-tcpLabelSize{0} Scale{0}==1 [0] Scale{0}==1.5 [5] [10]
+    set tcp.label.font                             + Layout##thisLayout##_tcpLabelSize{0} Scale{0}==1 [0] Scale{0}==1.5 [5] [10]
     set tcp.label.color                         ?recarm [255 80 100] ?trackcolor_valid ?colorTrackLabels cColorTextOnDark * textBrightnessMult{0} [200 200 200] * textBrightnessMult{0} [200 200 200] 
     set tcp.label.color                            ?selInvertLabels{0} ?track_selected ?recarm [180 0 10] [38 38 38] . .
 custom tcp.custom.unhidden                         '' 0 '' 'unhidden'
     set tcp.custom.unhidden                        tcp_hidden_overridden==1 !tcpLabelBlock{2} [0] + [tcp.recmon tcp.recmon] + [tcp.recmon{2}] * Scale [2 0 16 20] [0]
     front                                        tcp.custom.unhidden 
-set tcp.volume                                    !tcpLabelBlock{2} [0] + [tcp.label tcp.label] + [tcp.label{2}] * Scale [0 0 Layout##thisLayout##-tcpVolumeLength{0} 20] 
-    set thisVolL                                * Scale Layout##thisLayout##-tcpVolumeLength{0}
+set tcp.volume                                    !tcpLabelBlock{2} [0] + [tcp.label tcp.label] + [tcp.label{2}] * Scale [0 0 Layout##thisLayout##_tcpVolumeLength{0} 20] 
+    set thisVolL                                * Scale Layout##thisLayout##_tcpVolumeLength{0}
     set volKnobFlipW                            * Scale 40
     set tcp.volume.fadermode                     thisVolL{0}<=volKnobFlipW{0} [1] [0]    
-set tcp.volume.label                            !hide_tcp.volume.label{0} !Layout##thisLayout##-useInfoBlock{0} tcpInfoblockBlock + [tcp.volume{2}] [tcp.volume tcpLabelBlock 48 tcpLabelBlock]
+set tcp.volume.label                            !hide_tcp.volume.label{0} !Layout##thisLayout##_useInfoBlock{0} tcpInfoblockBlock + [tcp.volume{2}] [tcp.volume tcpLabelBlock 48 tcpLabelBlock]
     set tcp.volume.label.font                    Scale{0}==1 [1] Scale{0}==1.5 [6] [11]
     set tcp.volume.label.color                    * textBrightnessMult{0} tcpMainSecColBrightness{0}<150 [220 220 220] [38 38 38]
     set tcp.volume.label.margin                    * Scale [6 0 0 0 0]
-set tcp.infoblock                                ?Layout##thisLayout##-useInfoBlock{0} tcpInfoblockBlock
+set tcp.infoblock                                ?Layout##thisLayout##_useInfoBlock{0} tcpInfoblockBlock
     set tcp.infoblock.font                        Scale{0}==1 [2] Scale{0}==1.5 [7] [12]
     set tcp.infoblock.color                        [0 0 0 210] ; [0 0 0 168] ; * textBrightnessMult{0} tcpMainSecColBrightness{0}<150 [220 220 220] [38 38 38]
     set tcp.infoblock.color.metervalue                ?recarm [254 64 0 255] [0 254 149 192]
@@ -505,9 +505,9 @@ set tcp.width                                    !tcpPanBlock{2} [0] trackpanmod
 set tcp.custom.inputBlock                        ?visSections tcpInputBlock [0]
     set tcp.custom.inputBlock.color             ?visSections [0 0 0 0 255 255 100 255] [0 0 0 0 0 0 0]
 set tcp.fxin                                    !tcpInputBlock{2} [0] + [tcpInputBlock tcpInputBlock] * Scale [0 0 20 20]
-set tcp.recinput                                !tcpInputBlock{2} [0] + + [tcpInputBlock tcpInputBlock] [tcp.fxin{2} 0] * Scale [0 0 Layout##thisLayout##-tcpRecinputLength{0} 20]
+set tcp.recinput                                !tcpInputBlock{2} [0] + + [tcpInputBlock tcpInputBlock] [tcp.fxin{2} 0] * Scale [0 0 Layout##thisLayout##_tcpRecinputLength{0} 20]
     set tcp.recinput.color                         * textBrightnessMult{0} [235 235 235]                 
-    set tcp.recinput.font                        + Layout##thisLayout##-tcpInputFontSize{0} Scale{0}==1 [0] Scale{0}==1.5 [5] [10]
+    set tcp.recinput.font                        + Layout##thisLayout##_tcpInputFontSize{0} Scale{0}==1 [0] Scale{0}==1.5 [5] [10]
     set tcp.recinput.margin                     + [0 0 0 0 0.5] * Scale [2 0 20]
 
 
@@ -517,16 +517,16 @@ custom tcp.custom.sectionBottom                 ; follows those calculations on 
     set sectionBottomH                            ?sectionBottomMinimise{0} 0 - h + tcp.custom.sectionMain{1} tcp.custom.sectionMain{3}
     hideSection Bottom 4 H thisLayout
     ; hideSection sets bottomSectionH to 0 if params or sends is empty, even if embed is set to bottom (fx will never be empty if there's an embed!). This overrides that...
-    set sectionBottomH                             !actingEmbeddedUiCount{0} . Layout##thisLayout##-tcpFxembedLocation{0}>4 Layout##thisLayout##-tcpFxembedLocation{0}<7 ?sectionBottomMinimise{0} 0 - h + tcp.custom.sectionMain{1} tcp.custom.sectionMain{3}
-    
+    set sectionBottomH                             !actingEmbeddedUiCount{0} . Layout##thisLayout##_tcpFxembedLocation{0}>4 Layout##thisLayout##_tcpFxembedLocation{0}<7 ?sectionBottomMinimise{0} 0 - h + tcp.custom.sectionMain{1} tcp.custom.sectionMain{3}
+
     ;hideSection sets bottomSectionH to 0 if inserts and sends are set to bottom and inserts are empty. This overrides that...
     set sectionBottomH                            !actingSendCount{0} . ?actingFxCount{0} . \
-                                                Layout##thisLayout##-tcpFxLocation{0}==4 Layout##thisLayout##-tcpSendLocation{0}==5 ?sectionBottomMinimise{0} 0 - h + tcp.custom.sectionMain{1} tcp.custom.sectionMain{3} . .
-    
+                                                Layout##thisLayout##_tcpFxLocation{0}==4 Layout##thisLayout##_tcpSendLocation{0}==5 ?sectionBottomMinimise{0} 0 - h + tcp.custom.sectionMain{1} tcp.custom.sectionMain{3} . .
+
     ; if embed is set to bottom (section 5 or 6), and embed is empty, then bottomDiv will be 1 too big
-    set thisTcpSectionBottomDiv                    Layout##thisLayout##-tcpSectionBottomDiv{0}
-    set thisTcpSectionBottomDiv                    ?actingEmbeddedUiCount{0} . Layout##thisLayout##-tcpFxembedLocation{0}>4    Layout##thisLayout##-tcpFxembedLocation{0}<7 - Layout##thisLayout##-tcpSectionBottomDiv{0} 1 . .    
-    
+    set thisTcpSectionBottomDiv                    Layout##thisLayout##_tcpSectionBottomDiv{0}
+    set thisTcpSectionBottomDiv                    ?actingEmbeddedUiCount{0} . Layout##thisLayout##_tcpFxembedLocation{0}>4    Layout##thisLayout##_tcpFxembedLocation{0}<7 - Layout##thisLayout##_tcpSectionBottomDiv{0} 1 . .    
+
     set tcp.custom.sectionBottom                 + + [0 tcp.custom.sectionMain] [tcp.custom.sectionMain tcp.custom.sectionMain{3} tcp.custom.sectionMain sectionBottomH{0}] * Scale [0 sectionMargin{0}]
     custom tcp.custom.sectionBottom1            
     set tcp.custom.sectionBottom1                / tcp.custom.sectionBottom [1 1 thisTcpSectionBottomDiv{0} 1]
@@ -538,7 +538,7 @@ custom tcp.custom.sectionBottom                 ; follows those calculations on 
     set tcp.custom.sectionBottom3                thisTcpSectionBottomDiv{0}<3 [0] + + + [tcp.custom.sectionBottom1 tcp.custom.sectionBottom1 0 tcp.custom.sectionBottom2] \
                                                     [tcp.custom.sectionBottom1{2}] [tcp.custom.sectionBottom2{2}] / [0 0 tcp.custom.sectionBottom] thisTcpSectionBottomDiv{0}
     set tcp.custom.sectionBottom3.color         ?visSections [0 0 0 0 100 255 150 150] ?sectionBottomNotEmpty{0} [0 0 0 0 38 38 38 255] emptyTcpSecColor
-        
+
     set tcpSectionBottom1Margin                    + tcp.custom.sectionBottom1 * * Scale sectionMargin{0} [1 1 -2 -2]
     set tcpSectionBottom2Margin                    + tcp.custom.sectionBottom2 * * Scale sectionMargin{0} [0 1 0 -2]
     set tcpSectionBottom3Margin                    + tcp.custom.sectionBottom3 * * Scale sectionMargin{0} [0 1 -1 -2]
@@ -555,31 +555,31 @@ custom tcp.custom.colourBox
 custom tcp.custom.tcpBgBox
     set tcp.custom.tcpBgBox                     [0 0 w h] 
     set tcp.custom.tcpBgBox.color                 [0 0 0 0 tcpBgColR tcpBgColG tcpBgColB 255]
-    
+
 ;-- POPULATE SECTIONS --    
-    
-assignLoc tcp.fxparm Layout##thisLayout##-tcpFxparmLocation
+
+assignLoc tcp.fxparm Layout##thisLayout##_tcpFxparmLocation
     set tcp.fxparm.margin                         * Scale [3 0 4 0 0 0 0 4]
     set tcpFxparmMaxWidth                        tcpFxparmMaxWidth{0}>tcp.fxparm{2} tcp.fxparm{2}
     set tcp.fxparm.font                         + * Scale [0 24 tcpFxparmMinWidth{0} tcpFxparmMaxWidth{0}] Scale{0}==1 [1] Scale{0}==1.5 [6] [11] 
         ; set tcp.fxparm.font                     + [0 0 0 0 1] ; The fifth parameter specifies line spacing adjustment
-    set tcp.fxparm.visflags                        [1 Layout##thisLayout##-tcpFxparmVisflag1 Layout##thisLayout##-tcpFxparmVisflag2]
+    set tcp.fxparm.visflags                        [1 Layout##thisLayout##_tcpFxparmVisflag1 Layout##thisLayout##_tcpFxparmVisflag2]
 
-assignLoc tcp.fxlist Layout##thisLayout##-tcpFxLocation
+assignLoc tcp.fxlist Layout##thisLayout##_tcpFxLocation
     set tcp.fxlist                                !tcp_fxlist_enabled{0} [0] . ; if disabled in options
     set tcp.fxlist.font                         + * Scale [0 18 tcpFxMinWidth{0} tcpFxMaxWidth{0}] + [1] Scale{0}==1 [0] Scale{0}==1.5 [5] [10]
     set tcp.fxlist.margin                        + * Scale [3 0 4 6 0 0 20 sectionMargin{0}] [0 0 0 0 0.5]
 
-assignLoc tcp.sendlist Layout##thisLayout##-tcpSendLocation
+assignLoc tcp.sendlist Layout##thisLayout##_tcpSendLocation
 set tcp.sendlist                                !tcp_sends_enabled{0} [0] . ; if disabled in options
     set tcp.sendlist.margin                     * Scale [2 0 0 0 0 0 0 sectionMargin{0}]
     set tcp.sendlist.font                         + * Scale [0 20 tcpSendMinWidth{0} tcpSendMaxWidth{0}] + [1] Scale{0}==1 [0] Scale{0}==1.5 [5] [10]
 
-assignLoc tcp.fxembed Layout##thisLayout##-tcpFxembedLocation    
+assignLoc tcp.fxembed Layout##thisLayout##_tcpFxembedLocation    
     set tcp.fxembedheader.color                    [200 200 200]
 
 set minTcpW                                        + + + \
-                                                  * Scale + + thisTcpfolderIndent tcp.custom.sectionNumber{2} Layout##thisLayout##-tcpMeterWidth{0} \
+                                                  * Scale + + thisTcpfolderIndent tcp.custom.sectionNumber{2} Layout##thisLayout##_tcpMeterWidth{0} \
                                                   longestTcpBlock{0} \
                                                   + + tcp.custom.sectionLeft1{2} tcp.custom.sectionLeft2{2} tcp.custom.sectionLeft3{2} \
                                                   + + tcp.custom.sectionRight1{2} tcp.custom.sectionRight2{2} tcp.custom.sectionRight3{2} 
@@ -589,40 +589,40 @@ endMacro
 
 
 
-define_parameter LayoutA-tcpFxparmLocation                 'Layout A - FX Parameters Section' 4 0 9
-define_parameter LayoutA-tcpSendLocation                 'Layout A - Send List Section' 0 0 9
-define_parameter LayoutA-tcpFxLocation                     'Layout A - FX List Section' 7 0 9
-define_parameter LayoutA-tcpFxembedLocation             'Layout A - Embedded FX Section' 5 0 9
-define_parameter LayoutA-tcpFxparmPin                     'Layout A - FX Parameters Pin' 0 0 1
-define_parameter LayoutA-tcpSendPin                     'Layout A - Send List Pin' 0 0 1
-define_parameter LayoutA-tcpFxPin                         'Layout A - FX List Pin' 0 0 1
-define_parameter LayoutA-tcpFxembedPin                     'Layout A - Embedded FX Pin' 0 0 1
-define_parameter LayoutA-tcpFxparmVisflag1                 'Layout A - tcpFxparmVisflag1' -1 -1 1
-define_parameter LayoutA-tcpFxparmVisflag2                 'Layout A - tcpFxparmVisflag2' 1 -1 1
-define_parameter LayoutA-tcpSectionBottomDiv             'Layout A - tcpSectionBottomDiv' 2 1 3
-define_parameter LayoutA-sectionLeftW                     'Layout A - Left Section Width' 75 46 400
-define_parameter LayoutA-sectionRightW                     'Layout A - Right Section Width' 75 46 400
-define_parameter LayoutA-tcpLabelLength                 'Layout A - TCP Label Length' 120 40 500
-define_parameter LayoutA-tcpLabelSize                     'Layout A - TCP Label Font Size' 4 1 5
-define_parameter LayoutA-tcpVolumeLength                 'Layout A - TCP Volume Length' 40 40 300
-define_parameter LayoutA-tcpInputFontSize                 'Layout A - TCP Input Font Size' 1 1 5
-define_parameter LayoutA-tcpRecinputLength                 'Layout A - TCP Input Length' 100 40 400
-define_parameter LayoutA-tcpMeterWidth                     'Layout A - TCP Meter Width' 20 10 300
-define_parameter LayoutA-tcpMeterBorder                 'Layout A - TCP Meter Border' 2 0 8
-define_parameter LayoutA-useInfoBlock                     'Layout A - TCP use InfoBlock' 0 0 1
+define_parameter LayoutA_tcpFxparmLocation                 'Layout A - FX Parameters Section' 4 0 9
+define_parameter LayoutA_tcpSendLocation                 'Layout A - Send List Section' 0 0 9
+define_parameter LayoutA_tcpFxLocation                     'Layout A - FX List Section' 7 0 9
+define_parameter LayoutA_tcpFxembedLocation             'Layout A - Embedded FX Section' 5 0 9
+define_parameter LayoutA_tcpFxparmPin                     'Layout A - FX Parameters Pin' 0 0 1
+define_parameter LayoutA_tcpSendPin                     'Layout A - Send List Pin' 0 0 1
+define_parameter LayoutA_tcpFxPin                         'Layout A - FX List Pin' 0 0 1
+define_parameter LayoutA_tcpFxembedPin                     'Layout A - Embedded FX Pin' 0 0 1
+define_parameter LayoutA_tcpFxparmVisflag1                 'Layout A - tcpFxparmVisflag1' -1 -1 1
+define_parameter LayoutA_tcpFxparmVisflag2                 'Layout A - tcpFxparmVisflag2' 1 -1 1
+define_parameter LayoutA_tcpSectionBottomDiv             'Layout A - tcpSectionBottomDiv' 2 1 3
+define_parameter LayoutA_sectionLeftW                     'Layout A - Left Section Width' 75 46 400
+define_parameter LayoutA_sectionRightW                     'Layout A - Right Section Width' 75 46 400
+define_parameter LayoutA_tcpLabelLength                 'Layout A - TCP Label Length' 120 40 500
+define_parameter LayoutA_tcpLabelSize                     'Layout A - TCP Label Font Size' 4 1 5
+define_parameter LayoutA_tcpVolumeLength                 'Layout A - TCP Volume Length' 40 40 300
+define_parameter LayoutA_tcpInputFontSize                 'Layout A - TCP Input Font Size' 1 1 5
+define_parameter LayoutA_tcpRecinputLength                 'Layout A - TCP Input Length' 100 40 400
+define_parameter LayoutA_tcpMeterWidth                     'Layout A - TCP Meter Width' 20 10 300
+define_parameter LayoutA_tcpMeterBorder                 'Layout A - TCP Meter Border' 2 0 8
+define_parameter LayoutA_useInfoBlock                     'Layout A - TCP use InfoBlock' 0 0 1
 
-define_parameter LayoutA-hideTcpLabelBlock                 'Layout A - Visflag Track Label Block' 0 0 15
-define_parameter LayoutA-hideTcpRecmon                     'Layout A - Visflag Track Recmon' 4 0 15
-define_parameter LayoutA-hideTcpMSBlock                    'Layout A - Visflag Track MS Block' 0 0 15        
-define_parameter LayoutA-hideTcpIo                         'Layout A - Visflag Track Io' 1 0 15    
-define_parameter LayoutA-hideTcpFxBlock                    'Layout A - Visflag Track Fx Block' 0 0 15    
-define_parameter LayoutA-hideTcpPanBlock                 'Layout A - Visflag Track Pan Block' 1 0 15    
-define_parameter LayoutA-hideTcpRecmode                    'Layout A - Visflag Track Recmode' 4 0 15    
-define_parameter LayoutA-hideTcpInputBlock                'Layout A - Visflag Track Input Block' 4 0 15    
-define_parameter LayoutA-hideTcpEnv                         'Layout A - Visflag Track Env' 0 0 15
-define_parameter LayoutA-hideTcpPhase                     'Layout A - Visflag Track Phase' 1 0 15
-define_parameter LayoutA-hideTcpLabelsValues            'Layout A - Visflag Track Labels and Values' 8 0 15
-define_parameter LayoutA-hideTcpMeterValues                'Layout A - Visflag Track Meter Values' 4 0 15
+define_parameter LayoutA_hideTcpLabelBlock                 'Layout A - Visflag Track Label Block' 0 0 15
+define_parameter LayoutA_hideTcpRecmon                     'Layout A - Visflag Track Recmon' 4 0 15
+define_parameter LayoutA_hideTcpMSBlock                    'Layout A - Visflag Track MS Block' 0 0 15        
+define_parameter LayoutA_hideTcpIo                         'Layout A - Visflag Track Io' 1 0 15    
+define_parameter LayoutA_hideTcpFxBlock                    'Layout A - Visflag Track Fx Block' 0 0 15    
+define_parameter LayoutA_hideTcpPanBlock                 'Layout A - Visflag Track Pan Block' 1 0 15    
+define_parameter LayoutA_hideTcpRecmode                    'Layout A - Visflag Track Recmode' 4 0 15    
+define_parameter LayoutA_hideTcpInputBlock                'Layout A - Visflag Track Input Block' 4 0 15    
+define_parameter LayoutA_hideTcpEnv                         'Layout A - Visflag Track Env' 0 0 15
+define_parameter LayoutA_hideTcpPhase                     'Layout A - Visflag Track Phase' 1 0 15
+define_parameter LayoutA_hideTcpLabelsValues            'Layout A - Visflag Track Labels and Values' 8 0 15
+define_parameter LayoutA_hideTcpMeterValues                'Layout A - Visflag Track Meter Values' 4 0 15
 
 drawTcp A 1
 Layout "A"
@@ -638,40 +638,40 @@ drawTcp A 2
 endLayout
 
 
-define_parameter LayoutB-tcpFxparmLocation                 'Layout B - FX Parameters Section' 4 0 9
-define_parameter LayoutB-tcpSendLocation                 'Layout B - Send List Section' 0 0 9
-define_parameter LayoutB-tcpFxLocation                     'Layout B - FX List Section' 7 0 9
-define_parameter LayoutB-tcpFxembedLocation             'Layout B - Embedded FX Section' 5 0 9
-define_parameter LayoutB-tcpFxparmPin                     'Layout B - FX Parameters Pin' 0 0 1
-define_parameter LayoutB-tcpSendPin                     'Layout B - Send List Pin' 0 0 1
-define_parameter LayoutB-tcpFxPin                         'Layout B - FX List Pin' 0 0 1
-define_parameter LayoutB-tcpFxembedPin                     'Layout B - Embedded FX Pin' 0 0 1
-define_parameter LayoutB-tcpFxparmVisflag1                 'Layout B - tcpFxparmVisflag1' -1 -1 1
-define_parameter LayoutB-tcpFxparmVisflag2                 'Layout B - tcpFxparmVisflag2' 1 -1 1
-define_parameter LayoutB-tcpSectionBottomDiv             'Layout B - tcpSectionBottomDiv' 2 1 3
-define_parameter LayoutB-sectionLeftW                     'Layout B - Left Section Width' 75 46 400
-define_parameter LayoutB-sectionRightW                     'Layout B - Right Section Width' 75 46 400
-define_parameter LayoutB-tcpLabelLength                 'Layout B - TCP Label Length' 100 40 500
-define_parameter LayoutB-tcpLabelSize                     'Layout B - TCP Label Font Size' 4 1 5
-define_parameter LayoutB-tcpVolumeLength                 'Layout B - TCP Volume Length' 40 40 300
-define_parameter LayoutB-tcpInputFontSize                 'Layout B - TCP Input Font Size' 1 1 5
-define_parameter LayoutB-tcpRecinputLength                 'Layout B - TCP Input Length' 100 40 400
-define_parameter LayoutB-tcpMeterWidth                     'Layout B - TCP Meter Width' 20 10 300
-define_parameter LayoutB-tcpMeterBorder                 'Layout B - TCP Meter Border' 2 0 8
-define_parameter LayoutB-useInfoBlock                     'Layout B - TCP use InfoBlock' 0 0 1
+define_parameter LayoutB_tcpFxparmLocation                 'Layout B - FX Parameters Section' 4 0 9
+define_parameter LayoutB_tcpSendLocation                 'Layout B - Send List Section' 0 0 9
+define_parameter LayoutB_tcpFxLocation                     'Layout B - FX List Section' 7 0 9
+define_parameter LayoutB_tcpFxembedLocation             'Layout B - Embedded FX Section' 5 0 9
+define_parameter LayoutB_tcpFxparmPin                     'Layout B - FX Parameters Pin' 0 0 1
+define_parameter LayoutB_tcpSendPin                     'Layout B - Send List Pin' 0 0 1
+define_parameter LayoutB_tcpFxPin                         'Layout B - FX List Pin' 0 0 1
+define_parameter LayoutB_tcpFxembedPin                     'Layout B - Embedded FX Pin' 0 0 1
+define_parameter LayoutB_tcpFxparmVisflag1                 'Layout B - tcpFxparmVisflag1' -1 -1 1
+define_parameter LayoutB_tcpFxparmVisflag2                 'Layout B - tcpFxparmVisflag2' 1 -1 1
+define_parameter LayoutB_tcpSectionBottomDiv             'Layout B - tcpSectionBottomDiv' 2 1 3
+define_parameter LayoutB_sectionLeftW                     'Layout B - Left Section Width' 75 46 400
+define_parameter LayoutB_sectionRightW                     'Layout B - Right Section Width' 75 46 400
+define_parameter LayoutB_tcpLabelLength                 'Layout B - TCP Label Length' 100 40 500
+define_parameter LayoutB_tcpLabelSize                     'Layout B - TCP Label Font Size' 4 1 5
+define_parameter LayoutB_tcpVolumeLength                 'Layout B - TCP Volume Length' 40 40 300
+define_parameter LayoutB_tcpInputFontSize                 'Layout B - TCP Input Font Size' 1 1 5
+define_parameter LayoutB_tcpRecinputLength                 'Layout B - TCP Input Length' 100 40 400
+define_parameter LayoutB_tcpMeterWidth                     'Layout B - TCP Meter Width' 20 10 300
+define_parameter LayoutB_tcpMeterBorder                 'Layout B - TCP Meter Border' 2 0 8
+define_parameter LayoutB_useInfoBlock                     'Layout B - TCP use InfoBlock' 0 0 1
 
-define_parameter LayoutB-hideTcpLabelBlock                 'Layout B - Visflag Track Label Block' 0 0 15
-define_parameter LayoutB-hideTcpRecmon                     'Layout B - Visflag Track Recmon' 0 0 15
-define_parameter LayoutB-hideTcpMSBlock                    'Layout B - Visflag Track MS Block' 0 0 15    
-define_parameter LayoutB-hideTcpIo                         'Layout B - Visflag Track Io' 0 0 15    
-define_parameter LayoutB-hideTcpFxBlock                    'Layout B - Visflag Track Fx Block' 0 0 15    
-define_parameter LayoutB-hideTcpPanBlock                 'Layout B - Visflag Track Pan Block' 0 0 15    
-define_parameter LayoutB-hideTcpRecmode                    'Layout B - Visflag Track Recmode' 0 0 15    
-define_parameter LayoutB-hideTcpInputBlock                'Layout B - Visflag Track Input Block' 0 0 15    
-define_parameter LayoutB-hideTcpEnv                         'Layout B - Visflag Track Env' 0 0 15
-define_parameter LayoutB-hideTcpPhase                     'Layout B - Visflag Track Phase' 0 0 15
-define_parameter LayoutB-hideTcpLabelsValues            'Layout B - Visflag Track Labels and Values' 0 0 15
-define_parameter LayoutB-hideTcpMeterValues                'Layout B - Visflag Track Meter Values' 4 0 15
+define_parameter LayoutB_hideTcpLabelBlock                 'Layout B - Visflag Track Label Block' 0 0 15
+define_parameter LayoutB_hideTcpRecmon                     'Layout B - Visflag Track Recmon' 0 0 15
+define_parameter LayoutB_hideTcpMSBlock                    'Layout B - Visflag Track MS Block' 0 0 15    
+define_parameter LayoutB_hideTcpIo                         'Layout B - Visflag Track Io' 0 0 15    
+define_parameter LayoutB_hideTcpFxBlock                    'Layout B - Visflag Track Fx Block' 0 0 15    
+define_parameter LayoutB_hideTcpPanBlock                 'Layout B - Visflag Track Pan Block' 0 0 15    
+define_parameter LayoutB_hideTcpRecmode                    'Layout B - Visflag Track Recmode' 0 0 15    
+define_parameter LayoutB_hideTcpInputBlock                'Layout B - Visflag Track Input Block' 0 0 15    
+define_parameter LayoutB_hideTcpEnv                         'Layout B - Visflag Track Env' 0 0 15
+define_parameter LayoutB_hideTcpPhase                     'Layout B - Visflag Track Phase' 0 0 15
+define_parameter LayoutB_hideTcpLabelsValues            'Layout B - Visflag Track Labels and Values' 0 0 15
+define_parameter LayoutB_hideTcpMeterValues                'Layout B - Visflag Track Meter Values' 4 0 15
 
 Layout "B"
 drawTcp B 1
@@ -686,40 +686,40 @@ drawTcp B 2
 endLayout
 
 
-define_parameter LayoutC-tcpFxparmLocation                 'Layout C - FX Parameters Section' 4 0 9
-define_parameter LayoutC-tcpSendLocation                 'Layout C - Send List Section' 0 0 9
-define_parameter LayoutC-tcpFxLocation                     'Layout C - FX List Section' 0 0 9
-define_parameter LayoutC-tcpFxembedLocation             'Layout C - Embedded FX Section' 5 0 9
-define_parameter LayoutC-tcpFxparmPin                     'Layout C - FX Parameters Pin' 0 0 1
-define_parameter LayoutC-tcpSendPin                     'Layout C - Send List Pin' 0 0 1
-define_parameter LayoutC-tcpFxPin                         'Layout C - FX List Pin' 0 0 1
-define_parameter LayoutC-tcpFxembedPin                     'Layout C - Embedded FX Pin' 0 0 1
-define_parameter LayoutC-tcpFxparmVisflag1                 'Layout C - tcpFxparmVisflag1' 1 -1 1
-define_parameter LayoutC-tcpFxparmVisflag2                 'Layout C - tcpFxparmVisflag2' 1 -1 1
-define_parameter LayoutC-tcpSectionBottomDiv             'Layout C - tcpSectionBottomDiv' 2 1 3
-define_parameter LayoutC-sectionLeftW                     'Layout C - Left Section Width' 75 46 400
-define_parameter LayoutC-sectionRightW                     'Layout C - Right Section Width' 75 46 400
-define_parameter LayoutC-tcpLabelLength                 'Layout C - TCP Label Length' 140 40 500
-define_parameter LayoutC-tcpLabelSize                     'Layout C - TCP Label Font Size' 4 1 5
-define_parameter LayoutC-tcpVolumeLength                 'Layout C - TCP Volume Length' 140 40 300
-define_parameter LayoutC-tcpInputFontSize                 'Layout C - TCP Input Font Size' 1 1 5
-define_parameter LayoutC-tcpRecinputLength                 'Layout C - TCP Input Length' 140 40 400
-define_parameter LayoutC-tcpMeterWidth                     'Layout C - TCP Meter Width' 100 10 300
-define_parameter LayoutC-tcpMeterBorder                 'Layout C - TCP Meter Border' 2 0 8
-define_parameter LayoutC-useInfoBlock                     'Layout C - TCP use InfoBlock' 0 0 1
+define_parameter LayoutC_tcpFxparmLocation                 'Layout C - FX Parameters Section' 4 0 9
+define_parameter LayoutC_tcpSendLocation                 'Layout C - Send List Section' 0 0 9
+define_parameter LayoutC_tcpFxLocation                     'Layout C - FX List Section' 0 0 9
+define_parameter LayoutC_tcpFxembedLocation             'Layout C - Embedded FX Section' 5 0 9
+define_parameter LayoutC_tcpFxparmPin                     'Layout C - FX Parameters Pin' 0 0 1
+define_parameter LayoutC_tcpSendPin                     'Layout C - Send List Pin' 0 0 1
+define_parameter LayoutC_tcpFxPin                         'Layout C - FX List Pin' 0 0 1
+define_parameter LayoutC_tcpFxembedPin                     'Layout C - Embedded FX Pin' 0 0 1
+define_parameter LayoutC_tcpFxparmVisflag1                 'Layout C - tcpFxparmVisflag1' 1 -1 1
+define_parameter LayoutC_tcpFxparmVisflag2                 'Layout C - tcpFxparmVisflag2' 1 -1 1
+define_parameter LayoutC_tcpSectionBottomDiv             'Layout C - tcpSectionBottomDiv' 2 1 3
+define_parameter LayoutC_sectionLeftW                     'Layout C - Left Section Width' 75 46 400
+define_parameter LayoutC_sectionRightW                     'Layout C - Right Section Width' 75 46 400
+define_parameter LayoutC_tcpLabelLength                 'Layout C - TCP Label Length' 140 40 500
+define_parameter LayoutC_tcpLabelSize                     'Layout C - TCP Label Font Size' 4 1 5
+define_parameter LayoutC_tcpVolumeLength                 'Layout C - TCP Volume Length' 140 40 300
+define_parameter LayoutC_tcpInputFontSize                 'Layout C - TCP Input Font Size' 1 1 5
+define_parameter LayoutC_tcpRecinputLength                 'Layout C - TCP Input Length' 140 40 400
+define_parameter LayoutC_tcpMeterWidth                     'Layout C - TCP Meter Width' 100 10 300
+define_parameter LayoutC_tcpMeterBorder                 'Layout C - TCP Meter Border' 2 0 8
+define_parameter LayoutC_useInfoBlock                     'Layout C - TCP use InfoBlock' 0 0 1
 
-define_parameter LayoutC-hideTcpLabelBlock                 'Layout C - Visflag Track Label Block' 0 0 15
-define_parameter LayoutC-hideTcpRecmon                     'Layout C - Visflag Track Recmon' 4 0 15
-define_parameter LayoutC-hideTcpMSBlock                    'Layout C - Visflag Track MS Block' 0 0 15    
-define_parameter LayoutC-hideTcpIo                         'Layout C - Visflag Track Io' 0 0 15    
-define_parameter LayoutC-hideTcpFxBlock                    'Layout C - Visflag Track Fx Block' 0 0 15    
-define_parameter LayoutC-hideTcpPanBlock                 'Layout C - Visflag Track Pan Block' 1 0 15    
-define_parameter LayoutC-hideTcpRecmode                    'Layout C - Visflag Track Recmode' 4 0 15    
-define_parameter LayoutC-hideTcpInputBlock                'Layout C - Visflag Track Input Block' 0 0 15    
-define_parameter LayoutC-hideTcpEnv                         'Layout C - Visflag Track Env' 1 0 15
-define_parameter LayoutC-hideTcpPhase                     'Layout C - Visflag Track Phase' 1 0 15
-define_parameter LayoutC-hideTcpLabelsValues            'Layout C - Visflag Track Labels and Values' 8 0 15
-define_parameter LayoutC-hideTcpMeterValues                'Layout C - Visflag Track Meter Values' 0 0 15
+define_parameter LayoutC_hideTcpLabelBlock                 'Layout C - Visflag Track Label Block' 0 0 15
+define_parameter LayoutC_hideTcpRecmon                     'Layout C - Visflag Track Recmon' 4 0 15
+define_parameter LayoutC_hideTcpMSBlock                    'Layout C - Visflag Track MS Block' 0 0 15    
+define_parameter LayoutC_hideTcpIo                         'Layout C - Visflag Track Io' 0 0 15    
+define_parameter LayoutC_hideTcpFxBlock                    'Layout C - Visflag Track Fx Block' 0 0 15    
+define_parameter LayoutC_hideTcpPanBlock                 'Layout C - Visflag Track Pan Block' 1 0 15    
+define_parameter LayoutC_hideTcpRecmode                    'Layout C - Visflag Track Recmode' 4 0 15    
+define_parameter LayoutC_hideTcpInputBlock                'Layout C - Visflag Track Input Block' 0 0 15    
+define_parameter LayoutC_hideTcpEnv                         'Layout C - Visflag Track Env' 1 0 15
+define_parameter LayoutC_hideTcpPhase                     'Layout C - Visflag Track Phase' 1 0 15
+define_parameter LayoutC_hideTcpLabelsValues            'Layout C - Visflag Track Labels and Values' 8 0 15
+define_parameter LayoutC_hideTcpMeterValues                'Layout C - Visflag Track Meter Values' 0 0 15
 
 Layout "C"
 drawTcp C 1
@@ -734,8 +734,8 @@ drawTcp C 2
 endLayout
 
 
-#<
-#>------------------------- MASTER TRACK CONTROL PANEL --------------------------------
+;
+;------------------------- MASTER TRACK CONTROL PANEL --------------------------------
 
 
 macro masterFollow this thisW thisH xOffs noSpace
@@ -746,11 +746,11 @@ macro masterFollow this thisW thisH xOffs noSpace
     set thisXMargin * Scale !noSpace{0} xMargin 0
     set thisYMargin * Scale yMargin{0}
     set this + + + [previous previous] [previous{2}] [thisXMargin 0 thisWs{0} thisHs{0}] [xOffs{0}] ; position it at the end of the current row
-    
+
     set sectionRHS + masterTcpSectionMainMargin{0} masterTcpSectionMainMargin{2}
     set thisRHS + this{0} this{2}
     set thisBS + this{1} this{3}
-    
+
 ; if it'll fit in this row, its already there now, use it to possbly set a new biggestY
     set biggestY thisRHS{0}<=sectionRHS{0} thisBS{0}>biggestY{0} thisBS{0} .  
 
@@ -761,20 +761,20 @@ macro masterFollow this thisW thisH xOffs noSpace
     set biggestY thisRHS{0}>sectionRHS{0} + this{1} this{3}
 ; it didn't fit in the row, so it was used to start the next row, so the containing section will now need extra height
     set masterTcpSectionMain thisRHS{0}>sectionRHS{0} + + [0 0 0 this{1}] [masterTcpSectionMain masterTcpSectionMain masterTcpSectionMain this] [0 0 0 masterTcpSectionMainMargin{1}]
-    
+
 ; -- cull if it extends below the height of the panel --    
     set thisBS + this{1} this{3} ; do that again because it might have moved rows
     set this thisBS{0}>h [this this 0 this] !previous{3} [this this 0 0] .   ; cull method is to set width to zero
-    
+
 ; -- cull if it is itself too wide for the section
     set thisWPlusMargin + this{2} * Scale sectionMargin{0}
     set this thisWPlusMargin{0}>masterTcpSectionMain{2} [this this 0 0] .
-    
+
 ; -- cull if previous element is zero height
     set this previous{3}==0 [this this 0 0] .
 
     set previous this
-    
+
 endmacro
 
 define_parameter masterTcpMeterWidth                 'Master TCP Meter Width' 100 10 600
@@ -808,7 +808,7 @@ set master.tcp.meter                                 + + master.tcp.custom.secti
 set masterTcpSectionMain                            + - [0 0 w] [0 0 master.tcp.custom.sectionMeter{2}] * Scale + [0 0 0 20] * 2 [0 0 0 sectionMargin{0}] 
     set masterTcpSectionMain                        trackpinned<2 . + masterTcpSectionMain * Scale [6 0 -6]
     set masterTcpSectionMainMargin                    + masterTcpSectionMain * Scale + [sectionMargin{0} sectionMargin{0}] * -2 [0 0 sectionMargin{0} sectionMargin{0}]
-    
+
 set masterTcpSelectColRatio                     ?track_selected / selectStrength{0} 100 0    
 set masterTcpCol                                + * - 1 masterTcpSelectColRatio \
                                                     [masterTcpBgColR masterTcpBgColG masterTcpBgColB] \
@@ -902,7 +902,7 @@ custom master.tcp.custom.pinnedInfill
 set master.tcp.fxparm                            masterTcpSectionBottomMargin
     set master.tcp.fxparm.margin                 * Scale [3 0 4 0 1 0 0 4]
     set master.tcp.fxparm.font                     + * Scale [0 24 tcpFxparmMinWidth{0} tcpFxparmMaxWidth{0}] + [1] Scale{0}==1 [0] Scale{0}==1.5 [5] [10]
-    
+
 endMacro
 
 drawMasterTcp 1
@@ -917,14 +917,14 @@ endLayout
 Layout "200%_A" "200"
 drawMasterTcp 2
 endLayout    
-    
-    
-    
-#<
-#> -------------------------- ENVELOPE CONTROL PANELS ---------------------------------
+
+
+
+;
+; -------------------------- ENVELOPE CONTROL PANELS ---------------------------------
 
 macro envFollow this thisW thisH xOffs noSpace
-    
+
     set thisWs * Scale thisW
     set thisHs * Scale thisH
     set xOffsS * Scale xOffs
@@ -932,11 +932,11 @@ macro envFollow this thisW thisH xOffs noSpace
     set thisYMargin * Scale yMargin
     set this + + + [previous previous] [previous{2}] [thisXMargin 0 thisWs thisHs] [xOffsS] ; position it at the end of the current row
     set this ?hide_##this{0} + [previous] [previous{2} . 0 .] . ; apply hide by setting w to zero and ignoring both thisXMargin and xOffs
-    
+
     set sectionRHS + envcp.custom.sectionMain{0} envcp.custom.sectionMain{2}
     set thisRHS + this{0} this{2}
     set thisBS + this{1} this{3}
-    
+
 ; if it'll fit in this row, its already there now, use it to possbly set a new biggestY
     set biggestY thisRHS{0}<=sectionRHS{0} thisBS{0}>biggestY{0} thisBS{0} .  
 
@@ -945,7 +945,7 @@ macro envFollow this thisW thisH xOffs noSpace
     set this thisRHS{0}>sectionRHS{0} + [envMargin thisYMargin{0} this this] [0 biggestY{0}]
 ; it didn't fit in the row, so it was used (in previous line) to start the next row, which means it will now be the new biggestY
     set biggestY thisRHS{0}>sectionRHS{0} + this{1} this{3}
-    
+
 ; -- cull if it extends below the height of the panel --    
     set thisBS + this{1} this{3} ; do that again because it might have moved rows
     set this thisBS{0}>h \
@@ -953,17 +953,17 @@ macro envFollow this thisW thisH xOffs noSpace
                     this{1}>thisYMarginPlus10{0} [this this 0 0] . \
                     [this this 0 this] \
                 !previous{3} [this this 0 0] .   ; cull method is to set width to zero
-    
+
 ; -- cull if it is itself too wide for the section
     set thisWPlusMargin + this{2} thisXMargin{0}
     set this thisWPlusMargin{0}>envcp.custom.sectionMain{2} [this this 0 0] .
-    
+
 ; -- cull if previous element is zero height
     set this previous{3}==0 [this this 0 0] .
-    
+
 ; -- this is the new previous    
     set previous this
-    
+
 endmacro
 
 
@@ -997,7 +997,7 @@ set xOffs 0
 set noSpace 0
 set envMargin                                        ?indentEnvcp{0} + tcpfolderBalanceType==2 * Scale tcpFolderBalancer 0 + envcp.custom.sectionMain * Scale sectionMargin{0} * Scale sectionMargin{0} 
 set previous                                        + [envMargin envcp.custom.sectionMain] * Scale [0 0 0 20]
-    
+
 set hide_envcpLabelBlock                            0
 set hide_envcp.fader                                0
 set hide_envcp.value                                ?showEnvValue{0} 0 1
@@ -1005,11 +1005,10 @@ set hide_envcp.mod                                    envcp_type==4 0 1    ; 4 i
 set hide_envcp.learn                                envcp_type==4 0 1
 set hide_envcp.hide                                    0                                            
 
-;reset values for 'envFollow' macro
 set biggestY 0
 set xOffs 0
 set noSpace 0
-                                                        
+
 set thisEnvcpLabelLength                            ?indentEnvcp{0} tcpfolderBalanceType==1 + envcpLabelLength tcpFolderBalancer envcpLabelLength envcpLabelLength
 set envcpFaderLength                                 envcpFaderLength{0}<=40 20 .
 set envcpLabelBlockW                                + + + thisEnvcpLabelLength{0} envcpFaderLength{0}<=40 20 0 20 15 ; 20 is the recarm width, 15 is the bypass width
@@ -1032,7 +1031,7 @@ set envcp.label.margin                                 * Scale [2 0 4 0 0]
 set envFaderXoffset                                    envcpFaderLength{0}<=40 -20 6
 envFollow envcp.fader                                  envcpFaderLength{0} 20 envFaderXoffset{0} 0
     set envcp.fader.fadermode                         envcpFaderLength{0}<=40 [1] [0]
-    
+
 ; Calculate background color color now, for use in text brightness judgement    
 set envSelectColRatio                             ?env_selected / selectStrength{0} 100 0
 set envcpCol                                    + * - 1 envSelectColRatio + \
@@ -1060,7 +1059,7 @@ custom envcp.custom.envcpDiv
 custom envcp.custom.sectionMainBg
     set envcp.custom.sectionMainBg                    [envcp.custom.sectionMain 0 envcp.custom.sectionMain h]
     set envcp.custom.sectionMainBg.color            ?visSections [0 0 0 0 255 50 255 60] [0 0 0 0 envcpCol{0} envcpCol{1} envcpCol{2} 255]
-    
+
 set minEnvcpW                                        + thisTcpfolderIndentS * Scale envcpLabelBlockW
 set envcp.size                                        [. . minEnvcpW]
 
@@ -1079,8 +1078,8 @@ Layout "200%_A" "200"
 drawEnvCP 2
 endLayout
 
-#<
-#>---------------------------------- THE MIXER ----------------------------------------
+;
+;---------------------------------- THE MIXER ----------------------------------------
 
 ;-- GLOABL MCP PARAMS --
 
@@ -1121,10 +1120,10 @@ macro mcpFollow this thisW thisH yOffs noSpace Form
     set thisHs * Scale thisH
     set yOffsS * Scale yOffs
     set thisYMargin * Scale !noSpace{0} 6 0 ; hard coding margin as 6
-    
+
     set this mcpForm{0}==Form{0} + + + [previous previous] [0 previous{3}] [0 thisYMargin{0} thisWs thisHs] [0 yOffsS]
     set this mcpForm{0}==Form{0} ?hide_##this{0} + [previous previous] [0 previous{3} . 0] . ; apply hide by setting h to zero and ignoring both thisYMargin and yOffs
-    
+
     set thisBS    mcpForm{0}==Form{0} + + this{1} this{3} thisYMargin{0}
     set sectionButtonsBS mcpForm{0}==Form{0} + mcp.custom.sectionButtons{1} mcp.custom.sectionButtons{3}
     set this mcpForm{0}==Form{0} thisBS{0}>sectionButtonsBS{0} [. . . 0] . ; cull if extending below buttons section
@@ -1132,7 +1131,7 @@ macro mcpFollow this thisW thisH yOffs noSpace Form
 
     ; -- this is the new previous    
     set previous mcpForm{0}==Form{0} this
-    
+
 endMacro
 
 
@@ -1149,7 +1148,7 @@ macro stackMcpStripProxy index
                         mcpStripFlowLocation##index==9 mcp.env \
                         mcpStripFlowLocation##index==10 mcp.phase \
                         mcpStripFlowLocation##index==11 mcpStripMeterBlock
-                        
+
     set darkBg##index      mcpStripFlowLocation##index==1 1    \
                         mcpStripFlowLocation##index==2 1    \
                         mcpStripFlowLocation##index==3 0    \
@@ -1161,30 +1160,30 @@ macro stackMcpStripProxy index
                         mcpStripFlowLocation##index==9 0     \
                         mcpStripFlowLocation##index==10 0     \
                         mcpStripFlowLocation##index==11 1
-    
+
     set thisHs             * Scale proxy##index{3}
     set thisWs             * Scale proxy##index{2}
     set thisYMargin     * Scale darkBg##index{0}==previousDarkBg{0} 6 12
-    
+
     set proxy##index      + + [sidebarWidth{0}] / - [stripW] [thisWs] 2 - - [0 previous thisWs thisHs] [0 thisHs] [0 thisYMargin] 
-    
+
 ; -- cull if it extends above the height of the panel --    
     set proxy##index     proxy##index{1}<thisYMargin{0} \
                             [proxy##index proxy##index 0 0] \
                             !previous{3} [proxy##index proxy##index 0 0] . ; cull method is to set width and height to zero
-    
+
 ; -- cull if it is itself too tall for the section
     set hMinusIdx         - - h stripSectionBottomH{0} thisYMargin{0}
     set proxy##index     proxy##index{3}>hMinusIdx{0} [proxy##index proxy##index 0 0] . 
-    
+
 ; -- cull if previous element is zero height
     set proxy##index     previous{3}==0 [proxy##index proxy##index 0 0] .
-    
+
 ; -- this is the new previous    
     set previous         proxy##index
     set previousIndex    index
     set previousDarkBg darkBg##index
-    
+
 endmacro
 
 macro attachMcpStripProxy index
@@ -1212,12 +1211,12 @@ clear mcp.*
 
 set thisMcpfolderIndent                        * folderdepth mcpfolderIndentSize
 set hAfterIndent                            - h * Scale thisMcpfolderIndent{0}
-set mcpNchanGrowPx                            tracknch<3 0 * - tracknch 2 ?recarm Layout##thisLayout##-mcpNchanGrowRecarm ?track_selected Layout##thisLayout##-mcpNchanGrowSel Layout##thisLayout##-mcpNchanGrow
-set mcpWidth                                 * Scale + mcpNchanGrowPx{0} ?recarm Layout##thisLayout##-mcpWidthRecarm ?track_selected Layout##thisLayout##-mcpWidthSel Layout##thisLayout##-mcpWidth
+set mcpNchanGrowPx                            tracknch<3 0 * - tracknch 2 ?recarm Layout##thisLayout##_mcpNchanGrowRecarm ?track_selected Layout##thisLayout##_mcpNchanGrowSel Layout##thisLayout##_mcpNchanGrow
+set mcpWidth                                 * Scale + mcpNchanGrowPx{0} ?recarm Layout##thisLayout##_mcpWidthRecarm ?track_selected Layout##thisLayout##_mcpWidthSel Layout##thisLayout##_mcpWidth
 set mcpFormW                                * Scale [52 88]
 set mcpForm                                    mcpWidth{0}<mcpFormW{0} [1] mcpWidth{0}<mcpFormW{1} [2] [3] ; 1=Strip, 2=Intermediate, 3=Normal
-set addSidebar                                ?recarm ?Layout##thisLayout##-mcpSidebarRecarm 1 0 ?track_selected ?Layout##thisLayout##-mcpSidebarSel 1 0 ?Layout##thisLayout##-mcpSidebar 1 0
-set sidebarWidth                            * Scale ?addSidebar{0} Layout##thisLayout##-sidebarWidth 0    
+set addSidebar                                ?recarm ?Layout##thisLayout##_mcpSidebarRecarm 1 0 ?track_selected ?Layout##thisLayout##_mcpSidebarSel 1 0 ?Layout##thisLayout##_mcpSidebar 1 0
+set sidebarWidth                            * Scale ?addSidebar{0} Layout##thisLayout##_sidebarWidth 0    
 
 
 ;-- SECTIONS --
@@ -1233,8 +1232,8 @@ set sectionBottomH                            ?mcpfolderBalanceType{0} maxSectio
 set stripSectionBottomH                        * Scale + 20 * folderdepth mcpfolderIndentSize
 
 ; calculate sectionButtons height
-set mcpIntermediateSectionButtonsH            hAfterIndent{0}<Layout##thisLayout##-mcpInterShowSecButtons{0} 0 * Scale !Layout##thisLayout##-verboseMcp{0} 92 102
-set mcpStripSectionButtonsH                    * Scale + + !Layout##thisLayout##-verboseMcp{0} 120 130 !Layout##thisLayout##-verboseMcp{0} 26 38
+set mcpIntermediateSectionButtonsH            hAfterIndent{0}<Layout##thisLayout##_mcpInterShowSecButtons{0} 0 * Scale !Layout##thisLayout##_verboseMcp{0} 92 102
+set mcpStripSectionButtonsH                    * Scale + + !Layout##thisLayout##_verboseMcp{0} 120 130 !Layout##thisLayout##_verboseMcp{0} 26 38
 
 set centW                                    * 0.5 mcpWidth{0}                                            
 set firstThirdW                                + sidebarWidth * 0.3333 mcpWidth{0}
@@ -1252,7 +1251,7 @@ custom mcp.custom.recmodeBg_h                '' 0 '' 'dropdownBg_h'
 custom mcp.custom.recmodeBg_v                '' 0 '' 'dropdownBg_v'
 
 ; Normal Width
-set mcp.custom.sectionTop                    mcpForm{0}==3 + [sidebarWidth 0 mcpWidth{0}] * Scale hAfterIndent{0}>Layout##thisLayout##-mcpNormalShowSecIn{0} [0 0 0 50] [0]
+set mcp.custom.sectionTop                    mcpForm{0}==3 + [sidebarWidth 0 mcpWidth{0}] * Scale hAfterIndent{0}>Layout##thisLayout##_mcpNormalShowSecIn{0} [0 0 0 50] [0]
 set mcp.custom.recinputBg_v                    mcpForm{0}==3 [0]
 set mcp.custom.recmodeBg_v                    mcpForm{0}==3 [0]
 set mcp.custom.recinputBg_h                    mcpForm{0}==3 !mcp.custom.sectionTop{3} [0] + [mcp.custom.sectionTop] + [0 0 mcpWidth{0}] * Scale [6 6 -12 20] 
@@ -1262,7 +1261,7 @@ set mcp.recmode                                mcp.custom.recmodeBg_h
 set mcp.fxin                                mcpForm{0}==3 !mcp.custom.sectionTop{3} [0] + + [mcp.custom.sectionTop] [mcp.custom.sectionTop{2}] * Scale [-26 30 20 20] 
 
 ; Intermediate Width
-set mcp.custom.sectionTop                    mcpForm{0}==2 + [sidebarWidth 0 mcpWidth{0}] * Scale hAfterIndent{0}>Layout##thisLayout##-mcpInterShowSecIn{0} [0 0 0 72] [0]
+set mcp.custom.sectionTop                    mcpForm{0}==2 + [sidebarWidth 0 mcpWidth{0}] * Scale hAfterIndent{0}>Layout##thisLayout##_mcpInterShowSecIn{0} [0 0 0 72] [0]
 set mcp.custom.recinputBg_h                    mcpForm{0}==2 [0]
 set mcp.custom.recmodeBg_h                    mcpForm{0}==2 [0]
 set mcp.custom.recinputBg_v                    mcpForm{0}==2 mcp.custom.sectionTop{3}==0 [0] + [secondThirdW{0} 0 0 mcp.custom.sectionTop] * Scale [-6 6 20 -6]
@@ -1286,30 +1285,30 @@ set mcpMainSecCol                                + * - 1 selectColRatio + \
                                                     * - 1 customColorRatio [mcpBgColR mcpBgColG mcpBgColB] \
                                                 * selectColRatio [255 255 255] 
 brightnessFromRGB                                 mcpMainSecCol{0} mcpMainSecCol{1} mcpMainSecCol{2} mcpMainSecColBrightness
-                                            
+
 ; Normal Width
-set mcp.custom.sectionPan                     mcpForm{0}==3 + + [sidebarWidth 0 mcpWidth{0}] [0 mcp.custom.sectionTop{3}] hAfterIndent{0}<Layout##thisLayout##-mcpNormalShowSecPan{0} [0] * Scale !Layout##thisLayout##-verboseMcp{0} [0 0 0 30] [0 0 0 46]
+set mcp.custom.sectionPan                     mcpForm{0}==3 + + [sidebarWidth 0 mcpWidth{0}] [0 mcp.custom.sectionTop{3}] hAfterIndent{0}<Layout##thisLayout##_mcpNormalShowSecPan{0} [0] * Scale !Layout##thisLayout##_verboseMcp{0} [0 0 0 30] [0 0 0 46]
 set mcp.custom.sectionPan.color             mcpForm{0}==3 [0 0 0 1 0 0 0 0]
-set mcp.pan.label                            mcpForm{0}==3 mcp.custom.sectionPan{3}==0 [0] !Layout##thisLayout##-verboseMcp{0} [mcp.custom.sectionPan mcp.custom.sectionPan] \
+set mcp.pan.label                            mcpForm{0}==3 mcp.custom.sectionPan{3}==0 [0] !Layout##thisLayout##_verboseMcp{0} [mcp.custom.sectionPan mcp.custom.sectionPan] \
                                                 + [mcp.custom.sectionPan mcp.custom.sectionPan mcp.custom.sectionPan] * Scale [0 0 0 18]
 set mcp.pan.label.margin                    mcpForm{0}==3 * [Scale Scale Scale Scale 1] trackpanmode>=4 [12 2 0 0 0] [6 2 6 0 0.5]
 set mcp.pan.label.color                        mcpForm{0}==3 * textBrightnessMult{0} mcpMainSecColBrightness{0}<150 [220 220 220] [38 38 38]
-set mcpLabelAbsentMargin                    !Layout##thisLayout##-verboseMcp{0} [0 4]
+set mcpLabelAbsentMargin                    !Layout##thisLayout##_verboseMcp{0} [0 4]
 set mcp.pan                                    mcpForm{0}==3 mcp.custom.sectionPan{3}==0 [0] \
                                                 trackpanmode==6  + + * Scale + mcpLabelAbsentMargin [6 0 -12 10] [0 mcp.pan.label{3}] [mcp.pan.label mcp.pan.label mcp.custom.sectionPan] \
                                                 + + [centW mcp.pan.label{3}] [mcp.custom.sectionPan mcp.pan.label] * Scale + mcpLabelAbsentMargin trackpanmode>=4 [-20 0 20 20] [-10 0 20 20]
 set mcp.width                                mcpForm{0}==3 mcp.custom.sectionPan{3}==0 [0] \
                                                 trackpanmode==6 + + * Scale + mcpLabelAbsentMargin [6 10 -12 10] [0 mcp.pan.label{3}] [mcp.pan.label mcp.pan.label mcp.custom.sectionPan] \
                                                 trackpanmode>=4 + [mcp.pan mcp.pan] * Scale [22 0 20 20] [0]
-set mcp.width.label                            mcpForm{0}==3 mcp.custom.sectionPan{3}==0 [0] trackpanmode>=4 !Layout##thisLayout##-verboseMcp{0} [0] \
+set mcp.width.label                            mcpForm{0}==3 mcp.custom.sectionPan{3}==0 [0] trackpanmode>=4 !Layout##thisLayout##_verboseMcp{0} [0] \
                                                 + [mcp.custom.sectionPan mcp.custom.sectionPan mcp.custom.sectionPan] * Scale [0 0 0 18] [0]
 set mcp.width.label.margin                    mcpForm{0}==3 * [Scale Scale Scale Scale 1] [0 2 12 0 1]
 
 ; Intermediate Width
 set mcp.custom.sectionPan                     mcpForm{0}==2 + + [sidebarWidth mcp.custom.sectionTop{3} mcpWidth{0}] [0 mcpIntermediateSectionButtonsH{0}] \
-                                                hAfterIndent{0}<Layout##thisLayout##-mcpInterShowSecPan{0} [0] * Scale !Layout##thisLayout##-verboseMcp{0} [0 0 0 30] [0 0 0 46]
+                                                hAfterIndent{0}<Layout##thisLayout##_mcpInterShowSecPan{0} [0] * Scale !Layout##thisLayout##_verboseMcp{0} [0 0 0 30] [0 0 0 46]
 set mcp.custom.sectionPan.color             mcpForm{0}==2 [0 0 0 1 0 0 0 0]
-set mcp.pan.label                            mcpForm{0}==2 mcp.custom.sectionPan{3}==0 [0] !Layout##thisLayout##-verboseMcp{0} [0 mcp.custom.sectionPan] \
+set mcp.pan.label                            mcpForm{0}==2 mcp.custom.sectionPan{3}==0 [0] !Layout##thisLayout##_verboseMcp{0} [0 mcp.custom.sectionPan] \
                                                 + [mcp.custom.sectionPan mcp.custom.sectionPan mcp.custom.sectionPan] * Scale [0 0 0 20]
 set mcp.pan.label.margin                    mcpForm{0}==2 * [Scale Scale Scale Scale 1] trackpanmode>=4 [4 2 0 0 0] [0 2 0 0 0.5]
 set mcp.pan.label.color                        mcpForm{0}==2 * textBrightnessMult{0} mcpMainSecColBrightness{0}<150 [220 220 220] [38 38 38]
@@ -1319,7 +1318,7 @@ set mcp.pan                                    mcpForm{0}==2 mcp.custom.sectionP
 set mcp.width                                mcpForm{0}==2 mcp.custom.sectionPan{3}==0 [0] \
                                                 trackpanmode==6 + + * Scale + mcpLabelAbsentMargin [6 10 -12 10] [0 mcp.pan.label{3}] [mcp.pan.label mcp.pan.label mcp.custom.sectionPan] \
                                                 trackpanmode>=4 + [mcp.pan mcp.pan] * Scale [22 0 20 20] [0]
-set mcp.width.label                            mcpForm{0}==2 mcp.custom.sectionPan{3}==0 [0] trackpanmode>=4 !Layout##thisLayout##-verboseMcp{0} [0] \
+set mcp.width.label                            mcpForm{0}==2 mcp.custom.sectionPan{3}==0 [0] trackpanmode>=4 !Layout##thisLayout##_verboseMcp{0} [0] \
                                                 + [mcp.custom.sectionPan mcp.custom.sectionPan mcp.custom.sectionPan] * Scale [0 0 0 20] [0]
 set mcp.width.label.margin                    mcpForm{0}==2 * [Scale Scale Scale Scale 1] [0 2 4 0 1]                                        
 
@@ -1331,23 +1330,23 @@ set mcp.width.label.margin                    mcpForm{0}==2 * [Scale Scale Scale
     set mcp.width.fadermode                    trackpanmode==6 [-1] [1]
 
 ;--Button Section--    
-    
+
 custom mcp.custom.sectionButtons
-set mcpIoH                                    ?Layout##thisLayout##-verboseMcp{0} 32 22
-set mcpEnvH                                    ?Layout##thisLayout##-verboseMcp{0} 32 22
+set mcpIoH                                    ?Layout##thisLayout##_verboseMcp{0} 32 22
+set mcpEnvH                                    ?Layout##thisLayout##_verboseMcp{0} 32 22
 
 ; Normal Width
 set mcp.custom.sectionButtons                mcpForm{0}==3 + [sidebarWidth] + [mcpWidth{0} mcp.custom.sectionPan] - + * Scale [-32 0 32] [0 mcp.custom.sectionPan{3} 0 h]    \
                                                 + + [0 0 0 mcp.custom.sectionPan{1}] [0 0 0 mcp.custom.sectionPan{3}] [0 0 0 sectionBottomH{0}]    
-set mcp.custom.sectionButtons.color            mcpForm{0}==3 ?Layout##thisLayout##-mcpNormalDarkButtons{0} [0 0 0 1 38 38 38 255] [0 0 0 1 0 0 0 0]
+set mcp.custom.sectionButtons.color            mcpForm{0}==3 ?Layout##thisLayout##_mcpNormalDarkButtons{0} [0 0 0 1 38 38 38 255] [0 0 0 1 0 0 0 0]
 
 set biggestY                                0
 set hide_mcp.mute                            0
 set hide_mcp.solo                            0
-set hide_mcp.io                                !Layout##thisLayout##-mcpNormalShowRoute{0} 1 0
-set hide_mcp.fxGroup                        !Layout##thisLayout##-mcpNormalShowSecFx{0} 1 0
-set hide_mcp.env                            !Layout##thisLayout##-mcpNormalShowEnv{0} 1 0
-set hide_mcp.phase                            !Layout##thisLayout##-mcpNormalShowPhase{0} 1 0
+set hide_mcp.io                                !Layout##thisLayout##_mcpNormalShowRoute{0} 1 0
+set hide_mcp.fxGroup                        !Layout##thisLayout##_mcpNormalShowSecFx{0} 1 0
+set hide_mcp.env                            !Layout##thisLayout##_mcpNormalShowEnv{0} 1 0
+set hide_mcp.phase                            !Layout##thisLayout##_mcpNormalShowPhase{0} 1 0
 set previous                                mcpForm{0}==3 + [mcp.custom.sectionButtons mcp.custom.sectionButtons] * Scale [6 6 0 0] ; Null object    
 mcpFollow mcp.mute                            20 20 0 1 3
 mcpFollow mcp.solo                            20 20 0 1 3
@@ -1363,10 +1362,10 @@ set mcp.custom.sectionButtons                mcpForm{0}==2 + [sidebarWidth mcp.c
 set mcp.custom.sectionButtons.color            mcpForm{0}==2 [0 0 0 1 0 0 0 0]
 set mcp.mute                                mcpForm{0}==2 mcpIntermediateSectionButtonsH{0}==0 [0] + + [firstThirdW{0}] [0 mcp.custom.sectionButtons] * Scale [-12 6 20 20]
 set mcp.solo                                 mcpForm{0}==2 mcpIntermediateSectionButtonsH{0}==0 [0] + + [mcp.mute mcp.mute] [0 mcp.mute{3}] * Scale [0 0 20 20]
-set mcp.io                                     mcpForm{0}==2 mcpIntermediateSectionButtonsH{0}==0 [0] + + [mcp.solo mcp.solo] [0 mcp.solo{3}] * Scale ?Layout##thisLayout##-verboseMcp{0} [0 6 20 32] [0 6 20 22]
+set mcp.io                                     mcpForm{0}==2 mcpIntermediateSectionButtonsH{0}==0 [0] + + [mcp.solo mcp.solo] [0 mcp.solo{3}] * Scale ?Layout##thisLayout##_verboseMcp{0} [0 6 20 32] [0 6 20 22]
 set mcp.fx                                    mcpForm{0}==2 mcpIntermediateSectionButtonsH{0}==0 [0] + + [secondThirdW{0}] [0 mcp.custom.sectionButtons] * Scale [-6 6 20 20]
 set mcp.fxbyp                                 mcpForm{0}==2 mcpIntermediateSectionButtonsH{0}==0 [0] + + [mcp.fx mcp.fx] [0 mcp.fx{3}] * Scale [0 0 20 16]
-set mcp.env                                 mcpForm{0}==2 mcpIntermediateSectionButtonsH{0}==0 [0] + + [mcp.fxbyp mcp.fxbyp] [0 mcp.fxbyp{3}] * Scale ?Layout##thisLayout##-verboseMcp{0} [0 6 20 32] [0 6 20 22]
+set mcp.env                                 mcpForm{0}==2 mcpIntermediateSectionButtonsH{0}==0 [0] + + [mcp.fxbyp mcp.fxbyp] [0 mcp.fxbyp{3}] * Scale ?Layout##thisLayout##_verboseMcp{0} [0 6 20 32] [0 6 20 22]
 set mcp.phase                                 mcpForm{0}==2 mcpIntermediateSectionButtonsH{0}==0 [0] + + [mcp.env mcp.env] [0 mcp.env{3}] * Scale [0 4 20 16]
 
 ; Strip Width                                mcp.custom.sectionButtons is the volume bg in stackMcpStripProxy
@@ -1379,7 +1378,7 @@ custom mcp.custom.mcpDarkBox
 set mcp.custom.mcpDarkBox                    mcpForm{0}==3 + + [sidebarWidth mcp.custom.sectionPan w h] [0 mcp.custom.sectionPan{3}] \
                                                 * -1 + + [0 0 mcp.custom.sectionButtons sectionBottomH] [0 0 sidebarWidth mcp.custom.sectionPan{1}] [0 0 0 mcp.custom.sectionPan{3}]
 set standardDarkBoxMinH                        - h + + maxSectionBottomH mcp.custom.sectionPan{1} mcp.custom.sectionPan{3}                                                
-set mcp.volume.label                         mcpForm{0}==3 !Layout##thisLayout##-verboseMcp{0} [0] + [mcp.custom.mcpDarkBox mcp.custom.mcpDarkBox mcp.custom.mcpDarkBox] * Scale [0 0 0 20]
+set mcp.volume.label                         mcpForm{0}==3 !Layout##thisLayout##_verboseMcp{0} [0] + [mcp.custom.mcpDarkBox mcp.custom.mcpDarkBox mcp.custom.mcpDarkBox] * Scale [0 0 0 20]
 set mcp.meter                                mcpForm{0}==3 + + * Scale [4 6 -32 -36] [mcp.custom.mcpDarkBox mcp.custom.mcpDarkBox mcp.custom.mcpDarkBox mcp.custom.mcpDarkBox] \
                                                 * [0 1 0 -1] [0 mcp.volume.label{3} 0 mcp.volume.label{3}]
 set mcp.volume                                mcpForm{0}==3 + + [mcp.custom.mcpDarkBox mcp.custom.mcpDarkBox 0 mcp.custom.mcpDarkBox] + [mcp.custom.mcpDarkBox{2}] * Scale [-26 6 25 -36] \
@@ -1392,7 +1391,7 @@ set mcp.recmon                                mcpForm{0}==3 + + + [mcp.meter mcp
 ; Intermediate Width
 set mcp.custom.mcpDarkBox                    mcpForm{0}==2 + + [sidebarWidth mcp.custom.sectionPan mcpWidth{0} h] [0 mcp.custom.sectionPan{3}] \
                                                         * -1 + + [0 0 0 mcp.custom.sectionPan{1}] [0 0 0 mcp.custom.sectionPan{3}] [0 0 0 sectionBottomH]
-set mcp.volume.label                         mcpForm{0}==2 !Layout##thisLayout##-verboseMcp{0} [0] + [mcp.custom.mcpDarkBox mcp.custom.mcpDarkBox mcp.custom.mcpDarkBox] * Scale [0 0 0 20]
+set mcp.volume.label                         mcpForm{0}==2 !Layout##thisLayout##_verboseMcp{0} [0] + [mcp.custom.mcpDarkBox mcp.custom.mcpDarkBox mcp.custom.mcpDarkBox] * Scale [0 0 0 20]
 set mcp.meter                                mcpForm{0}==2 + + * Scale [6 6 -42 -36] [mcp.custom.mcpDarkBox mcp.custom.mcpDarkBox mcp.custom.mcpDarkBox mcp.custom.mcpDarkBox] \
                                                 * [0 1 0 -1] [0 mcp.volume.label{3} 0 mcp.volume.label{3}]
 set mcp.volume                                mcpForm{0}==2 + + [mcp.custom.mcpDarkBox mcp.custom.mcpDarkBox 0 mcp.custom.mcpDarkBox] + [mcp.custom.mcpDarkBox{2}] * Scale [-30 6 24 -36] \
@@ -1409,8 +1408,8 @@ set mcp.volume.label.color                    * textBrightnessMult{0} [150 150 1
       set mcp.volume.label.font                + [1] Scale{0}==1 [0] Scale{0}==1.5 [5] [10]
       set mcp.volume.label.margin           * [Scale Scale Scale Scale 1] [0 6 0 0 0.5]
 set mcp.meter.vu.div                           * Scale [1 1]
-    set mcp.meter.readout.color                !Layout##thisLayout##-mcpMeterReadout{0} [0 0 0 0 0 0 0 0] * textBrightnessMult{0} [100 100 100 255 255 183 171 255]
-    set showMcpMeterVals                    ?recarm ?Layout##thisLayout##-mcpMeterValsRecarm 1 0 ?track_selected ?Layout##thisLayout##-mcpMeterValsSel 1 0 ?Layout##thisLayout##-mcpMeterVals 1 0
+    set mcp.meter.readout.color                !Layout##thisLayout##_mcpMeterReadout{0} [0 0 0 0 0 0 0 0] * textBrightnessMult{0} [100 100 100 255 255 183 171 255]
+    set showMcpMeterVals                    ?recarm ?Layout##thisLayout##_mcpMeterValsRecarm 1 0 ?track_selected ?Layout##thisLayout##_mcpMeterValsSel 1 0 ?Layout##thisLayout##_mcpMeterVals 1 0
     set mcp.meter.scale.color.lit.bottom       !showMcpMeterVals{0} [0 0 0 0 0 0 0 0] [0 0 0 170 0 0 0 0]
     set mcp.meter.scale.color.lit.top          !showMcpMeterVals{0} [0 0 0 0 0 0 0 0] [0 0 0 170 0 0 0 0]
     set mcp.meter.scale.color.unlit.bottom     !showMcpMeterVals{0} [0 0 0 0 0 0 0 0] ?recarm [255 64 0 255 0 0 0 0] + * - textBrightnessMult{0} 1 [0 0 0 100] [255 255 255 60 0 0 0 0]
@@ -1448,7 +1447,7 @@ set mcp.extmixer.mode                        mcpForm{0}==2 ?addSidebar{0} [1] [-
 
 ; Strip Width
 set mcp.custom.sectionBottom                mcpForm{0}==1 - [sidebarWidth h mcpWidth stripSectionBottomH] [0 stripSectionBottomH]
-set mcpStripLabelHeightBal                    + Layout##thisLayout##-mcpStripLabelHeight ?mcpfolderBalanceType{0} * mcpfolderIndentSize - mcp_maxfolderdepth folderdepth 0
+set mcpStripLabelHeightBal                    + Layout##thisLayout##_mcpStripLabelHeight ?mcpfolderBalanceType{0} * mcpfolderIndentSize - mcp_maxfolderdepth folderdepth 0
 set mcp.custom.mcpNameBg                     mcpForm{0}==1 [0] ; in the new strip width, label isn't in bottom section
 set mcp.label                                 mcpForm{0}==1 [0] ; in the new strip width, label isn't in bottom section
 set mcp.label.margin                         mcpForm{0}==1 * [Scale Scale Scale Scale 1] [0 4 0 4 0]
@@ -1459,14 +1458,14 @@ custom mcp.custom.mcpIdxDiv
     front mcp.custom.mcpIdxDiv
 
 set mcp.custom.sidebarBg                    mcpForm{0}==1 ?addSidebar{0} [0 0 sidebarWidth{0} mcp.custom.mcpIdxBg{1}] [0]
-set mcp.extmixer.mode                        mcpForm{0}==1 ?addSidebar{0} [1] ?Layout##thisLayout##-mcpStripHideExtmixer{0} [1] [-1]
+set mcp.extmixer.mode                        mcpForm{0}==1 ?addSidebar{0} [1] ?Layout##thisLayout##_mcpStripHideExtmixer{0} [1] [-1]
 
 
 set mcpStripLabelBlockH                     + 46 mcpStripLabelHeightBal{0} ; 46 is recarm and recmon
-set mcpStripVolumeBlockH                     Layout##thisLayout##-mcpStripVolumeHeight 
+set mcpStripVolumeBlockH                     Layout##thisLayout##_mcpStripVolumeHeight 
 set mcpStripVolKnobH                        / mcpVolKnobH{0} Scale
 set mcpStripVolumeBlockH                    mcpStripVolumeBlockH{0}<=mcpStripVolKnobH{0} 32
-set mcpStripInputBlockH                     + Layout##thisLayout##-mcpStripInputHeight 20
+set mcpStripInputBlockH                     + Layout##thisLayout##_mcpStripInputHeight 20
 set stripW                                     - w sidebarWidth{0} 
 
 set mcpStripLabelBlock                         mcpForm{0}==1 [0 0 24 mcpStripLabelBlockH{0}]
@@ -1474,12 +1473,12 @@ set mcpStripVolumeBlock                        mcpForm{0}==1 [0 0 24 mcpStripVol
 set mcpStripMSBlock                            mcpForm{0}==1 [0 0 20 40]
 set mcp.io                                    mcpForm{0}==1 [0 0 20 mcpIoH{0}]
 set mcpStripFxBlock                            mcpForm{0}==1 [0 0 20 36]
-set mcpStripPanBlock                        mcpForm{0}==1 !Layout##thisLayout##-verboseMcp{0} [0 0 20 52] [0 0 20 82]
+set mcpStripPanBlock                        mcpForm{0}==1 !Layout##thisLayout##_verboseMcp{0} [0 0 20 52] [0 0 20 82]
 set mcp.custom.recmodeBg_v                    mcpForm{0}==1 [0 0 20 42]
 set mcpStripInputBlock                        mcpForm{0}==1 [0 0 20 mcpStripInputBlockH{0}]
 set mcp.env                                 mcpForm{0}==1 [0 0 20 mcpEnvH{0}]
 set mcp.phase                                 mcpForm{0}==1 [0 0 20 16]
-set mcpStripMeterBlock                         mcpForm{0}==1 [0 0 24 Layout##thisLayout##-mcpStripMeterHeight]
+set mcpStripMeterBlock                         mcpForm{0}==1 [0 0 24 Layout##thisLayout##_mcpStripMeterHeight]
 set previous                                 [0 mcp.custom.sectionBottom 0 20] 
 set previousDarkBg                            1
 
@@ -1509,7 +1508,7 @@ attachMcpStripProxy 11
 
 set mcp.meter                                mcpForm{0}==1 + [sidebarWidth{0} mcpStripMeterBlock stripW mcpStripMeterBlock] * [1 2 -2 -4] * Scale 4
 set mcp.fxin                                mcpForm{0}==1 mcpStripInputBlock{3}>0 + [mcpStripInputBlock mcpStripInputBlock] * Scale [0 0 20 20]
-set mcp.custom.recinputBg_v                    mcpForm{0}==1 mcpStripInputBlock{3}>0 + [mcpStripInputBlock mcpStripInputBlock] * Scale [0 20 20 Layout##thisLayout##-mcpStripInputHeight]
+set mcp.custom.recinputBg_v                    mcpForm{0}==1 mcpStripInputBlock{3}>0 + [mcpStripInputBlock mcpStripInputBlock] * Scale [0 20 20 Layout##thisLayout##_mcpStripInputHeight]
 set mcp.recinput                            mcpForm{0}==1 mcpStripInputBlock{3}>0 mcp.custom.recinputBg_v
 set mcp.recmode                                mcpForm{0}==1 mcp.custom.recmodeBg_v
 set mcp.fx                                    mcpForm{0}==1 mcpStripFxBlock{3}>0 + [mcpStripFxBlock mcpStripFxBlock] * Scale [0 0 20 20]
@@ -1521,7 +1520,7 @@ set mcp.custom.sectionButtons.color            mcpForm{0}==1 ?visSections{0} [0 
 set mcp.volume                                mcpForm{0}==1 mcpStripVolumeBlock
 set mcp.volume                                mcpForm{0}==1 mcp.volume{3}<mcpVolKnobH{0} + + [mcpStripVolumeBlock mcpStripVolumeBlock] * 0.5 [mcpStripVolumeBlock{2}] * Scale [-10 6 20 20]
 set mcp.volume                                mcpForm{0}==1 mcpStripVolumeBlock{3}==0 [0]
-set mcp.recarm                                mcpForm{0}==1 mcpStripLabelBlock{3}]==0 [0] + + [mcpStripLabelBlock mcpStripLabelBlock] * Scale [0 -24 24 20] [0 mcpStripLabelBlock{3}]
+set mcp.recarm                                mcpForm{0}==1 mcpStripLabelBlock{3}==0 [0] + + [mcpStripLabelBlock mcpStripLabelBlock] * Scale [0 -24 24 20] [0 mcpStripLabelBlock{3}]
 set mcp.recmon                                mcpForm{0}==1 - - + [mcpStripLabelBlock mcp.recarm] * Scale [4 -20 20 20] [0 thisYMargin{0}]
 set mcp.custom.mcpNameBg                    mcpForm{0}==1 + [sidebarWidth{0} mcpStripLabelBlock stripW mcpStripLabelBlock] * Scale [0 -6 0 12]
 set mcp.label                                mcpForm{0}==1 + [mcpStripLabelBlock mcpStripLabelBlock mcpStripLabelBlock] - * Scale [0 0 0 mcpStripLabelBlockH{0}] [0 0 0 48]
@@ -1531,11 +1530,11 @@ set mcp.mute                                mcpForm{0}==1 mcpStripMSBlock{3}>0 +
 set mcp.solo                                mcpForm{0}==1 mcpStripMSBlock{3}>0 + [mcp.mute mcp.mute] * Scale [0 20 20 20]
 
 set stripMode6yOffs                            * Scale 12    
-set mcp.pan.label                            mcpForm{0}==1 mcpStripPanBlock{3}==0 [0] !Layout##thisLayout##-verboseMcp{0} [0 mcpStripPanBlock] \
+set mcp.pan.label                            mcpForm{0}==1 mcpStripPanBlock{3}==0 [0] !Layout##thisLayout##_verboseMcp{0} [0 mcpStripPanBlock] \
                                                  trackpanmode==6 + + [0 stripMode6yOffs{0}] [sidebarWidth{0} mcpStripPanBlock stripW] * Scale [0 0 0 20] \
                                                  + [sidebarWidth{0} mcpStripPanBlock stripW] * Scale [0 0 0 20] 
-                                            
-                                                
+
+
 set mcp.pan                                    mcpForm{0}==1 mcpStripPanBlock{3}==0 [0] \
                                                  trackpanmode==6  + + + [0 stripMode6yOffs{0}] * Scale + mcpLabelAbsentMargin [0 0 0 10] [0 mcp.pan.label{3}] [sidebarWidth{0} mcpStripPanBlock stripW] \
                                                  + + [0 mcp.pan.label{3}] [mcpStripPanBlock mcp.pan.label] * Scale + mcpLabelAbsentMargin trackpanmode>=4 [0 0 20 20] [0 10 20 20]
@@ -1543,8 +1542,8 @@ set mcp.width                                mcpForm{0}==1 mcpStripPanBlock{3}==
                                                  trackpanmode==6 + + + [0 stripMode6yOffs{0}] * Scale [0 14 0 10] [0 mcp.pan.label{3}] [sidebarWidth{0} mcpStripPanBlock stripW] \
                                                  trackpanmode>=4 + [mcp.pan mcp.pan] * Scale [0 24 20 20] [0]
 set mcp.width.label                            mcpForm{0}==1 mcpStripPanBlock{3}==0 [0] \
-                                                 trackpanmode==6 + [0 stripMode6yOffs{0}] !Layout##thisLayout##-verboseMcp{0} [0] + [sidebarWidth{0} mcpStripPanBlock stripW] * Scale [0 38 0 20] \
-                                                trackpanmode>=4 !Layout##thisLayout##-verboseMcp{0} [0] + + [sidebarWidth{0} mcp.width{1} stripW] * Scale [0 0 0 20] [0 mcp.width{3}]                                                    
+                                                 trackpanmode==6 + [0 stripMode6yOffs{0}] !Layout##thisLayout##_verboseMcp{0} [0] + [sidebarWidth{0} mcpStripPanBlock stripW] * Scale [0 38 0 20] \
+                                                trackpanmode>=4 !Layout##thisLayout##_verboseMcp{0} [0] + + [sidebarWidth{0} mcp.width{1} stripW] * Scale [0 0 0 20] [0 mcp.width{3}]                                                    
 set mcp.width.label.margin                    mcpForm{0}==1 * [Scale Scale Scale Scale 1] [0 2 0 0 0.5]
 set mcp.pan.label.margin                    mcpForm{0}==1 * [Scale Scale Scale Scale 1] [0 2 0 0 0.5]    
 set mcp.pan.label.color                        mcpForm{0}==1 * textBrightnessMult{0} [150 150 150]    
@@ -1556,7 +1555,7 @@ set mcp.recinput.margin                        * Scale mcp.recinput{3}>mcp.recin
 set mcp.width.label.font                    + [1] Scale{0}==1 [0] Scale{0}==1.5 [5] [10]
 set mcp.width.label.color                    mcp.pan.label.color
 set mcp.custom.mcpNameBg.color                 ?selInvertLabels{0} ?track_selected [0 0 0 0 255 255 255 100] [0 0 0 0 38 38 38] [0 0 0 0 38 38 38]
-set mcp.label.font                             + Layout##thisLayout##-mcpLabelSize{0} Scale{0}==1 [0] Scale{0}==1.5 [5] [10]
+set mcp.label.font                             + Layout##thisLayout##_mcpLabelSize{0} Scale{0}==1 [0] Scale{0}==1.5 [5] [10]
 set mcp.label.color                         ?recarm [255 80 100] ?trackcolor_valid ?colorTrackLabels cColorTextOnDark * textBrightnessMult{0} [200 200 200] * textBrightnessMult{0} [200 200 200] 
 set mcp.label.color                         ?selInvertLabels{0} ?track_selected ?recarm [180 0 10] [38 38 38] . .
 set mcp.custom.indentInfill                    mcpForm{0}==1 + [0 mcp.custom.sectionBottom w mcp.custom.sectionBottom] * Scale [0 20] \
@@ -1578,12 +1577,12 @@ set mcp.fxparm.font                         + * Scale + [0 0 0 0 1] [0 24] Scale
     set mcp.fxparm.margin                    * Scale [3 0 4 0 0 0 0 4]                                            
 set mcp.fxlist.font                         + * Scale [1 18 80 80] Scale{0}==1 [0] Scale{0}==1.5 [5] [10]
     set mcp.fxlist.margin                    * [Scale Scale Scale Scale 1 Scale Scale Scale] [3 0 4 6 0.5 0 20 2]
-set mcp.sendlist.font                         + * Scale [1 18 80 80] Scale{0}==1 [0] Scale{0}==1.5 [5] [10]    
-    set mcp.sendlist.margin                 * [Scale Scale Scale Scale 1 Scale Scale Scale] [2 0 0 0 0 0 0 0 2]
+set mcp.sendlist.font                         + * Scale [1 18 80 80] Scale{0}==1 [0] Scale{0}==1.5 [5] [10]
+    set mcp.sendlist.margin                 * [Scale Scale Scale Scale 1 Scale Scale Scale] [2 0 0 0 0 0 0 0]
 front mcp.extmixer mcp.custom.mcp_selectionDot mcp.custom.mcp_selectionDotSel
-    
+
 ;--MCP Size--
-    
+
 set minH                                    mcpForm{0}==3 + + + mcp.custom.sectionTop{3} mcp.custom.sectionPan{3} maxSectionBottomH{0} * Scale 90
 set minH                                    mcpForm{0}==2 + + + + * Scale 100 mcp.custom.sectionTop{3} mcp.custom.sectionPan{3} maxSectionBottomH{0} mcp.custom.sectionButtons{3}
 set minH                                    mcpForm{0}==1 0
@@ -1617,37 +1616,37 @@ endMacro
 
 
 
-define_parameter LayoutA-verboseMcp                 'Layout A - Verbose MCP' 0 0 1
-define_parameter LayoutA-mcpMeterReadout            'Layout A - mcpMeterReadout' 1 0 1
-define_parameter LayoutA-mcpWidth                    'Layout A - Mixer Panel Width' 88 28 140
-define_parameter LayoutA-mcpWidthSel                'Layout A - Selected Mixer Panel Width' 88 28 140
-define_parameter LayoutA-mcpWidthRecarm                'Layout A - Armed Mixer Panel Width' 88 28 140
-define_parameter LayoutA-mcpSidebar                    'Layout A - Mixer Sidebar' 0 0 1
-define_parameter LayoutA-mcpSidebarSel                'Layout A - Selected Mixer Sidebar' 0 0 1
-define_parameter LayoutA-mcpSidebarRecarm            'Layout A - Armed Mixer Sidebar' 0 0 1
-define_parameter LayoutA-sidebarWidth                'Layout A - Sidebar Width' 88 34 300
-define_parameter LayoutA-mcpNchanGrow                'Layout A - Mixer nChan Grow' 2 0 20
-define_parameter LayoutA-mcpNchanGrowSel            'Layout A - Selected Mixer nChan Grow' 2 0 20
-define_parameter LayoutA-mcpNchanGrowRecarm            'Layout A - Armed Mixer nChan Grow' 2 0 20
-define_parameter LayoutA-mcpMeterVals                'Layout A - Mixer Meter Values' 0 0 1
-define_parameter LayoutA-mcpMeterValsSel            'Layout A - Selected Mixer Meter Values' 0 0 1
-define_parameter LayoutA-mcpMeterValsRecarm            'Layout A - Armed Mixer Meter Values' 1 0 1
-define_parameter LayoutA-mcpNormalDarkButtons        'Layout A - Dark Under Buttons' 1 0 1
-define_parameter LayoutA-mcpNormalShowSecIn            'Layout A - mcpNormalShowSecIn' 300 0 500
-define_parameter LayoutA-mcpNormalShowSecPan        'Layout A - mcpNormalShowSecPan' 200 0 500
-define_parameter LayoutA-mcpNormalShowRoute            'Layout A - mcpNormalShowRoute' 1 0 1
-define_parameter LayoutA-mcpNormalShowSecFx            'Layout A - mcpNormalShowSecFx' 1 0 1
-define_parameter LayoutA-mcpNormalShowEnv            'Layout A - mcpNormalShowEnv' 1 0 1
-define_parameter LayoutA-mcpNormalShowPhase            'Layout A - mcpNormalShowPhase' 1 0 1
-define_parameter LayoutA-mcpLabelSize                 'Layout A - MCP Label Font Size' 4 1 5
-define_parameter LayoutA-mcpInterShowSecIn            'Layout A - mcpInterShowSecIn' 320 0 500
-define_parameter LayoutA-mcpInterShowSecButtons        'Layout A - mcpInterShowSecButtons' 280 0 500
-define_parameter LayoutA-mcpInterShowSecPan            'Layout A - mcpInterShowSecPan' 240 0 500
-define_parameter LayoutA-mcpStripLabelHeight        'Layout A - Label Height' 88 20 300
-define_parameter LayoutA-mcpStripInputHeight        'Layout A - Record Input Height' 70 20 140
-define_parameter LayoutA-mcpStripMeterHeight        'Layout A - Meter Height' 40 20 300
-define_parameter LayoutA-mcpStripVolumeHeight        'Layout A - Volume Height' 120 60 300
-define_parameter LayoutA-mcpStripHideExtmixer        'Layout A - Hide non-sidebar ExtMixer' 0 0 1
+define_parameter LayoutA_verboseMcp                 'Layout A - Verbose MCP' 0 0 1
+define_parameter LayoutA_mcpMeterReadout            'Layout A - mcpMeterReadout' 1 0 1
+define_parameter LayoutA_mcpWidth                    'Layout A - Mixer Panel Width' 88 28 140
+define_parameter LayoutA_mcpWidthSel                'Layout A - Selected Mixer Panel Width' 88 28 140
+define_parameter LayoutA_mcpWidthRecarm                'Layout A - Armed Mixer Panel Width' 88 28 140
+define_parameter LayoutA_mcpSidebar                    'Layout A - Mixer Sidebar' 0 0 1
+define_parameter LayoutA_mcpSidebarSel                'Layout A - Selected Mixer Sidebar' 0 0 1
+define_parameter LayoutA_mcpSidebarRecarm            'Layout A - Armed Mixer Sidebar' 0 0 1
+define_parameter LayoutA_sidebarWidth                'Layout A - Sidebar Width' 88 34 300
+define_parameter LayoutA_mcpNchanGrow                'Layout A - Mixer nChan Grow' 2 0 20
+define_parameter LayoutA_mcpNchanGrowSel            'Layout A - Selected Mixer nChan Grow' 2 0 20
+define_parameter LayoutA_mcpNchanGrowRecarm            'Layout A - Armed Mixer nChan Grow' 2 0 20
+define_parameter LayoutA_mcpMeterVals                'Layout A - Mixer Meter Values' 0 0 1
+define_parameter LayoutA_mcpMeterValsSel            'Layout A - Selected Mixer Meter Values' 0 0 1
+define_parameter LayoutA_mcpMeterValsRecarm            'Layout A - Armed Mixer Meter Values' 1 0 1
+define_parameter LayoutA_mcpNormalDarkButtons        'Layout A - Dark Under Buttons' 1 0 1
+define_parameter LayoutA_mcpNormalShowSecIn            'Layout A - mcpNormalShowSecIn' 300 0 500
+define_parameter LayoutA_mcpNormalShowSecPan        'Layout A - mcpNormalShowSecPan' 200 0 500
+define_parameter LayoutA_mcpNormalShowRoute            'Layout A - mcpNormalShowRoute' 1 0 1
+define_parameter LayoutA_mcpNormalShowSecFx            'Layout A - mcpNormalShowSecFx' 1 0 1
+define_parameter LayoutA_mcpNormalShowEnv            'Layout A - mcpNormalShowEnv' 1 0 1
+define_parameter LayoutA_mcpNormalShowPhase            'Layout A - mcpNormalShowPhase' 1 0 1
+define_parameter LayoutA_mcpLabelSize                 'Layout A - MCP Label Font Size' 4 1 5
+define_parameter LayoutA_mcpInterShowSecIn            'Layout A - mcpInterShowSecIn' 320 0 500
+define_parameter LayoutA_mcpInterShowSecButtons        'Layout A - mcpInterShowSecButtons' 280 0 500
+define_parameter LayoutA_mcpInterShowSecPan            'Layout A - mcpInterShowSecPan' 240 0 500
+define_parameter LayoutA_mcpStripLabelHeight        'Layout A - Label Height' 88 20 300
+define_parameter LayoutA_mcpStripInputHeight        'Layout A - Record Input Height' 70 20 140
+define_parameter LayoutA_mcpStripMeterHeight        'Layout A - Meter Height' 40 20 300
+define_parameter LayoutA_mcpStripVolumeHeight        'Layout A - Volume Height' 120 60 300
+define_parameter LayoutA_mcpStripHideExtmixer        'Layout A - Hide non-sidebar ExtMixer' 0 0 1
 
 drawMcp A 1
 Layout "A"
@@ -1663,37 +1662,37 @@ drawMcp A 2
 endLayout
 
 
-define_parameter LayoutB-verboseMcp                 'Layout B - Verbose MCP' 0 0 1
-define_parameter LayoutB-mcpMeterReadout            'Layout B - mcpMeterReadout' 0 0 1
-define_parameter LayoutB-mcpWidth                    'Layout B - Mixer Panel Width' 28 28 140
-define_parameter LayoutB-mcpWidthSel                'Layout B - Selected Mixer Panel Width' 32 28 140
-define_parameter LayoutB-mcpWidthRecarm                'Layout B - Armed Mixer Panel Width' 40 28 140
-define_parameter LayoutB-mcpSidebar                    'Layout B - Mixer Sidebar' 0 0 1
-define_parameter LayoutB-mcpSidebarSel                'Layout B - Selected Mixer Sidebar' 0 0 1
-define_parameter LayoutB-mcpSidebarRecarm            'Layout B - Armed Mixer Sidebar' 0 0 1
-define_parameter LayoutB-sidebarWidth                'Layout B - Sidebar Width' 88 34 300
-define_parameter LayoutB-mcpNchanGrow                'Layout B - Mixer nChan Grow' 0 0 20
-define_parameter LayoutB-mcpNchanGrowSel            'Layout B - Selected Mixer nChan Grow' 0 0 20
-define_parameter LayoutB-mcpNchanGrowRecarm            'Layout B - Armed Mixer nChan Grow' 0 0 20
-define_parameter LayoutB-mcpMeterVals                'Layout B - Mixer Meter Values' 0 0 1
-define_parameter LayoutB-mcpMeterValsSel            'Layout B - Selected Mixer Meter Values' 0 0 1
-define_parameter LayoutB-mcpMeterValsRecarm            'Layout B - Armed Mixer Meter Values' 1 0 1
-define_parameter LayoutB-mcpNormalDarkButtons        'Layout B - Dark Under Buttons' 1 0 1
-define_parameter LayoutB-mcpNormalShowSecIn            'Layout B - mcpNormalShowSecIn' 350 0 500
-define_parameter LayoutB-mcpNormalShowSecPan        'Layout B - mcpNormalShowSecPan' 300 0 500
-define_parameter LayoutB-mcpNormalShowRoute            'Layout B - mcpNormalShowRoute' 1 0 1
-define_parameter LayoutB-mcpNormalShowSecFx            'Layout B - mcpNormalShowSecFx' 1 0 1
-define_parameter LayoutB-mcpNormalShowEnv            'Layout B - mcpNormalShowEnv' 1 0 1
-define_parameter LayoutB-mcpNormalShowPhase            'Layout B - mcpNormalShowPhase' 1 0 1
-define_parameter LayoutB-mcpLabelSize                 'Layout B - MCP Label Font Size' 3 1 5
-define_parameter LayoutB-mcpInterShowSecIn            'Layout B - mcpInterShowSecIn' 350 0 500
-define_parameter LayoutB-mcpInterShowSecButtons        'Layout B - mcpInterShowSecButtons' 380 0 500
-define_parameter LayoutB-mcpInterShowSecPan            'Layout B - mcpInterShowSecPan' 300 0 500
-define_parameter LayoutB-mcpStripLabelHeight        'Layout B - Label Height' 88 0 300
-define_parameter LayoutB-mcpStripInputHeight        'Layout B - Record Input Height' 70 20 140
-define_parameter LayoutB-mcpStripMeterHeight        'Layout B - Meter Height' 20 20 300
-define_parameter LayoutB-mcpStripVolumeHeight        'Layout B - Volume Height' 80 60 300
-define_parameter LayoutB-mcpStripHideExtmixer        'Layout B - Hide non-sidebar ExtMixer' 1 0 1
+define_parameter LayoutB_verboseMcp                 'Layout B - Verbose MCP' 0 0 1
+define_parameter LayoutB_mcpMeterReadout            'Layout B - mcpMeterReadout' 0 0 1
+define_parameter LayoutB_mcpWidth                    'Layout B - Mixer Panel Width' 28 28 140
+define_parameter LayoutB_mcpWidthSel                'Layout B - Selected Mixer Panel Width' 32 28 140
+define_parameter LayoutB_mcpWidthRecarm                'Layout B - Armed Mixer Panel Width' 40 28 140
+define_parameter LayoutB_mcpSidebar                    'Layout B - Mixer Sidebar' 0 0 1
+define_parameter LayoutB_mcpSidebarSel                'Layout B - Selected Mixer Sidebar' 0 0 1
+define_parameter LayoutB_mcpSidebarRecarm            'Layout B - Armed Mixer Sidebar' 0 0 1
+define_parameter LayoutB_sidebarWidth                'Layout B - Sidebar Width' 88 34 300
+define_parameter LayoutB_mcpNchanGrow                'Layout B - Mixer nChan Grow' 0 0 20
+define_parameter LayoutB_mcpNchanGrowSel            'Layout B - Selected Mixer nChan Grow' 0 0 20
+define_parameter LayoutB_mcpNchanGrowRecarm            'Layout B - Armed Mixer nChan Grow' 0 0 20
+define_parameter LayoutB_mcpMeterVals                'Layout B - Mixer Meter Values' 0 0 1
+define_parameter LayoutB_mcpMeterValsSel            'Layout B - Selected Mixer Meter Values' 0 0 1
+define_parameter LayoutB_mcpMeterValsRecarm            'Layout B - Armed Mixer Meter Values' 1 0 1
+define_parameter LayoutB_mcpNormalDarkButtons        'Layout B - Dark Under Buttons' 1 0 1
+define_parameter LayoutB_mcpNormalShowSecIn            'Layout B - mcpNormalShowSecIn' 350 0 500
+define_parameter LayoutB_mcpNormalShowSecPan        'Layout B - mcpNormalShowSecPan' 300 0 500
+define_parameter LayoutB_mcpNormalShowRoute            'Layout B - mcpNormalShowRoute' 1 0 1
+define_parameter LayoutB_mcpNormalShowSecFx            'Layout B - mcpNormalShowSecFx' 1 0 1
+define_parameter LayoutB_mcpNormalShowEnv            'Layout B - mcpNormalShowEnv' 1 0 1
+define_parameter LayoutB_mcpNormalShowPhase            'Layout B - mcpNormalShowPhase' 1 0 1
+define_parameter LayoutB_mcpLabelSize                 'Layout B - MCP Label Font Size' 3 1 5
+define_parameter LayoutB_mcpInterShowSecIn            'Layout B - mcpInterShowSecIn' 350 0 500
+define_parameter LayoutB_mcpInterShowSecButtons        'Layout B - mcpInterShowSecButtons' 380 0 500
+define_parameter LayoutB_mcpInterShowSecPan            'Layout B - mcpInterShowSecPan' 300 0 500
+define_parameter LayoutB_mcpStripLabelHeight        'Layout B - Label Height' 88 0 300
+define_parameter LayoutB_mcpStripInputHeight        'Layout B - Record Input Height' 70 20 140
+define_parameter LayoutB_mcpStripMeterHeight        'Layout B - Meter Height' 20 20 300
+define_parameter LayoutB_mcpStripVolumeHeight        'Layout B - Volume Height' 80 60 300
+define_parameter LayoutB_mcpStripHideExtmixer        'Layout B - Hide non-sidebar ExtMixer' 1 0 1
 
 Layout "B"
 drawMcp B 1
@@ -1708,37 +1707,37 @@ drawMcp B 2
 endLayout
 
 
-define_parameter LayoutC-verboseMcp                 'Layout C - Verbose MCP' 1 0 1
-define_parameter LayoutC-mcpMeterReadout            'Layout C - mcpMeterReadout' 1 0 1
-define_parameter LayoutC-mcpWidth                    'Layout C - Mixer Panel Width' 88 28 140
-define_parameter LayoutC-mcpWidthSel                'Layout C - Selected Mixer Panel Width' 100 28 140
-define_parameter LayoutC-mcpWidthRecarm                'Layout C - Armed Mixer Panel Width' 100 28 140
-define_parameter LayoutC-mcpSidebar                    'Layout C - Mixer Sidebar' 1 0 1
-define_parameter LayoutC-mcpSidebarSel                'Layout C - Selected Mixer Sidebar' 1 0 1
-define_parameter LayoutC-mcpSidebarRecarm            'Layout C - Armed Mixer Sidebar' 1 0 1
-define_parameter LayoutC-sidebarWidth                'Layout C - Sidebar Width' 88 34 300
-define_parameter LayoutC-mcpNchanGrow                'Layout C - Mixer nChan Grow' 2 0 20
-define_parameter LayoutC-mcpNchanGrowSel            'Layout C - Selected Mixer nChan Grow' 2 0 20
-define_parameter LayoutC-mcpNchanGrowRecarm            'Layout C - Armed Mixer nChan Grow' 2 0 20
-define_parameter LayoutC-mcpMeterVals                'Layout C - Mixer Meter Values' 1 0 1
-define_parameter LayoutC-mcpMeterValsSel            'Layout C - Selected Mixer Meter Values' 1 0 1
-define_parameter LayoutC-mcpMeterValsRecarm            'Layout C - Armed Mixer Meter Values' 1 0 1
-define_parameter LayoutC-mcpNormalDarkButtons        'Layout C - Dark Under Buttons' 1 0 1
-define_parameter LayoutC-mcpNormalShowSecIn            'Layout C - mcpNormalShowSecIn' 350 0 500
-define_parameter LayoutC-mcpNormalShowSecPan        'Layout C - mcpNormalShowSecPan' 300 0 500
-define_parameter LayoutC-mcpNormalShowRoute            'Layout C - mcpNormalShowRoute' 1 0 1
-define_parameter LayoutC-mcpNormalShowSecFx            'Layout C - mcpNormalShowSecFx' 1 0 1
-define_parameter LayoutC-mcpNormalShowEnv            'Layout C - mcpNormalShowEnv' 1 0 1
-define_parameter LayoutC-mcpNormalShowPhase            'Layout C - mcpNormalShowPhase' 1 0 1
-define_parameter LayoutC-mcpLabelSize                 'Layout C - MCP Label Font Size' 4 1 5
-define_parameter LayoutC-mcpInterShowSecIn            'Layout C - mcpInterShowSecIn' 350 0 500
-define_parameter LayoutC-mcpInterShowSecButtons        'Layout C - mcpInterShowSecButtons' 380 0 500
-define_parameter LayoutC-mcpInterShowSecPan            'Layout C - mcpInterShowSecPan' 300 0 500
-define_parameter LayoutC-mcpStripLabelHeight        'Layout C - Label Height' 88 0 300
-define_parameter LayoutC-mcpStripInputHeight        'Layout C - Record Input Height' 70 20 140
-define_parameter LayoutC-mcpStripMeterHeight        'Layout C - Meter Height' 40 20 300
-define_parameter LayoutC-mcpStripVolumeHeight        'Layout C - Volume Height' 120 60 300
-define_parameter LayoutC-mcpStripHideExtmixer        'Layout C - Hide non-sidebar ExtMixer' 1 0 1
+define_parameter LayoutC_verboseMcp                 'Layout C - Verbose MCP' 1 0 1
+define_parameter LayoutC_mcpMeterReadout            'Layout C - mcpMeterReadout' 1 0 1
+define_parameter LayoutC_mcpWidth                    'Layout C - Mixer Panel Width' 88 28 140
+define_parameter LayoutC_mcpWidthSel                'Layout C - Selected Mixer Panel Width' 100 28 140
+define_parameter LayoutC_mcpWidthRecarm                'Layout C - Armed Mixer Panel Width' 100 28 140
+define_parameter LayoutC_mcpSidebar                    'Layout C - Mixer Sidebar' 1 0 1
+define_parameter LayoutC_mcpSidebarSel                'Layout C - Selected Mixer Sidebar' 1 0 1
+define_parameter LayoutC_mcpSidebarRecarm            'Layout C - Armed Mixer Sidebar' 1 0 1
+define_parameter LayoutC_sidebarWidth                'Layout C - Sidebar Width' 88 34 300
+define_parameter LayoutC_mcpNchanGrow                'Layout C - Mixer nChan Grow' 2 0 20
+define_parameter LayoutC_mcpNchanGrowSel            'Layout C - Selected Mixer nChan Grow' 2 0 20
+define_parameter LayoutC_mcpNchanGrowRecarm            'Layout C - Armed Mixer nChan Grow' 2 0 20
+define_parameter LayoutC_mcpMeterVals                'Layout C - Mixer Meter Values' 1 0 1
+define_parameter LayoutC_mcpMeterValsSel            'Layout C - Selected Mixer Meter Values' 1 0 1
+define_parameter LayoutC_mcpMeterValsRecarm            'Layout C - Armed Mixer Meter Values' 1 0 1
+define_parameter LayoutC_mcpNormalDarkButtons        'Layout C - Dark Under Buttons' 1 0 1
+define_parameter LayoutC_mcpNormalShowSecIn            'Layout C - mcpNormalShowSecIn' 350 0 500
+define_parameter LayoutC_mcpNormalShowSecPan        'Layout C - mcpNormalShowSecPan' 300 0 500
+define_parameter LayoutC_mcpNormalShowRoute            'Layout C - mcpNormalShowRoute' 1 0 1
+define_parameter LayoutC_mcpNormalShowSecFx            'Layout C - mcpNormalShowSecFx' 1 0 1
+define_parameter LayoutC_mcpNormalShowEnv            'Layout C - mcpNormalShowEnv' 1 0 1
+define_parameter LayoutC_mcpNormalShowPhase            'Layout C - mcpNormalShowPhase' 1 0 1
+define_parameter LayoutC_mcpLabelSize                 'Layout C - MCP Label Font Size' 4 1 5
+define_parameter LayoutC_mcpInterShowSecIn            'Layout C - mcpInterShowSecIn' 350 0 500
+define_parameter LayoutC_mcpInterShowSecButtons        'Layout C - mcpInterShowSecButtons' 380 0 500
+define_parameter LayoutC_mcpInterShowSecPan            'Layout C - mcpInterShowSecPan' 300 0 500
+define_parameter LayoutC_mcpStripLabelHeight        'Layout C - Label Height' 88 0 300
+define_parameter LayoutC_mcpStripInputHeight        'Layout C - Record Input Height' 70 20 140
+define_parameter LayoutC_mcpStripMeterHeight        'Layout C - Meter Height' 40 20 300
+define_parameter LayoutC_mcpStripVolumeHeight        'Layout C - Volume Height' 120 60 300
+define_parameter LayoutC_mcpStripHideExtmixer        'Layout C - Hide non-sidebar ExtMixer' 1 0 1
 
 Layout "C"
 drawMcp C 1
@@ -1753,9 +1752,9 @@ drawMcp C 2
 endLayout
 
 
-#<
+;
 
-#>--------------------------------- MASTER MIXER --------------------------------------
+;--------------------------------- MASTER MIXER --------------------------------------
 
 
 define_parameter masterMcpWidth                        'Master Mixer Panel Width' 132 90 400
@@ -1772,9 +1771,9 @@ macro masterMcpFollow this thisW thisH yOffs noSpace
     set thisHs * Scale thisH
     set yOffsS * Scale yOffs
     set thisYMargin * Scale !noSpace{0} 6 0 ; hard coding margin as 6
-    
+
     set this + + + [previous previous] [0 previous{3}] [0 thisYMargin{0} thisWs thisHs] [0 yOffsS]
-    
+
     set thisBS    + + this{1} this{3} thisYMargin{0}
     set sectionButtonsBS + master.mcp.custom.sectionButtons{1} master.mcp.custom.sectionButtons{3}
 
@@ -1782,7 +1781,7 @@ macro masterMcpFollow this thisW thisH yOffs noSpace
 
     ; -- this is the new previous    
     set previous this
-    
+
 endMacro
 
 macro drawMasterMcp Scale
@@ -1861,7 +1860,7 @@ front master.mcp.custom.masterMcpNameBg    master.mcp.label
 set master.mcp.fxlist.font                             + * Scale [1 18 80 80] Scale{0}==1 [0] Scale{0}==1.5 [5] [10]
     set master.mcp.fxlist.margin                    * [Scale Scale Scale Scale 1 Scale Scale Scale] [3 0 4 6 0.5 0 20 2]
 set master.mcp.sendlist.font                         + * Scale [1 18 80 80] Scale{0}==1 [0] Scale{0}==1.5 [5] [10]    
-    set master.mcp.sendlist.margin                     * [Scale Scale Scale Scale 1 Scale Scale Scale] [2 0 0 0 0 0 0 0 2]
+    set master.mcp.sendlist.margin                     * [Scale Scale Scale Scale 1 Scale Scale Scale] [2 0 0 0 0 0 0 0]
 set master.mcp.fxparm.font                             mcp.fxparm.font
      set master.mcp.fxparm.margin                    mcp.fxparm.margin
 
@@ -1891,12 +1890,12 @@ Layout "200%_A" "200"
 drawMasterMcp 2
 endLayout
 
-#<
+;
 
-#>---------------------------------- TRANSPORT ----------------------------------------
+;---------------------------------- TRANSPORT ----------------------------------------
 
 macro transFollow this thisW thisH
-    
+
     set thisWs                                * Scale thisW
     set thisHs                                * Scale thisH
     set this                                 - - [previous previous thisWs thisHs] [transMargin] [thisWs]  ; position it to the left of the current row
@@ -1909,14 +1908,14 @@ macro transFollow this thisW thisH
 ; -- cull if it extends below the height of the panel --    
     set thisBS                                 + this{1} this{3}
     set this                                 thisBS{0}>h [this this 0 this] !previous{3} [this this 0 0] .   ; cull method is to set width to zero
- 
+
 ; -- cull if it is itself too wide for the section
     set thisWPlusMargin                     + this{2} * Scale transMargin
     set this                                 thisWPlusMargin{0}>trans.custom.sectionRight{2} [this this 0 0] .
-    
+
 ; -- this is the new previous    
     set previous                             this
-    
+
 endmacro
 
 define_parameter transBgColR                 'Transport background colour' 51 0 255
@@ -1979,7 +1978,7 @@ custom trans.custom.sectionBpm                '' 0 '' 'transSectionBg'
 custom trans.custom.sectionSig                '' 0 '' 'transSectionBg'
 custom trans.custom.sectionSel                '' 0 '' 'transSectionBg'
 
-    set transRateFaderWidth                    transRateFaderWidth{0}=100 38
+    set transRateFaderWidth                    transRateFaderWidth{0}==100 38
     set transSectionRateW                    + transRateFaderWidth{0} transRateFaderWidth{0}>100 0 60
     set sectionRightW                        - w + + trans.custom.sectionButtons{2} trans.custom.sectionStatus{2} * Scale + transMargin transMargin
     set transDoubleH                        * Scale + 72 transMargin
@@ -1991,7 +1990,7 @@ custom trans.custom.sectionSel                '' 0 '' 'transSectionBg'
 
 set previous                                 + [w trans.custom.sectionRight] * Scale [0 0 0 36]
 
-set hide_trans.custom.sectionRate             !trans_flags&2 1 0
+set hide_trans.custom.sectionRate             trans_flags&2 1 0
 transFollow trans.custom.sectionRate         transSectionRateW{0} 36
     set trans.custom.sectionRate.color        ?visSections [0 0 0 0 100 255 100 80] [0 0 0 1 0 0 0 0]
     set trans.rate.fader                     !trans.custom.sectionRate{2} [0] + [trans.custom.sectionRate trans.custom.sectionRate] \
@@ -2000,7 +1999,7 @@ transFollow trans.custom.sectionRate         transSectionRateW{0} 36
     set trans.custom.rateFaderBg            transRateFaderWidth{0}>100 trans.rate.fader [0]
     set trans.rate.fader.fadermode             transRateFaderWidth{0}>100 [0] [1]
     set trans.rate                            !trans.custom.sectionRate{2} [0] transRateFaderWidth{0}>100 + + [trans.custom.sectionRate trans.custom.sectionRate] * Scale [-40 2 80 16] * 0.5 [trans.custom.sectionRate{2}] \
-                                                + + [trans.rate.fader trans.rate.fader] * Scale [0 0 60 36] [trans.rate.fader{2}}]
+                                                + + [trans.rate.fader trans.rate.fader] * Scale [0 0 60 36] [trans.rate.fader{2}]
     set trans.rate.margin                     [0 0 0 0 0]
     set trans.rate.font                        + [2] Scale{0}==1 [0] Scale{0}==1.5 [5] [10]
     set trans.rate.color                     * textBrightnessMult{0} [160 160 160] 
@@ -2020,8 +2019,8 @@ transFollow trans.custom.sectionBpm            78 36
     set trans.bpm.edit.color                 trans.bpm.tap.color 
     set trans.bpm.edit.margin                 + * Scale [0 0 0 6] [0 0 0 0 0.5]
     set trans.timebase                        trans.custom.sectionBpm{w}<1 [0] + + [trans.custom.sectionBpm trans.custom.sectionBpm] [trans.bpm.tap{2}] * Scale [0 0 16 36]
-    
-set hide_trans.custom.sectionSig             !trans_flags&4 1 0
+
+set hide_trans.custom.sectionSig             trans_flags&4 1 0
 transFollow trans.custom.sectionSig            40 36
     set trans.custom.sectionSig.color        ?visSections [0 0 0 0 255 100 100 150] [0 0 0 1 0 0 0 0]
     set trans.curtimesig                     trans.custom.sectionSig
@@ -2040,8 +2039,8 @@ set trans.custom.bg                            [0 0 w h]
 set trans.custom.bg.color                    [0 0 0 0 transBgColR transBgColG transBgColB 255]
 
 endMacro
-    
-    
+
+
 drawTrans 1
 Layout "A"
 drawTrans 1
@@ -2054,10 +2053,10 @@ endLayout
 Layout "200%_A" "200"
 drawTrans 2
 endLayout
-    
 
-#<    
-#>------------------------------- DPI TRANSLATION -------------------------------------
+
+;    
+;------------------------------- DPI TRANSLATION -------------------------------------
 
 ; ------ DUMMY LAYOUTS ---------
 

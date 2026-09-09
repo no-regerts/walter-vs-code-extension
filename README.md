@@ -57,7 +57,6 @@ Provides full feature support for WALTER language.
 - **Macros (`macro ... endmacro`) are not fully supported yet:**
   - Implementing full macro support will take some time. If the highlighting of false errors inside macros annoys you, you can disable the parser. To do so, add `"WALTER.enableParser": false` to your `settings.json`.
   - For now, all `##` inclusions are treated as ordinary identifiers.
-  - Only identifiers are allowed as formal macro parameters.
 - **Using the `def` command is prohibited** because of the ambiguity it introduces when reading source code.
 - **Since expressions like `?var1<var2 ...` and `!val1&val2 ...` are not documented by the developers, such expressions are not allowed.**
   - Instead of `!val1&val2 branch1 branch2` use `val1&val2 branch2 branch1`.

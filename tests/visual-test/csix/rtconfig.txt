@@ -508,7 +508,7 @@ macro drawTcp scale
                                                 + + [this_tcp_indent] [folder_sec] * scale h<tcp_folder_min{0} [0 0 10 19] [0 0 18 19]
 	set tcp.folder                  			!tcp_indent_hides{0} ?supercollapsed{0} [0] \
                                                 + [this_tcp_indent] * [1 scale scale scale 1 1 1 1] [folder_sec 86 18 14 0 1 0 1]
-    set tcp.folder                              h<tcp_folder_min{0} !folderstate{0}<0 [0]
+    set tcp.folder                              h<tcp_folder_min{0} folderstate{0}<0 [0] [0] [0]
     set tcp.trackidx                            + + [0 0 this_tcp_indent] [folder_sec 0 0 0 0 0 0 1] * scale !supercollapsed{0} [0 0 18 100] [0 0 18 140]
     set tcp_idx_margin                          - / h 2 * scale 16
     set tcp.trackidx.margin                     + + [this_tcp_indent] + [0 tcp_idx_margin 0 tcp_idx_margin 0.5] \

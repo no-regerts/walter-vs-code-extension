@@ -6,6 +6,7 @@
 // set scalar 20
 // set trans.play [ -scalar . . .] // сдвинет кнопку на значение идентификатора '-scalar', а не 'scalar'.
 
+const nonSpaceRegex = /[a-z0-9_+\-*/\\@&!?<>='"`:.,(){}\[\]]+/i;
 const spaceRegex = /[^a-z0-9_+\-*/\\@&!?<>='"`;:.,(){}\[\]\r\n]+/i;
 
 function repeatUpTo(max, rule) {
@@ -46,11 +47,12 @@ module.exports = grammar({
     [$.expression, $.negativeConditional],
     [$.expression, $.relationalConditional],
     [$.expression, $.bitwiseConditional],
-    [$.space, $.trailingSpaces],
     [$.defineParameterCommand],
     [$.expression, $.scalarValue],
     [$.property],
     [$.scalarValue],
+    [$.defCommand],
+    [$.expression, $.normalConditional]
   ],
 
   word: $ => $.identifier,
@@ -63,9 +65,8 @@ module.exports = grammar({
       // eof(), // TODO: детектировать конец файла.
     ),
 
-    // anyChar: $ => /[^\s\S]/,
-
-    space: $ => spaceRegex,
+    anyWord: $ => nonSpaceRegex,
+    space: $ => token(prec(1, spaceRegex)),
     trailingSpaces: $ => spaceRegex,
     newLine: $ => /\r?\n/,
 
@@ -73,10 +74,9 @@ module.exports = grammar({
 
     number: $ => seq(optional($.minus), /\d+(?:\.\d+)?/),
     minus: $ => '-', // Используется, чтобы устранить неоднозначность между отрицательными числами и идентификаторами, начинающимися на '-'.
-
     hexColor: $ => choice(
       /[0-9a-f]{8}/i,
-      /[0-9a-f]{6}/i, // TODO: проверить, что 6-значные хексы работают для цветов.
+      /[0-9a-f]{6}/i, // TODO: проверить, что 6-значные хексы работают для цветов, также проверить 4-значные.
     ),
 
     string: $ => choice(
@@ -115,7 +115,7 @@ module.exports = grammar({
         $.clearCommand,
         $.resetCommand,
         $.setCommand,
-        // $.defCommand,
+        $.defCommand,
         $.frontCommand,
         $.defineParameterCommand,
         $.customCommand,
@@ -127,107 +127,54 @@ module.exports = grammar({
       $.newLine,
     )),
 
-    themeConfigStatement: $ => seq(
+    themeConfigStatement: $ => prec(1, seq(
       optional($.space),
-      choice(
-        $.singleNumberConfigStatement,
-        $.doubleNumberConfigStatement,
-        $.quadripleNumberConfigStatement,
-        $.sinleColorConfigStatement,
-        $.tripleColorConfigStatement,
-        $.stringConfigStatement,
-      ),
+      prec(1, choice(
+        seq(token(prec(1, /version/i)), $.space, $.number),
+        seq(token(prec(1, /use_pngs/i)), $.space, choice('0', '1')),
+        seq(token(prec(1, /use_overlays/i)), $.space, choice('0', '1')),
+        seq(token(prec(1, /tinttcp/i)), $.space, $.number), // TODO: пометить как предупреждение, т.к. не стоит отбирать контроль у пользователя.
+        seq(token(prec(1, /peaksedges/i)), $.space, $.number), // TODO: пометить как предупреждение, т.к. не стоит отбирать контроль у пользователя.
+        seq(token(prec(1, /tcp_folderindent/i)), $.space, $.number),
+        seq(token(prec(1, /tcp_heights/i)), $.space, $.number, $.space, $.number, $.space, $.number, $.space, $.number),
+        seq(token(prec(1, /tcp_master_minheight/i)), $.space, $.number),
+        seq(token(prec(1, /tcp_voltext_flags/i)), $.space, $.number, optional(seq($.space, $.number))), // Checked: the last value is optional.
+        seq(token(prec(1, /tcp_master_voltext_flags/i)), $.space, $.number, optional(seq($.space, $.number))), // Checked: the last value is optional.
+        seq(token(prec(1, /mcp_voltext_flags/i)), $.space, $.number, optional(seq($.space, $.number))), // Checked: the last value is optional.
+        seq(token(prec(1, /mcp_master_voltext_flags/i)), $.space, $.number, optional(seq($.space, $.number))), // Checked: the last value is optional.
+        seq(token(prec(1, /tcp_vupeakwidth/i)), $.space, $.number),
+        seq(token(prec(1, /mcp_vupeakheight/i)), $.space, $.number),
+        seq(token(prec(1, /mcp_mastervupeakheight/i)), $.space, $.number),
+        seq(token(prec(1, /tcp_showborders/i)), $.space, choice('0', '1')),
+        seq(token(prec(1, /mcp_showborders/i)), $.space, choice('0', '1')),
+        seq(token(prec(1, /trans_showborders/i)), $.space, choice('0', '1')),
+        seq(token(prec(1, /mcp_altmeterpos/i)), $.space, choice('0', '1')),
+        seq(token(prec(1, /tcp_vol_zeroline/i)), $.space, $.hexColor),
+        seq(token(prec(1, /tcp_pan_zeroline/i)), $.space, $.hexColor),
+        seq(token(prec(1, /tcp_width_zeroline/i)), $.space, $.hexColor),
+        seq(token(prec(1, /mcp_vol_zeroline/i)), $.space, $.hexColor),
+        seq(token(prec(1, /mcp_pan_zeroline/i)), $.space, $.hexColor),
+        seq(token(prec(1, /mcp_width_zeroline/i)), $.space, $.hexColor),
+        seq(token(prec(1, /trans_speed_zeroline/i)), $.space, $.hexColor),
+        seq(token(prec(1, /item_volknobfg/i)), $.space, $.hexColor, $.space, $.hexColor, $.space, $.hexColor),
+        seq(token(prec(1, /envcp_min_height/i)), $.space, $.number),
+        seq(token(prec(1, /mcp_min_height/i)), $.space, $.number),
+        seq(token(prec(1, /no_meter_reclbl/i)), $.space, choice('0', '1')),
+        seq(token(prec(1, /gen_pan_zeroline/i)), $.space, $.hexColor),
+        seq(token(prec(1, /gen_vol_zeroline/i)), $.space, $.hexColor),
+        seq(token(prec(1, /warnings/i)), $.space, choice(token(/all/i), token(/pedantic/i))),
+        seq(token(prec(1, /adjuster_script/i)), $.space, $.string),
+        seq(token(prec(1, /misc_dpi_translate/i)), $.space, $.number, $.space, $.number),
+        seq(token(prec(1, /global_scale/i)), $.space, $.number),
+        seq(token(prec(2, /layout_dpi_translate/i)), $.space, $.string, $.space, $.number, $.space, $.string), // Лексический приоритет должен быть выше, чем у команды layout.
+        seq(token(prec(1, /want_os_type/i)), $.space, choice('0', '1')),
+      )),
       optional($.space),
       optional($.comment),
       $.newLine,
-    ),
-    singleNumberConfigStatement: $ => seq(
-      $.singleNumberConfigKeyword,
-      $.space,
-      $.number,
-    ),
-    singleNumberConfigKeyword: $ => choice(
-      'version',
-      'use_pngs',
-      'use_overlays',
-      'tcp_showborders',
-      'mcp_showborders',
-      'trans_showborders',
-      'tcp_vupeakwidth',
-      'mcp_vupeakheight',
-      'mcp_mastervupeakheight',
-      'mcp_altmeterpos',
-      'tcp_master_minheight',
-      'no_meter_reclbl',
-      'mcp_min_height',
-      'tcp_folderindent',
-      'envcp_min_height',
-      'tinttcp',
-      'peaksedges',
-      'want_os_type',
-    ),
-    doubleNumberConfigStatement: $ => seq(
-      $.doubleNumberConfigKeyword,
-      $.space,
-      $.number,
-      $.space,
-      $.number,
-    ),
-    doubleNumberConfigKeyword: $ => choice(
-      'tcp_voltext_flags',
-      'mcp_voltext_flags',
-      'misc_dpi_translate',
-    ),
-    quadripleNumberConfigStatement: $ => seq(
-      $.quadripleNumberConfigKeyword,
-      $.space,
-      $.number,
-      $.space,
-      $.number,
-      $.space,
-      $.number,
-      $.space,
-      $.number,
-    ),
-    quadripleNumberConfigKeyword: $ => choice(
-      'tcp_heights',
-    ),
-    sinleColorConfigStatement: $ => seq(
-      $.sinleColorConfigKeyword,
-      $.space,
-      $.hexColor,
-    ),
-    sinleColorConfigKeyword: $ => choice(
-      'tcp_vol_zeroline',
-      'tcp_pan_zeroline',
-      'mcp_vol_zeroline',
-      'mcp_pan_zeroline',
-      'trans_speed_zeroline',
-      'gen_vol_zeroline',
-      'gen_pan_zeroline',
-    ),
-    tripleColorConfigStatement: $ => seq(
-      $.tripleColorConfigKeyword,
-      $.space,
-      $.hexColor,
-      $.space,
-      $.hexColor,
-      $.space,
-      $.hexColor,
-    ),
-    tripleColorConfigKeyword: $ => choice(
-      'item_volknobfg',
-    ),
-    stringConfigStatement: $ => seq(
-      $.stringConfigKeyword,
-      $.space,
-      $.string,
-    ),
-    stringConfigKeyword: $ => choice(
-      'adjuster_script',
-    ),
+    )),
 
-    macroCallStatement: $ => prec(0, seq(
+    macroCallStatement: $ => prec(-1, seq(
       optional($.space),
       $.identifier,
       optional(repeat1(seq(
@@ -236,7 +183,8 @@ module.exports = grammar({
           $.identifier,
           $.number,
           $.string,
-          $.property
+          $.property,
+          $.coordinateList,
         ),
         optional($.accessExpression)
       ))),
@@ -249,7 +197,7 @@ module.exports = grammar({
 
     // Checked: принимает только один параметр, т.е. reset trans.* tcp.* - нельзя.
     clearCommand: $ => seq(
-      token(prec(2, /clear/i)),
+      token(prec(1, /clear/i)),
       $.space,
       $.property,
       optional(seq('.', '*')),
@@ -257,28 +205,29 @@ module.exports = grammar({
     
     // Checked: принимает только один параметр, т.е. reset trans.* tcp.* - нельзя.
     resetCommand: $ => seq(
-      token(prec(2, /reset/i)),
+      token(prec(1, /reset/i)),
       $.space,
       $.property,
       optional(seq('.', '*')),
     ),
     
     setCommand: $ => seq(
-      token(prec(2, /set/i)),
+      token(prec(1, /set/i)),
       $.space,
       $.property,
       $.space,
       $.expression,
     ),
 
-    // defCommand: $ => seq(
-    //   token(prec(2, /def/i)),
-    //   $.identifier,
-    //   repeat1($._anyToken), // TODO
-    // ),
+    defCommand: $ => seq(
+      token(prec(1, /def/i)),
+      $.space,
+      $.identifier,
+      repeat1(seq($.space, $.anyWord)),
+    ),
 
     frontCommand: $ => seq(
-      token(prec(2, /front/i)),
+      token(prec(1, /front/i)),
       repeat1(seq($.space, $.property)),
     ),
 
@@ -299,7 +248,7 @@ module.exports = grammar({
 
     // TODO: сделать опциональные токены.
     defineParameterCommand: $ => seq(
-      token(prec(2, /define_parameter/i)),
+      token(prec(1, /define_parameter/i)),
       $.space,
       $.property, // Checked: the documentation says that strings could be used for name too, but for the consistency we allow only identifiers.
       $.space,
@@ -313,7 +262,7 @@ module.exports = grammar({
     ),
     
     customCommand: $ => seq(
-      token(prec(2, /custom/i)),
+      token(prec(1, /custom/i)),
       $.space,
       $.property,
       optional(seq($.space, $.string)),
@@ -323,7 +272,7 @@ module.exports = grammar({
     ),
     
     layoutCommand: $ => seq(
-      token(prec(2, /layout/i)),
+      token(prec(1, /layout/i)),
       $.space,
       $.string,
       optional(seq($.space, $.string)),
@@ -434,19 +383,19 @@ module.exports = grammar({
       $.relationalConditional,
       $.bitwiseConditional,
     ),
-    normalConditional: $ => prec(1, seq(
-      '?',
-      $.scalarValue,
+    normalConditional: $ => seq(
+      token('?'),
+      choice($.scalarValue, $.conditionalExpression), // TODO: ??val isn't working as intended.
       $.space,
       $.expression,
       optional(choice(
         seq($.space, $.expression),
         seq($.space, $.placeholder),
       )),
-    )),
+    ),
     negativeConditional: $ => seq(
       '!',
-      $.scalarValue,
+      choice($.scalarValue, $.conditionalExpression), // TODO: !!val isn't working as intended.
       $.space,
       $.expression,
       optional(choice(

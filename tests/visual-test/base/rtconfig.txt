@@ -4,13 +4,57 @@
 ; Hit 'Ctrl + R' to reload the window after you made some changes.
 ; Note: syntax highlighting is highly dependent on the chosen theme, so make sure to test it on different themes.
 
+    
 
 ;comment
 ; comment
  ;comment
  ; comment
 
-       
+; Потенциальные свойства темы
+; vertfont_topdown 1
+; mcp_send_zeroline
+; transport_showborders 0
+
+version 5
+use_pngs 1
+use_overlays 0
+tinttcp 4
+peaksedges 4
+tcp_folderindent 12
+tcp_heights 4 20 52 72
+tcp_master_minheight 20
+tcp_voltext_flags 4 5
+tcp_master_voltext_flags 5 5
+mcp_voltext_flags 5 5
+mcp_master_voltext_flags 5 5
+tcp_vupeakwidth 2
+mcp_vupeakheight 2
+mcp_mastervupeakheight 4
+tcp_showborders 0
+mcp_showborders 0
+trans_showborders 0
+mcp_altmeterpos 0
+tcp_vol_zeroline 53000000
+tcp_pan_zeroline 53000000
+tcp_width_zeroline 53000000
+mcp_vol_zeroline 53000000
+mcp_pan_zeroline 000000
+mcp_width_zeroline 00000000
+trans_speed_zeroline 000000
+item_volknobfg 99000000 50000000 99000000
+envcp_min_height 20
+mcp_min_height 240
+no_meter_reclbl 1
+gen_pan_zeroline 53000000
+gen_vol_zeroline 53000000
+warnings all
+warnings pedantic
+adjuster_script "123"
+misc_dpi_translate 2 2
+global_scale 1
+layout_dpi_translate "123" 123 "213"
+want_os_type 1
 
 clear mcp.*
   clear mcp.bottom
@@ -36,6 +80,7 @@ set tcp.mute [0 tcp.custom.test{x} 10 10]
 set myvar w<100 [0 0 10 10] w<200 [20 20 10 10] [40 40 10 10]
 set tcp.width.label trackpanmode>=4 tcp.custom.test{x}>0 [tcp.width{w} 1] [0] [0]
 set tcp.fxin !recarm 123 234
+set include_extra !show_side_sends&show_side_fx 0 1
 set tcp.fxin h>164 !recarm [0] [362 21 19 37] [0]
 set tcp.fxin !recarm 123 234
 set tcp.fxin ?recarm 123 234
@@ -43,6 +88,8 @@ set tcp.fxin ?recarm 123 + 234 456
 set tcp.fxin ?recarm 123 - 234 456
 set tcp.fxin ?recarm 123 * 234 456
 set tcp.fxin ?recarm 123 / 234 456
+set tcp.label.margin                    * scale ?hide_tcp.recarm [5 0 1 0] [3 0 1 0] ; layoutProperty являются поставщиками скалярными числами и какое число они дают, первое или соответствующее
+set elem_diff * scale -46@x ; правильная подсветка, добавить в тесты.
 
 set tcp [tcpFolderBalancer] ; проверить на валидность и добавить если так можно
 
@@ -51,48 +98,45 @@ set tcp.custom.sectionLeft1 + + tcpfolderBalanceType==2 * Scale [tcpFolderBalanc
 set tcp.custom.sectionLeft1 ?visSections [0 0 0 0 255 100 100 150] ?sectionLeft1NotEmpty{0} [0 0 0 0 38 38 38 255] emptyTcpSecColor
 set valce vadue>0 + 1 . .
 set tcp_LabelSize_min            scale==2 100 scale==1 90 ; scale - зарезервированное слово
-set include_extra !show_side_sends&show_side_fx 0 1
 ; set tcp_LabelSize   ?tcp   0 . ; Должно ли работать без аксессора?
-; set tcp.label.margin                    * scale ?hide_tcp.recarm [5 0 1 0] [3 0 1 0] ; проверить, являются ли layoutProperty скалярными числами и какое число они дают, первое или соответствующее
-; set mcp.recmode + mcp_column_anchor h>327 [20 33 17 22 0 1 0 1][0] ; Допускается ли склеевать операнды - списки?
-; define_parameter Echolot_FTC 'Echolot_FTC version' 1 ; похоже должен работать только с одним параметром.
-; set mcp.io h>220 ?mcp_wantextmix&7 [0 284 78 24 0 1 0 1] [0 0 78 24 0 0 0 0] [0 0 78 24 0 0 0 0]
-
-; vertfont_topdown 1 ; является ли существующим свойством конфига
 ; then master.tcp.custom.pin      19          0       0       reaper_version<700 ; можно ли передавать строки или выражения в макросы?
 ; then tcp.infoblock  tcp_info_Size   1           0       !show_info 0 ; Проверить, передаются ли операции и условия в макросы как параметры.
-;   set tcp.label.margin                    * scale ?hide_tcp.recarm [5 0 1 0] [3 0 1 0] ; FTC MOD ; сломано, починить
-; set elem_diff * scale -46@x ; правильная подсветка, добавить в тесты.
+; tcp_voltext_flags 12 ; разобраться нах нужно, обязательно ли второе поле и какие значения возможны.
+; Если я явно объявляют скаляр, то могу ли я использовать его без {} в условных выражениях?
+; colorsmart tcp.trackidx.color [24 24 24] "asdf" asdfasdf ; проверить все ли типы можно передавть в макрос.
+set tcp.folder h<0 w>100 0
 
 set mcp.recarm ?1 [0 177 20 20 0 1.0 0 1.0]
 
-set tcp.custom.sectionLeft1       \
-  +                               \
-    +                             \
-      tcpfolderBalanceType==2     \
-        *                         \
-          Scale                   \
-          [tcpFolderBalancer{x}]  \
-        [0]                       \
-      [tcp.custom.sectionNumber]  \
+set tcp.custom.sectionLeft1                              \
+  +                                                      \
+    +                                                    \
+      tcpfolderBalanceType==2                            \
+        *                                                \
+          Scale                                          \
+          [tcpFolderBalancer{x}]                         \
+        [0]                                              \
+      [tcp.custom.sectionNumber]                         \
     [tcp.custom.sectionNumber{w} 0 sectionLeft1DrawW{0} h]
 
-def myDef whatever
+def myDef whatever [1 2 3 4] "123" ;comment
 
-front mcp.*
+front mcp
 front mcp.custom.test mcp.custom.test mcp.custom.test
-  front mcp.bottom.*
+  front mcp.bottom
 front mcp.bottom.font
-front mcp.bottom.font.*
 
 mCallTest p1 p2 p3
+colorsmart                  mcp.trackidx.color      [27 27 27]
 
 macro m p1 p2
   set test 1
 endmacro
 
+
 define_parameter myParam "str" 5 0 10
 define_parameter myParam "str" 4 4 4
+define_parameter Echolot_FTC 'Echolot_FTC version' 1
 
 custom tcp.custom.folder_start '' 0 '' 'folder_start'
 ; custom tcp.custom.sectionLeft1 someIdentifier someIdentifier 1
@@ -102,9 +146,6 @@ set tcp.custom.tcpDiv.color * Scale [0 0 0 0 0 0 0 tcpDivOpacity{0}]
 
 layout "mylayout" "folder"
 endlayout
-
-; Layout "4. TCP Separator" all-tcp-separator
-; endLayout
 
 layout "mylayout" "folder"
 
@@ -131,5 +172,17 @@ layout "test" "test"
   set hello 123
 
   set hello 123 ; comment
-  ;comment
+  ; comment
 endLayout
+
+; Should break the parser ------------------------------------------------------
+; set var [-10.0a]
+; set var [10.0a]
+; set -scalar 100 ; Унарные минусы поддерживаются только для числовых литералов.
+; front mcp.* ; front вроде не поддерживает wildcard.
+; set side_scrollbar_size scale=1.5 2 1
+; Layout "4. TCP Separator" all-tcp-separator ; String is expected.
+; endLayout
+; set mcp.recmode h>327 [20 33 17 22 0 1 0 1][0] ; Слипшиеся скобки.
+; set faderPos trans_flags&4!0 222 178
+; custom master.tcp.custom.tracknotes [0]
