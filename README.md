@@ -1,23 +1,21 @@
 Provides full feature support for WALTER language.
 
-# Attention
-- **This extension is in early development. Many features are not ready yet, and some bugs are to be expected. Moreover, it deliberately introduces a few restrictions on possible language constructs to make WALTER more consistent and less error-prone, so you may see a number of diagnostic messages (i.e., errors) in your code, even if it is fully functional. All of this is explained further in this document.**
+**This extension is in early development. Many features are not ready yet, and some bugs are to be expected. Moreover, it deliberately introduces a few restrictions on possible language constructs to make WALTER more consistent and less error-prone, so you may see a number of diagnostic messages (i.e., errors) in your code, even if it is fully functional. All of this is explained further in this document.**
 
 # Supported features
 
 ### Lexical syntax highlighting
-- ![](./assets/readme/sintax-highlighting.gif)
+![](./assets/readme/sintax-highlighting.gif)
 
 ### Syntax Validation
-- ![](./assets/readme/sintax-validation.gif)
-- See limitations below.
+![](./assets/readme/sintax-validation.gif)
 
 ### Comment toggling
-- ![](./assets/readme/comment-toggling.gif)
+![](./assets/readme/comment-toggling.gif)
 - Press `Ctrl + /` to toggle comment for current line or selection.
 
 ### Custom folding regions
-- ![](./assets/readme/custom-folding-regions.gif)
+![](./assets/readme/custom-folding-regions.gif)
 - Use `;---` and `;-` to mark the start and the end of a custom folding region, respectively.
 
 ### Code linting
@@ -35,16 +33,15 @@ Code linting is the automated process of analyzing source code to find formattin
 - Jump to definition (for user variables and macros).
 - Find all references to an identifier.
 - Semantic folding (for `macro`s, `layout`s, and long statements).
-- Semantic syntax highlighting (for `macro` parameters, identifiers, and user variables).
+- Semantic syntax highlighting (for `macro` parameters, and user variables).
 - Auto-indentation.
 - Hover information:
-  - Documentation for commands and built-in scalar values.
+  - Documentation for layout attributes and built-in scalar values.
   - Human-readable diagnostic messages.
   - User documentation comments (JSDoc style or similar).
   - Mappings between attributes and filenames.
 - Auto-completion / IntelliSense:
-  - Built-in entities (e.g., `tcp.size`, `trans_flags`).
-  - Built-in commands (e.g., `define_parameter`).
+  - Built-in entities (e.g., `tcp.size`, `trans_flags`, `define_parameter`).
   - User-defined variables.
 - Semantic error checking:
   - Unknown identifier (neither built-in nor user-defined).
@@ -60,7 +57,6 @@ Code linting is the automated process of analyzing source code to find formattin
   - `noMixedQuotes` - using different quote marks across the document.
   - `noConsecutiveBlankLines` - prevents long gaps in code.
   - `consistentIdentifierCase` - enforce `camelCase` or `snake_case`.
-  - `noOptionalOperands` - ok: `set trans.play 2>1 5 trans.play` or `set trans.play 2>1 5 .`; not ok: `set trans.play 2>1 5`.
   - `noLayoutVariableLookalikes` - e.g., `tcp.label.myVar`.
 
 # Known issues and limitations

@@ -50,9 +50,9 @@ tcp_vol_zeroline 53000000
 tcp_pan_zeroline 53000000
 tcp_width_zeroline 53000000
 mcp_vol_zeroline 53000000
-mcp_pan_zeroline 000000
+mcp_pan_zeroline 00000000
 mcp_width_zeroline 00000000
-trans_speed_zeroline 000000
+trans_speed_zeroline 00000000
 item_volknobfg 99000000 50000000 99000000
 envcp_min_height 20
 mcp_min_height 240
@@ -120,6 +120,8 @@ set tcp_LabelSize_min            scale==2 100 scale==1 90 ; scale - зарезе
 ; Если я явно объявляют скаляр, то могу ли я использовать его без {} в условных выражениях?
 ; colorsmart tcp.trackidx.color [24 24 24] "asdf" asdfasdf ; проверить все ли типы можно передавть в макрос.
 ; set master.tcp.recmode h>16 w>129 [ ] ; проверить что будет, если в скобки ничего не положить.
+; custom tcp.custom.custom_fx            " " _RSe62030daa98f80b459262c383e92c97ffab381a9 "Insert/show custom FX 1"  tcp_custom_customFX
+; set x .5 ; проверить, вдруг такая херня поддерживается.
 
 set mcp.recarm ?1 [0 177 20 20 0 1.0 0 1.0]
 set mcp.recarm 1>0 [0 177 20 20 0 1.0 0 1.0]

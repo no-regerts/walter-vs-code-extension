@@ -1,23 +1,32 @@
 import * as vscode from "vscode";
 import * as wts from "web-tree-sitter";
 import { WalterParser } from "./core/walter-parser.js";
-import { StaticAnalizer } from "./core/static-analizer.js";
+import {
+  DiagnosticMessage,
+  DiagnosticMessageType,
+  StaticAnalizer,
+} from "./core/static-analizer.js";
 import { WalterHoverProvider } from "./walter-hover-provider.js";
+import { ConfigManager } from "./config-manager.js";
 
 export class ExtensionController {
   private context?: vscode.ExtensionContext;
   private disposables: vscode.Disposable[] = [];
 
-  private isParserEnabled?: boolean;
+  private configManager: ConfigManager;
   private walterParser!: WalterParser;
-  private staticAnalizer: StaticAnalizer = new StaticAnalizer();
+  private staticAnalizer: StaticAnalizer;
 
   private currentDocument?: vscode.TextDocument;
 
-  private parserInterval?: number;
   private throttlerTimerId?: ReturnType<typeof setTimeout>;
   private isThrottled: boolean = false;
   private accumulatedChanges: vscode.TextDocumentContentChangeEvent[] = [];
+
+  constructor(configManager: ConfigManager, staticAnalizer: StaticAnalizer) {
+    this.configManager = configManager;
+    this.staticAnalizer = staticAnalizer;
+  }
 
   private extractTextFromEditorAndParse = () => {
     const editor = vscode.window.activeTextEditor;
@@ -66,46 +75,26 @@ export class ExtensionController {
   private setupDiagnostics = () => {
     const diagnosticCollection = vscode.languages.createDiagnosticCollection();
 
-    this.staticAnalizer.on("finished", (payload) => {
+    this.staticAnalizer.on("finished", (payload: DiagnosticMessage[]) => {
       if (!this.currentDocument) return;
 
-      const errorCaptures = payload.errors;
-      const warningCaptures = payload.warnings;
-
-      // TODO: переделать на общий массив.
-      const errors = errorCaptures.map((capture: wts.QueryCapture) => {
-        const node = capture.node;
+      const diagnostics = payload.map((message: DiagnosticMessage) => {
         return new vscode.Diagnostic(
           new vscode.Range(
-            node.startPosition.row,
-            node.startPosition.column,
-            node.endPosition.row,
-            node.endPosition.column,
+            message.startPosition.row,
+            message.startPosition.column,
+            message.endPosition.row,
+            message.endPosition.column,
           ),
-          capture.name === 'missing'? `Missing: ${node.type}` : 'Unknown error',
-          vscode.DiagnosticSeverity.Error,
+          message.text,
+          message.type === DiagnosticMessageType.error
+            ? vscode.DiagnosticSeverity.Error
+            : vscode.DiagnosticSeverity.Warning,
         );
       });
 
-      const warnings = warningCaptures.map(
-        (capture: wts.QueryCapture) =>
-          new vscode.Diagnostic(
-            new vscode.Range(
-              capture.node.startPosition.row,
-              capture.node.startPosition.column,
-              capture.node.endPosition.row,
-              capture.node.endPosition.column,
-            ),
-            `${capture.name}`,
-            vscode.DiagnosticSeverity.Warning,
-          ),
-      );
-
       diagnosticCollection.clear();
-      diagnosticCollection.set(this.currentDocument.uri, [
-        ...errors,
-        ...warnings,
-      ]);
+      diagnosticCollection.set(this.currentDocument.uri, diagnostics);
     });
   };
 
@@ -170,28 +159,21 @@ export class ExtensionController {
 
           this.isThrottled = false;
           this.accumulatedChanges = [];
-        }, this.parserInterval || 200);
+        }, this.configManager.config?.parserInterval || 200);
       }),
     );
 
     this.disposables.push(
       vscode.workspace.onDidChangeConfiguration((_) => {
         this.restart();
-      })
+      }),
     );
   };
 
   public activate = async (context: vscode.ExtensionContext) => {
     this.context = context;
 
-    const config = vscode.workspace.getConfiguration("walter");
-    this.isParserEnabled = config.get<boolean>("enableParser", true);
-    this.parserInterval = config.get<number>("parserInterval", 200);
-    const linterRules = {
-      noTrailingSpaces: config.get<boolean>("linter.noTrailingSpaces", true),
-    };
-
-    if (!this.isParserEnabled) return;
+    if (!this.configManager.config?.isParserEnabled) return;
 
     await wts.Parser.init();
     const wasmPath = vscode.Uri.joinPath(
@@ -202,7 +184,11 @@ export class ExtensionController {
     const language = await wts.Language.load(wasmPath.fsPath);
     this.walterParser = new WalterParser(language);
     this.walterParser.on("parsed", (ast: wts.Tree) =>
-      this.staticAnalizer.init(language, ast, linterRules),
+      this.staticAnalizer.init(
+        language,
+        ast,
+        this.configManager.config?.linterRules!,
+      ),
     );
 
     this.setupDiagnostics();

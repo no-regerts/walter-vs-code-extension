@@ -22,7 +22,7 @@ mcp_pan_zeroline 85000000
 trans_speed_zeroline 85000000
 gen_vol_zeroline FF000000
 gen_pan_zeroline FF000000
-item_volknobfg 2A2A2A  2A2A2A  2A2A2A
+item_volknobfg 2A2A2A2A  2A2A2A2A  2A2A2A2A
 tcp_master_minheight 56
 mcp_voltext_flags 5 5
 tcp_voltext_flags 12 45

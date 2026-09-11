@@ -1,17 +1,31 @@
 import * as wts from "web-tree-sitter";
 import { Observer } from "./utils/observer.js";
+import { LinterRules } from "../config-manager.js";
+
+export enum DiagnosticMessageType {
+  error,
+  warning,
+  info,
+  hint,
+}
+
+export interface DiagnosticMessage {
+  type: DiagnosticMessageType;
+  text: string;
+  startPosition: wts.Point;
+  endPosition: wts.Point;
+}
 
 export class StaticAnalizer extends Observer {
-  private currentErrors: wts.QueryCapture[] = [];
-  private currentWarnings: wts.QueryCapture[] = [];
+  private diagnosticMessages: DiagnosticMessage[] = [];
   private ast!: wts.Tree;
   private language!: wts.Language;
-  private linterRules: Record<string, boolean> = {};
+  private linterRules!: LinterRules;
 
   public init = (
     language: wts.Language,
     ast: wts.Tree,
-    linterRules: Record<string, boolean>,
+    linterRules: LinterRules,
   ): void => {
     this.language = language;
     this.ast = ast;
@@ -21,8 +35,7 @@ export class StaticAnalizer extends Observer {
   };
 
   private buildDiagnostics = () => {
-    this.currentErrors = [];
-    this.currentWarnings = [];
+    this.diagnosticMessages = [];
 
     const queryString = `
       (ERROR) @error
@@ -34,11 +47,35 @@ export class StaticAnalizer extends Observer {
     matches.forEach((match) => {
       switch (match.patternIndex) {
         case 0: // ERROR.
+          this.diagnosticMessages.push(
+            ...match.captures.map((capture) => ({
+              type: DiagnosticMessageType.error,
+              text: "Unknown error",
+              startPosition: capture.node.startPosition,
+              endPosition: capture.node.endPosition,
+            })),
+          );
+          break;
         case 1: // MISSING.
-          this.currentErrors.push(...match.captures);
+          this.diagnosticMessages.push(
+            ...match.captures.map((capture) => ({
+              type: DiagnosticMessageType.error,
+              text: `Missing: ${capture.node.type}`,
+              startPosition: capture.node.startPosition,
+              endPosition: capture.node.endPosition,
+            })),
+          );
+          break;
         case 2: // Trailing spaces.
           if (this.linterRules.noTrailingSpaces)
-            this.currentWarnings.push(...match.captures);
+            this.diagnosticMessages.push(
+              ...match.captures.map((capture) => ({
+                type: DiagnosticMessageType.warning,
+                text: "Trailing spaces",
+                startPosition: capture.node.startPosition,
+                endPosition: capture.node.endPosition,
+              })),
+            );
           break;
         case 3: // Consecutive newlines.
         case 4:
@@ -46,17 +83,18 @@ export class StaticAnalizer extends Observer {
       }
     });
 
-    this.notifyAll("finished", {
-      errors: this.currentErrors,
-      warnings: this.currentWarnings,
-    });
+    this.notifyAll("finished", this.diagnosticMessages);
   };
 
   public printErrors = () => {
-    console.log(this.currentErrors);
+    console.log(
+      this.diagnosticMessages.filter(
+        (message) => message.type === DiagnosticMessageType.error,
+      ),
+    );
   };
 
   private buildSymbolTable = () => {};
-  
+
   private buildCFG = () => {};
 }
