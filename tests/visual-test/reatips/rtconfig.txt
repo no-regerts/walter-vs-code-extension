@@ -1,4 +1,4 @@
-;   
+;
 ;   Reapertips Theme v1.93 (Dark Version)
 ;   made by Alejandro Hernandez and FeedTheCat (Ilias-Timon Poulakis) from Reapertips.com
 ;   based on Default_v6.0
@@ -99,7 +99,7 @@ define_parameter tcp_side_button_hide           'TCP: Hide side FX / IO buttons 
 
 define_parameter tcp_list_margin                'TCP: Margin between lists' 4 0 32
 define_parameter tcp_list_row_h                 'TCP: List row height' 17 8 200
-define_parameter tcp_fx_section_width           'TCP: FX width' 84 20 200   
+define_parameter tcp_fx_section_width           'TCP: FX width' 84 20 200
 define_parameter tcp_fx_num_columns             'TCP: FX column limit' 5 1 8
 define_parameter tcp_parm_section_width         'TCP: FX parameter width' 64 20 200
 define_parameter tcp_parm_num_columns           'TCP: FX parameter column limit' 3 1 8
@@ -291,7 +291,7 @@ indexParams 'C_tcp_sepSends'      2  1  2   83
 ; ---------------------------
 
 macro get_luma result color
-    set result + + * 0.212 color{0} * 0.701 color{1} * 0.087 color{2} 
+    set result + + * 0.212 color{0} * 0.701 color{1} * 0.087 color{2}
 endmacro
 
 macro initTrackGlobals
@@ -306,7 +306,7 @@ macro initTrackGlobals
     set hide_pan            260   ; height below which pan controls are hidden.
     set hide_volume_label           250   ; height below which volume label is hidden.
 
-    set track_color [trackcolor_r trackcolor_g trackcolor_b] 
+    set track_color [trackcolor_r trackcolor_g trackcolor_b]
     set bright_text_color   + ?track_selected [220 220 220] [200 200 200] ?trackcolor_valid [10 10 10] [0]
     set dark_text_color     [23 23 23]
 
@@ -548,7 +548,7 @@ macro floor value ; Fml...
                                 value<059 058 059 \
                             value<062 \
                                 value<061 060 061 \
-                                value<063 062 063 
+                                value<063 062 063
 endMacro
 
 macro ceil value
@@ -619,9 +619,9 @@ macro calcTcpSecs scale
   set tcp_VolSize     tcp_VolPair{0}
   set tcp_InSize      tcp_InPair{0}
 
-  set tcp_VolSize   tcp_VolSize>20  + tcp_vol_len_offs 
-  set tcp_InSize     tcp_InSize>49   + tcp_input_len_offs 
-  set tcp_LabelSize   + tcp_label_len_offs 
+  set tcp_VolSize   tcp_VolSize>20  + tcp_vol_len_offs
+  set tcp_InSize     tcp_InSize>49   + tcp_input_len_offs
+  set tcp_LabelSize   + tcp_label_len_offs
 
   set recmon_w 15
   set recarm_w 20
@@ -633,7 +633,7 @@ macro calcTcpSecs scale
   set align_PanSize tcp_dual_pan_align==1 20 tcp_dual_pan_align==3 43 tcp_PanSize
 
   ; Add 15 width for record monitor button, substract later if not visible
-  set tcp_LabelSize - . recmon_w 
+  set tcp_LabelSize - . recmon_w
   set tcp_LabelSize  + indent_offs
 
   ; Calculate position where pan knob ends
@@ -650,14 +650,14 @@ macro calcTcpSecs scale
 
   ; Shrink label and volume until io/fx button has to be hidden (if not already hidden)
   set shrink_w / - + + pan_end side_sec_w ?include_extra added_extra_w 0 main_sec{w} scale
-  set shrink_w !include_extra 0 
+  set shrink_w !include_extra 0
 
   shrinkLabelAndVolume 72 72 shrink_w
   set include_extra  !did_shrink 0
 
   ; Shrink label and volume until side section has to be hidden (if not already hidden)
   set shrink_w / - + + pan_end side_sec_w ?include_extra added_extra_w 0 main_sec{w} scale
-  set shrink_w ?did_shrink 0 !show_side_sec 0 
+  set shrink_w ?did_shrink 0 !show_side_sec 0
 
   shrinkLabelAndVolume 48 40 shrink_w
 
@@ -684,7 +684,7 @@ macro calcTcpSecs scale
   set labelFlip     !tcp_allow_shrink main_sec{2}<labelEnd{0} 1 0
 
   set hide_folder_recmon !tcp_show_folder_recarm 0 folderstate==1 0 ?recarm 0 1
-  set tcp_LabelSize   ?hide_tcp.recmon  + . recmon_w ?hide_folder_recmon + . recmon_w  
+  set tcp_LabelSize   ?hide_tcp.recmon  + . recmon_w ?hide_folder_recmon + . recmon_w
   set tcp_LabelSize   tcp_dual_pan_align==1 ?width_visible !hide_pan_group - . 23
   set tcp_VolSize    ?labelFlip 20
 
@@ -801,7 +801,7 @@ macro drawTcp scale
   set tcp.custom.bg ?supercollapsed + + + [0 0 w h] -1@h * [1 0 -1] bg_sec{x} * scale [1 0 -2] + bg_sec * lscale [1 0 -2 -1]
   set tcp.custom.bg tcp_dim_strength>tcp_idx_dim_strength + * lscale [-1 0 1]
 
-  set tcp.custom.bg.color + * track_default_bg_color - 1 tint_strength * track_bg_color tint_strength 
+  set tcp.custom.bg.color + * track_default_bg_color - 1 tint_strength * track_bg_color tint_strength
   set tcp.custom.bg.color * . - 1 dim_strength
   set tcp.custom.bg.color + * . - 1 sel_strength  * [0 0 0 0 255 255 255] sel_strength
 
@@ -824,7 +824,7 @@ macro drawTcp scale
 
   ; Draw custom meter background
   custom tcp.custom.meter_sec_bg
-  set tcp.custom.meter_sec_bg       + + meter_sec * lscale ?meterRight{0} [1 -1 -2] [-2 -1 2] 
+  set tcp.custom.meter_sec_bg       + + meter_sec * lscale ?meterRight{0} [1 -1 -2] [-2 -1 2]
   set tcp.custom.meter_sec_bg.color meter_bg_color
   set meter_sec ?supercollapsed [0]
 
@@ -888,7 +888,7 @@ macro drawTcp scale
   set min_pin_h                               scale==1 60 scale==1.5 91 120
   set tcp.custom.pin                          + + [this_tcp_indent] [folder_sec] * scale [0 0 19 19]
   set tcp.custom.pin                          folderstate==1 !trackpinned + * scale 12@y
-  set tcp.custom.pin                          !tcp_show_pin [0] h<min_pin_h [0] 
+  set tcp.custom.pin                          !tcp_show_pin [0] h<min_pin_h [0]
 
   set tcp.custom.pin_on                       ?trackpinned tcp.custom.pin [0]
   set tcp.custom.pin_off                      !trackpinned tcp.custom.pin [0]
@@ -899,8 +899,8 @@ macro drawTcp scale
   set tcp.trackidx.margin                   [this_tcp_indent tcp_idx_margin 0 tcp_idx_margin 0.5]
   set tcp.trackidx.margin              + folderstate<0 * scale [0 -6 0 6] folderstate==1 !trackpinned * scale [0 6 0 -6] 0 0
   set tcp.trackidx.margin                   ?tcp_show_pin ?trackpinned h>=min_pin_h + * scale [0 6 0 -6]
-  set tcp.trackidx.margin          trackidx>999 h<tcp_squash_height{0} [. . . . 1] 
-  set tcp.trackidx.margin                   + * lscale [-1 0 -1]     
+  set tcp.trackidx.margin          trackidx>999 h<tcp_squash_height{0} [. . . . 1]
+  set tcp.trackidx.margin                   + * lscale [-1 0 -1]
   set tcp.trackidx.margin                   ?supercollapsed + * scale 40@y
   set tcp.trackidx.margin                   + * main_font_voffs [0 1 0 -1]
   set tcp.trackidx.font            main_font
@@ -919,7 +919,7 @@ macro drawTcp scale
   set trackidx_sel_strength  !track_selected 0 / tcp_idx_sel_strength 100
 
   custom tcp.custom.trackidx_bg
-  set tcp.custom.trackidx_bg + tcp.trackidx * lscale [0 0 0 -1] 
+  set tcp.custom.trackidx_bg + tcp.trackidx * lscale [0 0 0 -1]
   set tcp.custom.trackidx_bg tcp_idx_dim_strength>=tcp_dim_strength + * lscale 1@w
   set tcp.custom.trackidx_bg.color + * track_default_bg_color - 1 trackidx_tint_strength * track_bg_color trackidx_tint_strength
   set tcp.custom.trackidx_bg.color * . - 1 / tcp_idx_dim_strength 100
@@ -951,7 +951,7 @@ macro drawTcp scale
   set icon_size           ?is_macos scale>1 * 2 tcp_iconsize   ; Fix retina scaling on MacOS
   set tcp.custom.comping  !tcp_show_comping [0] trackfixedlanes==0 [0] h<=lane_h [0] h<phaseHide_h [0] + + * scale + [-20 -16 20 15] theme_version>2 [-1] 0 [w h] icon_size@x
 
-  ;************** 
+  ;**************
 
   set tcp.meter                         - - - + meter_sec * scale [5 2 -6 -5] [0 0 tcp.mute{2}] [0 0 tcp_padding{0}] !is_solo_flipped * scale [0 0 18] [0]
 
@@ -968,7 +968,7 @@ macro drawTcp scale
   set tcp.label.margin                    * scale ?hide_tcp.recarm [5 0 1 0] [3 0 1 0] ; FTC MOD
   set tcp.label.margin                    ?labelFlip + 0.5@ls
   set tcp.label.margin                    + header_font_voffs@y
-  set tcp.label.color                     label_text_color 
+  set tcp.label.color                     label_text_color
 
   custom tcp.custom.label_flip_bg
   set tcp.custom.label_flip_bg        !labelFlip [0] tcp.label
@@ -992,8 +992,8 @@ macro drawTcp scale
         set tcp.recinput.margin               tcp.recinput{w}<min_input_text_w + min_input_text_w@x
         ;*** MOD end ***;
 
-    ; FTC MOD Add label folder indicator    
-    custom tcp.custom.folder_recarm   '' 0 '' 'custom_track_folder_recarm'  
+    ; FTC MOD Add label folder indicator
+    custom tcp.custom.folder_recarm   '' 0 '' 'custom_track_folder_recarm'
     set tcp.custom.folder_recarm !tcp_show_folder_recarm [0] folderstate==1 [0] ?recarm [0] tcp.recarm
 
   set tcp.pan                 !pan_group{2} [0 0 0 0] width_visible{0}==2 \
@@ -1066,8 +1066,8 @@ macro drawTcp scale
     set side_button_y  h>stick_row_h tcp_padding{y} h<double_row_h tcp_padding{y} * scale 3
     set side_button_h  * scale ?is_dense_row 19 20
 
-  set side_x  - tcp.size{0} side_sec_w{0} 
-  set side_x  ?meterRight{0} - . meter_sec{w} 
+  set side_x  - tcp.size{0} side_sec_w{0}
+  set side_x  ?meterRight{0} - . meter_sec{w}
     set side_y  h>stick_row_h  tcp_padding{y} * scale 1
     set side_y  ?show_side_buttons + + side_button_y side_button_h * scale h>stick_row_h 1 -1
   set side_h  - h side_y{0}
@@ -1112,9 +1112,9 @@ macro drawTcp scale
   set side_parm_cnt   ?show_side_parms    !tcp_sepSends   + send_cnt
   set side_send_cnt   ?show_side_sends    send_cnt 0
 
-    set vis_side_fx_cnt     * side_row_cnt tcp_fx_num_columns 
-    set vis_side_parm_cnt   * side_row_cnt tcp_parm_num_columns 
-    set vis_side_send_cnt   * side_row_cnt tcp_send_num_columns 
+    set vis_side_fx_cnt     * side_row_cnt tcp_fx_num_columns
+    set vis_side_parm_cnt   * side_row_cnt tcp_parm_num_columns
+    set vis_side_send_cnt   * side_row_cnt tcp_send_num_columns
 
     set show_scrollbar  0
   set show_scrollbar  ?show_side_fx    tcp_fx_num_columns>1   side_fx_cnt>=vis_side_fx_cnt      1
@@ -1165,7 +1165,7 @@ macro drawTcp scale
   set side_x ?show_side_fx + + fx_sec_w list_margin
 
   set tcp.fxparm [0]
-  set tcp.fxparm ?show_side_parms [side_x{0} side_y{0} parm_sec_w{0} side_list_h{0} 1 0 1 0] 
+  set tcp.fxparm ?show_side_parms [side_x{0} side_y{0} parm_sec_w{0} side_list_h{0} 1 0 1 0]
 
     set tcp.fx      ?show_side_parms    ?show_side_fx_button    !show_side_fx   + [side_x{0} side_button_y{0} parm_sec_w{0} side_button_h{0} 1 0 1 0] * scale -16@w
   set tcp.fx      ?show_side_parms    ?show_side_fx_button    ?show_side_fx   + + . list_margin@w parm_sec_w@w
@@ -1196,7 +1196,7 @@ macro drawTcp scale
                             + - - [0 0 main_sec] [0 0 tcp_padding{0}] [0 0 tcp_padding{0}] \
                             - [0 0 0 main_sec] [0 0 0 main_sec_last{0}] \
                             [0]
-    set main_list_sec       !previous_element{w} !previous_element{h} [0]   
+    set main_list_sec       !previous_element{w} !previous_element{h} [0]
 
     set main_list_sec main_list_sec{h}>0 hideValues{0}==0 + * [0 1 0 -1] + values_sec{h} * scale 4
     ; Limit width to last row element
@@ -1204,10 +1204,10 @@ macro drawTcp scale
     set main_list_sec  [. . main_list_sec_max_w .]
 
     set main_list_sec_min_h + row_h scrollbar_padding
-    set show_main_list_sec main_list_sec{h}<0 0 main_list_sec{h}<main_list_sec_min_h 0 1 
+    set show_main_list_sec main_list_sec{h}<0 0 main_list_sec{h}<main_list_sec_min_h 0 1
 
   set show_main_fx   !show_main_list_sec 0 ?show_side_fx       0   !has_tcp_fxlist     0   1
-  set show_main_parms !show_main_list_sec 0 ?show_side_parms    0   !tcp_sep_parms      0   1 
+  set show_main_parms !show_main_list_sec 0 ?show_side_parms    0   !tcp_sep_parms      0   1
   set show_main_parms !show_main_list_sec 0 ?default_behavior   tcp_fxparms>tcp_fxembed 1
   set show_main_sends !show_main_list_sec 0 ?show_side_sends    0   !tcp_sepSends       0   !tcp_sends_enabled 0  1
   set show_fxembed   !show_main_list_sec 0 tcp_fxembed>0 1 0
@@ -1242,8 +1242,8 @@ macro drawTcp scale
   set main_parm_cnt   ?show_main_parms    ?join_sends     tcp.fxparm{w}>0     + send_cnt
   set main_send_cnt   ?show_main_sends    send_cnt 0
 
-    set main_fx_row_cnt     + main_fx_cnt   1 
-    set main_send_row_cnt   + main_send_cnt 1 
+    set main_fx_row_cnt     + main_fx_cnt   1
+    set main_send_row_cnt   + main_send_cnt 1
     set main_parm_row_cnt   + main_parm_cnt 1
 
     ; Limit main section height to a multiple of fx height
@@ -1379,8 +1379,8 @@ macro drawTcp scale
   set tcp.fxparm.visflags !join_sends       [. . -1]
 
     ; Set list element margins
-    set has_sends_in_fxparm !join_sends 0 send_cnt==0 0 1 
-    set list_margin          + * scale [2 0 2 0 0 14] [0 0 0 0 0 0 0.5 col_gap{0}]  
+    set has_sends_in_fxparm !join_sends 0 send_cnt==0 0 1
+    set list_margin          + * scale [2 0 2 0 0 14] [0 0 0 0 0 0 0.5 col_gap{0}]
   set tcp.sendlist.margin   + list_margin * scale 1@x
   set tcp.fxlist.margin   + + list_margin * scale -1@x 0.5@ls
   set tcp.fxparm.margin     + list_margin ?has_sends_in_fxparm 0 * scale -1@x
@@ -1399,11 +1399,11 @@ macro drawTcp scale
     front tcp.custom.trackidx_bg tcp.custom.bg tcp.custom.bg_hl1 tcp.custom.bg_hl2 tcp.custom.bg_sh1 tcp.custom.bg_sh2
 
     front tcp.custom.meter_sec_bg tcp.custom.recarm_bg tcp.custom.name_bg tcp.custom.label_flip_bg
-    front tcp.label tcp.trackidx tcp.custom.pin_on tcp.custom.pin_off tcp.custom.hide_overlay  
+    front tcp.label tcp.trackidx tcp.custom.pin_on tcp.custom.pin_off tcp.custom.hide_overlay
     front tcp.fxparm tcp.fxlist tcp.sendlist tcp.fxembed tcp.recarm tcp.volume tcp.volume.label tcp.pan.label tcp.width.label tcp.recmon tcp.solo tcp.mute tcp.phase tcp.pan tcp.width tcp.recmode tcp.foldercomp tcp.folder tcp.meter tcp.io tcp.fx tcp.fxbyp tcp.env tcp.fxin tcp.recinput tcp.infoblock
     front tcp.custom.track_io_text_on tcp.custom.track_io_text_off tcp.custom.track_io_darker tcp.custom.folder_recarm tcp.custom.fixed_lanes_on tcp.custom.fixed_lanes_off
 
-    front tcp.custom.div_r tcp.custom.div_b 
+    front tcp.custom.div_r tcp.custom.div_b
     front tcp.custom.folder_11 tcp.custom.folder_12 tcp.custom.folder_14 tcp.custom.folder_18 tcp.folder
   front tcp.custom.folder_half_1 tcp.custom.folder_half_1 tcp.custom.folder_half_1 tcp.custom.folder_half_1 tcp.folder
     front tcp.custom.interaction_block_overlay
@@ -1419,7 +1419,7 @@ macro calcTcpFlow
     ;    element        size            padding?    fill    exclude             swap
     then tcp.recarm     20           0           0       0                   0
     then tcp.recmon     15           0           0       hide_folder_recmon  0
-    then tcp.label       tcp_LabelSize   0           0       0                   0    
+    then tcp.label       tcp_LabelSize   0           0       0                   0
     then tcp.volume     tcp_VolSize   0           0       0                   0
     then pan_group      tcp_PanSize    1           0       0                   0
     then tcp.infoblock  tcp_info_Size   1           0       show_info 0
@@ -1540,7 +1540,7 @@ Layout "A"
     calcTcpFlow
     drawTcp scale
 
-  Layout "A_Solid" "alt" 
+  Layout "A_Solid" "alt"
     set tcp.label .
   EndLayout
 EndLayout
@@ -1588,7 +1588,7 @@ Layout "B"
   calcTcpFlow
   drawTcp scale
 
-    Layout "B_Solid" "alt" 
+    Layout "B_Solid" "alt"
     set tcp.label .
   EndLayout
 EndLayout
@@ -1637,7 +1637,7 @@ Layout "C"
     calcTcpFlow
   drawTcp
 
-    Layout "C_Solid" "alt" 
+    Layout "C_Solid" "alt"
         set tcp.label .
     EndLayout
 EndLayout
@@ -1679,8 +1679,8 @@ macro drawTcpSeparator scale
     set tcp.label               [0 0 w h]
     set tcp.label.font          header_font
     set tcp.label.margin        + * scale [6 4 6 4] [0 0 0 0 0.5]
-    set tcp.label.color         ?track_selected [225 225 225] [190 190 190] 
-    set tcp.label.color         ?trackcolor_valid [trackcolor_r trackcolor_g trackcolor_b] 
+    set tcp.label.color         ?track_selected [225 225 225] [190 190 190]
+    set tcp.label.color         ?trackcolor_valid [trackcolor_r trackcolor_g trackcolor_b]
 endmacro
 
 Layout "Separator" "separator"
@@ -1811,7 +1811,7 @@ macro drawMasterTcp scale
   set mTcpPanLabelSpace            + + mTcpPanLabelSpace  master.tcp.width.label{w} tcp_padding{0}
   set master.tcp.pan.label          main_sec{w}<mTcpPanLabelSpace{0} [0]
 
-    set master.tcp.fxparm              - + + [0 meter_sec w h] [0 meter_sec{3}] [0 tcp_padding] + + [0 0 0 meter_sec{1}] [0 0 0 meter_sec{3}] [0 0 0 tcp_padding{1}] 
+    set master.tcp.fxparm              - + + [0 meter_sec w h] [0 meter_sec{3}] [0 tcp_padding] + + [0 0 0 meter_sec{1}] [0 0 0 meter_sec{3}] [0 0 0 tcp_padding{1}]
   set master.tcp.fxparm              + * scale [4 -2 -8 -4]
   set master.tcp.fxparm.font                tcp.fxlist.font
   set master.tcp.fxparm.margin        tcp.fxlist.margin
@@ -1997,12 +1997,12 @@ macro envThen element width use_padding
 endmacro
 
 macro calcEnvFlow
-    ;    element            size    padding?  
-    envThen envcp.arm        20       0     
-    envThen envcp.bypass      15       0     
-    envThen envcp.label   envcp_LabelSize   0     
-    envThen envcp.fader    envcp_VolSize   0     
-    envThen envcp.hide       36       1     
+    ;    element            size    padding?
+    envThen envcp.arm        20       0
+    envThen envcp.bypass      15       0
+    envThen envcp.label   envcp_LabelSize   0
+    envThen envcp.fader    envcp_VolSize   0
+    envThen envcp.hide       36       1
     envThen envcp.mod     addCont{0}  addCont{1}
     envThen envcp.learn    addCont{0}  addCont{1}
 endMacro
@@ -2127,7 +2127,7 @@ macro drawMcp scale
     set mcp_x                                   gapmode==1 gap_size_s 0
     set mcp_w                                   + * scale ?narrowMode 54 86 nchan_offs
     set mcp_h                                   * scale 371
-    set mcp_min_h                               * scale + 180 * mcp_maxfolderdepth mcp_indent_s 
+    set mcp_min_h                               * scale + 180 * mcp_maxfolderdepth mcp_indent_s
 
   set mcp.size                                + + [mcp_w mcp_h 0 mcp_min_h] sidebar_w_s@0 gap_size_s@0
     set mcp_w                                   scale==1.5 + 0.5
@@ -2138,7 +2138,7 @@ macro drawMcp scale
 
     set bot_sec_h                   + * scale 47 * mcp_indent_s ?mcp_control_align mcp_maxfolderdepth folderdepth
   set bot_sec                   - [0 h w bot_sec_h] bot_sec_h@y
-    set label_sec                  + + + [mcp_x bot_sec mcp_w] sidebar_w_s@w * scale 26@h ?mcp_control_align mcp_indent_offs_s@h 0 
+    set label_sec                  + + + [mcp_x bot_sec mcp_w] sidebar_w_s@w * scale 26@h ?mcp_control_align mcp_indent_offs_s@h 0
     set idx_sec                                 + + [bot_sec label_sec bot_sec] label_sec{h}@y * scale 20@h
 
   set stretch_sec_y                 + + fx_sec{h} pan_sec{h} in_sec{h}
@@ -2160,7 +2160,7 @@ macro drawMcp scale
 
     set mcp.custom.bg + + + pan_sec in_sec{h}@h * lscale [1 0 -1] * uscale [0 -1 0 1]
 
-    set mcp.custom.bg.color + * track_default_bg_color - 1 tint_strength * track_bg_color tint_strength 
+    set mcp.custom.bg.color + * track_default_bg_color - 1 tint_strength * track_bg_color tint_strength
     set mcp.custom.bg.color * . - 1 dim_strength
     set mcp.custom.bg.color + * . - 1 sel_strength  * [0 0 0 0 255 255 255] sel_strength
 
@@ -2217,13 +2217,13 @@ macro drawMcp scale
     set mcp.custom.sel_bar_inner !track_selected [0] + mcp.custom.sel_bar * lscale [0 1 0 -2]
     set mcp.custom.sel_bar_inner.color [0 0 0 0 234 234 234 0]
 
-    ; ------------- ;
+    ; -------------
 
     set mcp.extmixer.mode                !sidebarMode [-1] [1]
 
   set mcp.extmixer.position          !sidebarMode + * scale mcp_extmix_offs@h scale==1 [3 0 -3] scale==1.5 [5 0 -3] [7 0 -4]
     set mcp.extmixer.position                   !sidebarMode gapmode==1 + * [1 0 -1] gap_size_s
-    set mcp.extmixer.position                   !sidebarMode gapmode==2 + * [0 0 1]  gap_size_s 
+    set mcp.extmixer.position                   !sidebarMode gapmode==2 + * [0 0 1]  gap_size_s
   set mcp.extmixer.position          ?sidebarMode + sidebar_sec scale==1 [3 0 -4] scale==1.5 [5 0 -8] [6 0 -10]
     set mcp.extmixer.position                   + extmix_margin_s@y
 
@@ -2231,12 +2231,12 @@ macro drawMcp scale
     set scrollbar_size                          scale==1  [2 5] scale==1.5  [3 7]  [4 10]
     set line_spacing                            mcp_list_row_h>=34 0 1000
 
-    set mcp.fxlist.font                         [list_font row_h{0} 0 0 line_spacing{0} 0 scrollbar_size{0} scrollbar_size{1}] 
+    set mcp.fxlist.font                         [list_font row_h{0} 0 0 line_spacing{0} 0 scrollbar_size{0} scrollbar_size{1}]
     set mcp.sendlist.font                       [list_font row_h{0} 0 0 line_spacing{0} 0 scrollbar_size{0} scrollbar_size{1}]
-    set mcp.fxparm.font                         [list_font row_h{0} 0 0 line_spacing{0} 0 scrollbar_size{0} scrollbar_size{1}] 
+    set mcp.fxparm.font                         [list_font row_h{0} 0 0 line_spacing{0} 0 scrollbar_size{0} scrollbar_size{1}]
 
   set mcp.fxlist.margin                      + * scale   [2 0 2 0 0 14] 0.5@ls
-  set mcp.sendlist.margin                      * scale + [3 0 0 0 0 14] ?stripMode 0@w 6@w 
+  set mcp.sendlist.margin                      * scale + [3 0 0 0 0 14] ?stripMode 0@w 6@w
   set mcp.fxparm.margin                        * scale   [0 0 2 0 0 14]
 
     ; Fix MacOS retina scaling for slot text margins
@@ -2290,11 +2290,11 @@ macro drawMcp scale
     set mcp.pan                         + * scale !panLabelsMode 2@y 1@y
     set mcp.width                       + * scale !panLabelsMode 2@y 1@y
 
-    set mcp.pan.label       + * scale                   trackpanmode==6  -2.6@y 2@y  
+    set mcp.pan.label       + * scale                   trackpanmode==6  -2.6@y 2@y
     set mcp.width.label     + * scale ?stripMode 3@y    trackpanmode==6   1@y 2@y
 
     set mcp.width       ?narrowMode trackpanmode==5 + * scale 2@y
-    set mcp.width.label ?narrowMode trackpanmode==5 + * scale 2@y 
+    set mcp.width.label ?narrowMode trackpanmode==5 + * scale 2@y
 
     set mcp.width.label trackpanmode==6 + * scale 2@y
 
@@ -2393,7 +2393,7 @@ macro drawMcp scale
 
     set trackidx_bg_color [mcp.custom.trackidx_bg.color{4} mcp.custom.trackidx_bg.color{5} mcp.custom.trackidx_bg.color{6}]
     get_luma trackidx_bg_luma trackidx_bg_color
-    set mcp.trackidx.color trackidx_bg_luma<=text_luma_thres bright_text_color dark_text_color 
+    set mcp.trackidx.color trackidx_bg_luma<=text_luma_thres bright_text_color dark_text_color
 
     ; V7 adjustable handle
     custom mcp.custom.handle_hl_t
@@ -2431,7 +2431,7 @@ macro drawMcp scale
     ; FTC Hide folder dot image when indent > 0 (by increasing size and moving it out of view)
     set mcp.folder folderstate==1 param1{0}>1 + * scale 30@w
 
-    ;*** FTC MOD add custom folder indent images for MCP    
+    ;*** FTC MOD add custom folder indent images for MCP
     custom mcp.custom.folder_11 '' 0 '' 'custom_mcp_folder_11'
     custom mcp.custom.folder_12 '' 0 '' 'custom_mcp_folder_12'
     custom mcp.custom.folder_14 '' 0 '' 'custom_mcp_folder_14'
@@ -2482,7 +2482,7 @@ macro drawMcpStrip scale
     set mcp.extmixer.position ?sidebarMode + size_diff@x
     set mcp.trackidx.margin folderstate==1 + * scale [7]
 
-    set mcp.folder folderstate==1 + * scale 30@w 
+    set mcp.folder folderstate==1 + * scale 30@w
 
   set mcp.custom.folder_11 [0]
   set mcp.custom.folder_12 [0]
@@ -2503,7 +2503,7 @@ macro drawMcpStrip scale
     set mcp.volume.label  + * scale [0 0 -15 1]
 
     set mcp.volume.label.margin  + * scale 3@y 0.5@ls
-    set mcp.volume.label.margin  !labelsMode{0} * scale [300]  
+    set mcp.volume.label.margin  !labelsMode{0} * scale [300]
 
     set mcp.recarm    + * scale [-49]
     set mcp.recmon    + * scale [-49 -43]
@@ -2516,7 +2516,7 @@ macro drawMcpStrip scale
 
     set mcp.pan         trackpanmode==5 + * scale h<hide_pan_s [6] [13]
     set mcp.pan.label  trackpanmode==5 + * scale [18]
-    set mcp.width      trackpanmode==5 + * scale [-41 39] 
+    set mcp.width      trackpanmode==5 + * scale [-41 39]
     set mcp.width.label  trackpanmode==5 + * scale [-17 38]
     set mcp.recmon      trackpanmode==5 !recarm [0]
     set mcp.width      trackpanmode==5 ?recarm [0]
@@ -2809,7 +2809,7 @@ Layout "150%_A_Strip" "150/strip"
     calcFontSizes scale
     drawMcp scale
     drawMcpStrip scale
-EndLayout   
+EndLayout
 
 Layout "200%_A_Strip" "200/strip"
     clear mcp.*
@@ -2947,7 +2947,7 @@ Layout "150%_C_Strip" "150/strip"
     calcFontSizes scale
     drawMcp scale
     drawMcpStrip scale
-EndLayout    
+EndLayout
 
 Layout "200%_C_Strip" "200/strip"
     clear mcp.*
@@ -2969,7 +2969,7 @@ macro drawMcpSeparator scale
     set mcp.label.font          header_font
     set mcp.label.margin        + * scale [4 6 4 6] [0 0 0 0 0.5]
     set mcp.label.color         ?track_selected [225 225 225] [190 190 190]
-    set mcp.label.color         ?trackcolor_valid [trackcolor_r trackcolor_g trackcolor_b] 
+    set mcp.label.color         ?trackcolor_valid [trackcolor_r trackcolor_g trackcolor_b]
     set mcp.extmixer.mode       [1]
     set mcp.extmixer.position   [0]
 endMacro
@@ -3018,7 +3018,7 @@ macro drawMasterMcp scale
   set master.mcp.fxbyp                            * scale [89 7 29 20]
   set master.mcp.pan                 + [0 pan_sec] * scale h<hide_pan_sm{0} [0]    width_visible{0}==2   h<hide_pan_labels_sm{0} [7 5 67 9] [7 15 67 9] \
                                                 width_visible{0}!=0    h<hide_pan_labels_sm{0} [20 4 20 20] [20 7 20 20] \
-                                                          h<hide_pan_labels_sm{0} [31 4 20 20] [31 7 20 20]      
+                                                          h<hide_pan_labels_sm{0} [31 4 20 20] [31 7 20 20]
       set master.mcp.pan.fadermode                gl_fader_swap
     set master.mcp.pan.color                    gl_pan_color
     set master.mcp.pan.label                    h<hide_pan_labels_sm{x} [0] + [0 master.mcp.pan] * scale width_visible{0}!=0 width_visible{0}==2 [24 -11 35 9] [7 25 35 10] [24 25 35 10]
@@ -3046,7 +3046,7 @@ macro drawMasterMcp scale
     set master.mcp.pan     trackpanmode==6 + + . * scale 2@y scale==1 [0 0 0 0] scale==1.5 [0 -1 0 -2] [0 -2 0 -2]
     set master.mcp.width   trackpanmode==6 + + . * scale 2@y scale==1 [0 0 0 0] scale==1.5 [0  1 0 -2] [0  0 0 -2]
 
-    set master.mcp.pan.label       +  * scale trackpanmode==6 0@y 2@y 
+    set master.mcp.pan.label       +  * scale trackpanmode==6 0@y 2@y
     set master.mcp.width.label     +  * scale trackpanmode==6 4@y 2@y
 
   set master.mcp.mono                             + [0 pan_sec] * scale h<hide_pan_labels_sm{0} h<hide_pan_sm{0} [0] [93 4 25 22] [93 8 25 33]
@@ -3097,7 +3097,7 @@ macro drawMasterMcp scale
     set master.mcp.custom.bg                        + + fx_sec pan_sec{h}@h lscale@x
     set master.mcp.custom.bg                        ?sidebarMode [. . . h]
     set master.mcp.custom.bg.color                  + mcp_bg_color ?track_selected [0 0 0 0 13 13 13] [0]
-    ; *** end of mod ***    
+    ; *** end of mod ***
 
     ; FTC MOD extmixer offset
     set extmix_margin_s    * scale 2
@@ -3111,11 +3111,11 @@ macro drawMasterMcp scale
 
     set row_h * scale mcp_list_row_h
     set scrollbar_size                          scale==1  [2 5] scale==1.5  [3 7]  [4 10]
-    set line_spacing                            mcp_list_row_h>=34 0 1000 
+    set line_spacing                            mcp_list_row_h>=34 0 1000
 
-    set master.mcp.fxlist.font                         [list_font row_h{0} 0 0 line_spacing{0} 0 scrollbar_size{0} scrollbar_size{1}] 
+    set master.mcp.fxlist.font                         [list_font row_h{0} 0 0 line_spacing{0} 0 scrollbar_size{0} scrollbar_size{1}]
     set master.mcp.sendlist.font                       [list_font row_h{0} 0 0 line_spacing{0} 0 scrollbar_size{0} scrollbar_size{1}]
-    set master.mcp.fxparm.font                         [list_font row_h{0} 0 0 line_spacing{0} 0 scrollbar_size{0} scrollbar_size{1}] 
+    set master.mcp.fxparm.font                         [list_font row_h{0} 0 0 line_spacing{0} 0 scrollbar_size{0} scrollbar_size{1}]
 
   set master.mcp.fxlist.margin                  + * scale [2 0 2 0 0 14] 0.5@ls
   set master.mcp.sendlist.margin                *   scale [3 0 6 0 0 14]
@@ -3230,7 +3230,7 @@ macro drawTransport scale
     size  timebase  0   8   33  22
 
     set div_w scale==2 2 1
-    set status_min_s                * scale status_min 
+    set status_min_s                * scale status_min
     set selection_min_s             * scale selection_min
     set trans_margin                * scale 4
     set sec_margin                  * scale 6
@@ -3243,7 +3243,7 @@ macro drawTransport scale
     set trans_height_offs           * scale - trans_height 36
 
   paramPair trans_rateSize    77 60 90 104 118 132 146 160
-    set size_rate           + * scale [0 8 0 22] * scale [0 0 trans_rateSize{0} 0 trans_rateSize{0}] 
+    set size_rate           + * scale [0 8 0 22] * scale [0 0 trans_rateSize{0} 0 trans_rateSize{0}]
 
   set show_rate           trans_flags&2 1 0
     set show_timesig                trans_flags&4 1 0
@@ -3312,7 +3312,7 @@ macro drawTransport scale
     set sec_status      sec_status{w}>0     + * [1 0 -2] sec_margin
 
     ; draw content in sec_buttons
-    set compat_div_w    * div_w reaper_version<700 2 1 
+    set compat_div_w    * div_w reaper_version<700 2 1
   set trans.rew       +     [sec_buttons sec_buttons]                 [size_rew size_rew size_rew size_rew]
   set trans.fwd       - + + [trans.rew sec_buttons]   [size_rew{2}]   [size_fwd size_fwd size_fwd size_fwd]           compat_div_w@x
   set trans.stop      - + + [trans.fwd sec_buttons]   [size_fwd{2}]   [size_stop size_stop size_stop size_stop]       compat_div_w@x
@@ -3337,16 +3337,16 @@ macro drawTransport scale
     set trans.automode      sec_proj{w}==0 [0]     + [sec_proj sec_proj]                                [size_automode size_automode size_automode size_automode]
   set trans.bpm.tap       sec_proj{w}==0 [0] + + + [trans.automode sec_proj]  [trans.automode{2}]     [size_bpm_tap size_bpm_tap size_bpm_tap size_bpm_tap] sec_proj_margin@x
   set trans.bpm.edit      sec_proj{w}==0 [0]   + + [trans.bpm.tap sec_proj]   [trans.bpm.tap{2}]      [size_bpm_edit size_bpm_edit size_bpm_edit size_bpm_edit]
-  set trans.curtimesig    sec_proj{w}==0 [0]   + + [trans.bpm.edit sec_proj]  [trans.bpm.edit{2}]     [size_timesig size_timesig size_timesig size_timesig] 
+  set trans.curtimesig    sec_proj{w}==0 [0]   + + [trans.bpm.edit sec_proj]  [trans.bpm.edit{2}]     [size_timesig size_timesig size_timesig size_timesig]
     set trans.timebase      sec_proj{w}==0 [0]   + + [trans.curtimesig sec_proj] [trans.curtimesig{2}]  [size_timebase size_timebase size_timebase size_timebase]
     set trans_rate          sec_proj{w}==0 [0] + + + [trans.timebase sec_proj]  [trans.timebase{2}]     [size_rate size_rate size_rate size_rate] ?show_rate sec_proj_margin@x 0
     set rate_mode_change      * scale 80
     set trans_rate_mode      size_rate{w}<rate_mode_change{0} 1 0
-    set trans.rate               sec_proj{w}==0 [0] !show_rate{0} [0] + + [trans_rate trans_rate 0 trans_rate] * scale [-36 0 36] trans_rate{w}@x 
+    set trans.rate               sec_proj{w}==0 [0] !show_rate{0} [0] + + [trans_rate trans_rate 0 trans_rate] * scale [-36 0 36] trans_rate{w}@x
     set trans.rate.fader         sec_proj{w}==0 [0] !show_rate{0} [0] + [trans_rate trans_rate] \
                                         ?trans_rate_mode{0} \
                                             * scale [-4 -3 28 28] \
-                                            + - trans_rate{w}@w trans.rate{w}@w * scale [9 3 -9 16] 
+                                            + - trans_rate{w}@w trans.rate{w}@w * scale [9 3 -9 16]
 
 
     set is_compat_font   os_type==0 0 os_type>2 0 1
@@ -3399,12 +3399,12 @@ macro drawTransport scale
     custom trans.custom.sel_end  '' 0 '' 'custom_transport_sel_end'
     set trans.custom.sel_end    sec_sel{w}>0  +  + [trans.custom.sel_div3 trans_sel] * scale [-6 3 6 6] div_w@x
 
-    front trans.custom.sel_start trans.custom.sel_end 
+    front trans.custom.sel_start trans.custom.sel_end
 
     custom trans.custom.sel_bg  '' 0 '' 'custom_transport_edit_bg'
 
   set trans.sel          trans_sel
-    set trans.custom.sel_bg         sec_sel 
+    set trans.custom.sel_bg         sec_sel
 
     ; Set margins
   set trans.margin        + [trans_margin 0 trans_margin 0] / trans_height_offs@y 2
@@ -3520,7 +3520,7 @@ Layout "75%_A"
   set mcp.label        .
   set envcp.label      .
   set master.mcp.label   .
-  set master.tcp.label   .  
+  set master.tcp.label   .
   set trans.status     .
 EndLayout
 
@@ -3743,5 +3743,3 @@ layout_dpi_translate   '150%_A_Fader_Blue'   1.34   '200%_A_Fader_Blue'
 layout_dpi_translate   '150%_A_Fader_Purple'   1.34   '200%_A_Fader_Purple'
 layout_dpi_translate   '150%_A_Fader_Pink'   1.34   '200%_A_Fader_Pink'
 layout_dpi_translate   '150%_A_Fader_White'   1.34   '200%_A_Fader_White'
-
-;

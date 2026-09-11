@@ -20,6 +20,11 @@ export class WalterParser extends Observer {
     this.parser.setLanguage(this.language);
   }
 
+  public kill = () => {
+    this.parser.delete();
+    this.currentAst = null;
+  };
+
   public parseNewDocument = (documentText: string) => {
     this.parser.reset();
     this.currentAst = this.parser.parse(documentText);

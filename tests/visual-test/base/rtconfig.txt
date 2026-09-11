@@ -5,25 +5,36 @@
 ; Note: syntax highlighting is highly dependent on the chosen theme, so make sure to test it on different themes.
 
     
-
+		
 ;comment
 ; comment
  ;comment
- ; comment
-
+ ; comment  
+ ; commкиррилицыentф
+ ; только кириллица  
+ ; начинается с кириллицы commкиррилицыent  
+ ; commкиррилицыentф
+; ü
+;ü
+; é
+;
+;       
+; العالم
+; 你好
+   
 ; Потенциальные свойства темы
 ; vertfont_topdown 1
 ; mcp_send_zeroline
 ; transport_showborders 0
-
+    
 version 5
 use_pngs 1
 use_overlays 0
 tinttcp 4
 peaksedges 4
 tcp_folderindent 12
-tcp_heights 4 20 52 72
-tcp_master_minheight 20
+tcp_heights 4 20 52 72 ;        5156    
+tcp_master_minheight 20      
 tcp_voltext_flags 4 5
 tcp_master_voltext_flags 5 5
 mcp_voltext_flags 5 5
@@ -57,12 +68,12 @@ layout_dpi_translate "123" 123 "213"
 want_os_type 1
 
 clear mcp.*
-  clear mcp.bottom
+  clear mcp.bottom  
 clear mcp.bottom.*
 
 reset mcp.*
   reset mcp.bottom
-reset mcp.bottom.*
+reset mcp.bottom.*  
 
 set hello 145
   set mcp hello
@@ -71,8 +82,11 @@ set mcp.bottom.font [20 -11 -10.5]
 set mcp.bottom.font [ 20 11 10.5 20 ] ; comment
 set mcp.bottom.font [ 20 11 10.5 20 ]; comment
 set mcp.bottom.font [ tcp{x} myVar{x} 20 ];comment
-set mcp.bottom.font [ 20 11 10.5 20 ] ;comment
+set mcp.bottom.font [ 20 11 10.5 20 ] ;comment   
 set mcp.bottom.font [20 hello 10.5 9]
+set tcp.mute 4{x}
+set tcp.mute w{x}
+set tcp.mute var{x}
 set tcp.mute [0 tcp.custom.test{x} 10 10]
   set mcp.bottom.font [20 hello{w} 10.5 9]
   set mcp.bottom.font [trans.play{x} 9]
@@ -90,6 +104,8 @@ set tcp.fxin ?recarm 123 * 234 456
 set tcp.fxin ?recarm 123 / 234 456
 set tcp.label.margin                    * scale ?hide_tcp.recarm [5 0 1 0] [3 0 1 0] ; layoutProperty являются поставщиками скалярными числами и какое число они дают, первое или соответствующее
 set elem_diff * scale -46@x ; правильная подсветка, добавить в тесты.
+set test !!!!!???!a>b 1
+set tcp.folder h<0 w>100 0
 
 set tcp [tcpFolderBalancer] ; проверить на валидность и добавить если так можно
 
@@ -101,12 +117,13 @@ set tcp_LabelSize_min            scale==2 100 scale==1 90 ; scale - зарезе
 ; set tcp_LabelSize   ?tcp   0 . ; Должно ли работать без аксессора?
 ; then master.tcp.custom.pin      19          0       0       reaper_version<700 ; можно ли передавать строки или выражения в макросы?
 ; then tcp.infoblock  tcp_info_Size   1           0       !show_info 0 ; Проверить, передаются ли операции и условия в макросы как параметры.
-; tcp_voltext_flags 12 ; разобраться нах нужно, обязательно ли второе поле и какие значения возможны.
 ; Если я явно объявляют скаляр, то могу ли я использовать его без {} в условных выражениях?
 ; colorsmart tcp.trackidx.color [24 24 24] "asdf" asdfasdf ; проверить все ли типы можно передавть в макрос.
-set tcp.folder h<0 w>100 0
+; set master.tcp.recmode h>16 w>129 [ ] ; проверить что будет, если в скобки ничего не положить.
 
 set mcp.recarm ?1 [0 177 20 20 0 1.0 0 1.0]
+set mcp.recarm 1>0 [0 177 20 20 0 1.0 0 1.0]
+set mcp.recarm 1>0 .
 
 set tcp.custom.sectionLeft1                              \
   +                                                      \
@@ -126,26 +143,26 @@ front mcp.custom.test mcp.custom.test mcp.custom.test
   front mcp.bottom
 front mcp.bottom.font
 
-mCallTest p1 p2 p3
+mCallTest p1 p2 p3   
 colorsmart                  mcp.trackidx.color      [27 27 27]
 
-macro m p1 p2
-  set test 1
-endmacro
+mAcro m asdf asdf   
+  set test 1   
+endmacro   
 
 
-define_parameter myParam "str" 5 0 10
+define_parameter myParam "str" 5 0 10  
 define_parameter myParam "str" 4 4 4
 define_parameter Echolot_FTC 'Echolot_FTC version' 1
 
-custom tcp.custom.folder_start '' 0 '' 'folder_start'
+custom tcp.custom.folder_start '' 0 '' 'folder_start'  
 ; custom tcp.custom.sectionLeft1 someIdentifier someIdentifier 1
 ; custom tcp.custom.sectionLeft2 hideSection Left2 2 DrawW thisLayout
 custom tcp.custom.tcpDiv
 set tcp.custom.tcpDiv.color * Scale [0 0 0 0 0 0 0 tcpDivOpacity{0}]
 
-layout "mylayout" "folder"
-endlayout
+layout "mylayout" "folder"   
+endlayout   
 
 layout "mylayout" "folder"
 
@@ -158,7 +175,7 @@ endLayout
   layout "1. Classic Top Aligned"
   endLayout
 
-layout "mylayout" "folder"
+layout "mylayout" "folder"   
   set mcp.bottom.font [ 20 11 10.5 20 ] ; comment
   set mcp.bottom.font [ 20 11 10.5 20 ]; comment
   set mcp.bottom.font [ 20 11 10.5 20 ];comment
@@ -175,11 +192,11 @@ layout "test" "test"
   ; comment
 endLayout
 
-; Should break the parser ------------------------------------------------------
+; Should fail ------------------------------------------------------
 ; set var [-10.0a]
 ; set var [10.0a]
 ; set -scalar 100 ; Унарные минусы поддерживаются только для числовых литералов.
-; front mcp.* ; front вроде не поддерживает wildcard.
+; front mcp.* ; front не поддерживает wildcard.
 ; set side_scrollbar_size scale=1.5 2 1
 ; Layout "4. TCP Separator" all-tcp-separator ; String is expected.
 ; endLayout

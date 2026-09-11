@@ -662,7 +662,7 @@ macro drawTcpFxSend
 	set fxparm_w_cols                           + - fxparm_sec{0} fxparm_margin_r{0} * 2 * scale tcp_fxCols_size{0}
 	set fxparm_w                                ?fxparm_hide{0}<fxparm_hide_w{0} tcp_fxparmsends_s{0} + / fxparm_w_cols{0} 2 ?tcp_sepSends{0}>0 * scale + columnWeight{0} 50 [0]
 	set fxparm_h_size                           - h * 2 fxparm_y{0}
-	set fxparm_h_rows							/ / fxparm_h_size{0} scale fx_height_h{0} 
+	set fxparm_h_rows							/ / fxparm_h_size{0} scale fx_height_h{0}
 	floorRows fxparm_h_rows{0}
 	set fxparm_h								+ * fxparm_h_rows{0} fx_height{0} * scale 5
 
@@ -894,7 +894,7 @@ macro drawMasterTcp scale
 
 	  set master.tcp.meter.vu.div                    * [scale 1 scale scale] [16 -1 0 4]
 	  set master.tcp.meter.readout.color             [188 212 217 255 255 200 255 255]
-      set master.tcp.meter.rmsreadout.color          [188 212 217 255 0 0 0 0]   
+      set master.tcp.meter.rmsreadout.color          [188 212 217 255 0 0 0 0]
 	  set master.tcp.meter.scale.color.lit.bottom    [0 0 0 0 200 200 200 170]
 	  set master.tcp.meter.scale.color.lit.top       [0 0 0 0 255 255 255 235]
 	  set master.tcp.meter.scale.color.unlit.bottom  [140 155 180 200 0 0 0 0]
@@ -969,7 +969,7 @@ macro drawMasterTcp scale
 												+ * scale [-33] * [1 1 scale 1] - + [master_pan_group master_pan_group 53 element_h{0}] [master_pan_group{2}] [element_h{0}]
 
 		set master.tcp.width.label.margin       master.tcp.pan.label.margin
-		set master.tcp.width.label.font			master.tcp.pan.label.font 
+		set master.tcp.width.label.font			master.tcp.pan.label.font
 		set master.tcp.width.label.color      	main_val_color
 
 	set master.tcp.volume.label					+ [main_sec vol_sec] - + [main_eff{0}] * scale [-40 1 50 10] [meter_sec{3}]
@@ -1088,7 +1088,7 @@ macro calcEnvSecs scale
 	set values_sec								h<element_min_h{0} [0] \
                                                 h<valuesFlipH{0} + + [main_sec envcp_padding{1} values_w{0}] [main_sec{2}] \
                                                 * scale EnvFolderIndent{0}==0 [-22 2 20 13] [-48 2 0 13] + [0 main_sec{3} w] * scale [0 0 8 13]
-	set envcpNullElement						+ + [main_sec] [envcp_padding envcp_padding] * scale EnvFolderIndent{0}==0 [6 0 0 20] [-2 0 0 20] 
+	set envcpNullElement						+ + [main_sec] [envcp_padding envcp_padding] * scale EnvFolderIndent{0}==0 [6 0 0 20] [-2 0 0 20]
 	set previous_element 						envcpNullElement
 	set addCont									envcp_type==4 [30 1] [1 0]
 
@@ -1941,7 +1941,7 @@ macro drawTransport scale
 	set size_timesig             	?trans_flags&4 . [0 0 0 0 0]
 
 	; size the sections
-	set sec_buttons_width           + + + + + + size_stop{4} size_play{4} size_pause{4} size_rec{4} size_repeat{4} size_rew{4} size_fwd{4} 
+	set sec_buttons_width           + + + + + + size_stop{4} size_play{4} size_pause{4} size_rec{4} size_repeat{4} size_rew{4} size_fwd{4}
 	set sec_buttons                 [0 0 sec_buttons_width{0}]
 	set sec_proj_width           	+ + + + + size_trans.custom.cb601{4} size_bpm{4} size_trans.timebase{4} size_timesig{4} size_rate{4} size_automode{4}
 	set sec_proj                 	[0 0 sec_proj_width{0} row_height{0}]
@@ -2275,5 +2275,3 @@ layout_dpi_translate 	'C MCP-Thumb_RED'           1.74 	'~2x_C'
 
 layout_dpi_translate    ''                          1.34    'A'
 layout_dpi_translate    ''                          1.74    '~2x_A'
-
-;

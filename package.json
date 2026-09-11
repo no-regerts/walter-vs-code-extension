@@ -6,6 +6,13 @@
   "version": "0.0.1",
   "license": "MIT",
   "icon": "./assets/icons/extension-icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/no-regerts/walter-vs-code-extension"
+  },
+  "bugs": {
+    "url": "https://github.com/no-regerts/walter-vs-code-extension/issues"
+  },
   "engines": {
     "vscode": "^1.134.0"
   },
@@ -36,15 +43,20 @@
   "contributes": {
     "configuration": {
       "properties": {
-        "WALTER.enableParser": {
+        "walter.enableParser": {
           "type": "boolean",
           "default": true,
           "description": "Enables or disables the core feature of this extension (restart required)"
         },
-        "WALTER.parserInterval": {
+        "walter.parserInterval": {
           "type": "number",
           "default": 200,
-          "description": "Timeout between parsing events during typing (restart required)"
+          "description": "Timeout between parsing events during typing"
+        },
+        "walter.linter.noTrailingSpaces": {
+          "type": "boolean",
+          "default": true,
+          "description": "Underlines trailing spaces at the end of lines"
         }
       }
     },

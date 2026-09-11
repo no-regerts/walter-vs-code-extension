@@ -1,0 +1,43 @@
+
+
+set v .5
+set l [0 0 0 0 0 0 0 0 0]
+
+set val 4=3 1 2
+set val 4==3 1 2 3 4
+
+set v -folder_indent
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+clear mcp.*

@@ -72,6 +72,7 @@ export class ExtensionController {
       const errorCaptures = payload.errors;
       const warningCaptures = payload.warnings;
 
+      // TODO: переделать на общий массив.
       const errors = errorCaptures.map((capture: wts.QueryCapture) => {
         const node = capture.node;
         return new vscode.Diagnostic(
@@ -81,7 +82,7 @@ export class ExtensionController {
             node.endPosition.row,
             node.endPosition.column,
           ),
-          `${capture.name}: ${node.type}`,
+          capture.name === 'missing'? `Missing: ${node.type}` : 'Unknown error',
           vscode.DiagnosticSeverity.Error,
         );
       });
@@ -172,14 +173,24 @@ export class ExtensionController {
         }, this.parserInterval || 200);
       }),
     );
+
+    this.disposables.push(
+      vscode.workspace.onDidChangeConfiguration((_) => {
+        this.restart();
+      })
+    );
   };
 
   public activate = async (context: vscode.ExtensionContext) => {
     this.context = context;
 
-    const config = vscode.workspace.getConfiguration("WALTER");
-    this.isParserEnabled = config.get<boolean>("enableParser");
-    this.parserInterval = config.get<number>("parserInterval");
+    const config = vscode.workspace.getConfiguration("walter");
+    this.isParserEnabled = config.get<boolean>("enableParser", true);
+    this.parserInterval = config.get<number>("parserInterval", 200);
+    const linterRules = {
+      noTrailingSpaces: config.get<boolean>("linter.noTrailingSpaces", true),
+    };
+
     if (!this.isParserEnabled) return;
 
     await wts.Parser.init();
@@ -191,7 +202,7 @@ export class ExtensionController {
     const language = await wts.Language.load(wasmPath.fsPath);
     this.walterParser = new WalterParser(language);
     this.walterParser.on("parsed", (ast: wts.Tree) =>
-      this.staticAnalizer.init(language, ast),
+      this.staticAnalizer.init(language, ast, linterRules),
     );
 
     this.setupDiagnostics();
@@ -203,4 +214,12 @@ export class ExtensionController {
   };
 
   public deactivate = () => {};
+
+  private restart = () => {
+    this.walterParser.kill();
+    // this.staticAnalizer.kill(); TODO
+    // this.walterParser.off("parsed"); TODO
+    // TODO: remove all bindings.
+    this.activate(this.context!);
+  };
 }

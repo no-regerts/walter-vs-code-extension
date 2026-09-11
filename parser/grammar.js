@@ -7,7 +7,8 @@
 // set trans.play [ -scalar . . .] // сдвинет кнопку на значение идентификатора '-scalar', а не 'scalar'.
 
 const nonSpaceRegex = /[a-z0-9_+\-*/\\@&!?<>='"`:.,(){}\[\]]+/i;
-const spaceRegex = /[^a-z0-9_+\-*/\\@&!?<>='"`;:.,(){}\[\]\r\n]+/i;
+const commentWordRegex = /[\p{L}0-9_+\-*/\\@&!?<>='"`;:.,(){}\[\]]+/i;
+const spaceRegex = /[^\p{L}0-9_+\-*/\\@&!?<>='"`;:.,(){}\[\]\r\n]+/i;
 
 function repeatUpTo(max, rule) {
   const rules = [rule];
@@ -29,55 +30,57 @@ module.exports = grammar({
   word: $ => $.identifier,
 
   conflicts: $ => [
-    [$.singleLineCommentStatement, $.emptyLineStatement],
+    [$.defCommand],
     [$.frontCommand],
+    [$.layoutCommand],
     [$.customCommand],
+    [$.macroCommand],
+    [$.defineParameterCommand],
+
     [$.relationalConditional],
     [$.normalConditional],
     [$.negativeConditional],
     [$.bitwiseConditional],
+
+    [$.weightedSumExpression],
+    [$.offsetProductExpression],
     [$.additionExpression],
     [$.subtractionExpression],
     [$.multiplicationExpression],
     [$.divisionExpression],
+
     [$.macroCallStatement, $.property],
-    [$.weightedSumExpression],
-    [$.offsetProductExpression],
     [$.coordinateListItem, $.scalarValue],
-    [$.expression, $.negativeConditional],
-    [$.expression, $.relationalConditional],
-    [$.expression, $.bitwiseConditional],
-    [$.defineParameterCommand],
     [$.expression, $.scalarValue],
-    [$.property],
-    [$.scalarValue],
-    [$.defCommand],
-    [$.expression, $.normalConditional]
   ],
 
   word: $ => $.identifier,
 
   rules: {
-    source_file: $ => repeat($.statement),
+    source_file: $ => repeat($._statement),
 
     lineEnd: $ => choice(
-      $.newLine,
-      // eof(), // TODO: детектировать конец файла.
+      /\r?\n/,
+      // '\0',
+      // eof(), // TODO: handle the EOF too.
     ),
 
+    commentWord: $ => token(/\S+/),
     anyWord: $ => nonSpaceRegex,
     space: $ => token(prec(1, spaceRegex)),
-    trailingSpaces: $ => spaceRegex,
-    newLine: $ => /\r?\n/,
 
-    comment: $ => /;[^\r\n]*/,
+    comment: $ => prec.left(seq(
+      token(';'),
+      repeat(seq(optional($.space), $.commentWord)),
+      optional(alias($.space, $.trailingSpace)),
+    )),
+    commentWord: $ => commentWordRegex,
 
     number: $ => seq(optional($.minus), /\d+(?:\.\d+)?/),
     minus: $ => '-', // Используется, чтобы устранить неоднозначность между отрицательными числами и идентификаторами, начинающимися на '-'.
-    hexColor: $ => choice(
-      /[0-9a-f]{8}/i,
-      /[0-9a-f]{6}/i, // TODO: проверить, что 6-значные хексы работают для цветов, также проверить 4-значные.
-    ),
+    hexColor: $ => /[0-9a-f]{8}/i, // Verified: only 8-digit colors are supported.
+
+    macroToken: _ => token(prec(10, /macro/i)),
 
     string: $ => choice(
       $.singleQuoteString,
@@ -90,26 +93,25 @@ module.exports = grammar({
 
     identifier: $ => /[a-z_#][a-z0-9_#]*/i,
 
-    statement: $ => choice(
-      $.emptyLineStatement,
-      $.singleLineCommentStatement,
+    _statement: $ => choice(
+      $.noopStatement,
       $.commandStatement,
       $.themeConfigStatement,
       $.macroCallStatement,
     ),
-
-    emptyLineStatement: $ => seq(
-      optional($.trailingSpaces), // Any spaces on an empty line are trailing spaces.
+    noopStatement: $ => choice(
+      seq(
+        alias($.space, $.trailingSpace),
+        $.lineEnd,
+      ),
+      seq(
+        optional($.space),
+        $.comment,
+        $.lineEnd,
+      ),
       $.lineEnd,
     ),
-
-    singleLineCommentStatement: $ => seq(
-      optional($.space),
-      optional($.comment), // TODO: detect trailing spaces after comments.
-      $.lineEnd,
-    ),
-
-    commandStatement: $ => prec(1, seq(
+    commandStatement: $ => seq(
       optional($.space),
       choice(
         $.clearCommand,
@@ -122,14 +124,22 @@ module.exports = grammar({
         $.macroCommand,
         $.layoutCommand,
       ),
+      choice(
+        seq(
+          optional($.space),
+          $.comment,
+          $.lineEnd,
+        ),
+        seq(
+          alias($.space, $.trailingSpace),
+          $.lineEnd,
+        ),
+        $.lineEnd,
+      ),
+    ),
+    themeConfigStatement: $ => seq(
       optional($.space),
-      optional($.comment), // TODO: detect trailing spaces after comments.
-      $.newLine,
-    )),
-
-    themeConfigStatement: $ => prec(1, seq(
-      optional($.space),
-      prec(1, choice(
+      choice(
         seq(token(prec(1, /version/i)), $.space, $.number),
         seq(token(prec(1, /use_pngs/i)), $.space, choice('0', '1')),
         seq(token(prec(1, /use_overlays/i)), $.space, choice('0', '1')),
@@ -167,14 +177,22 @@ module.exports = grammar({
         seq(token(prec(1, /misc_dpi_translate/i)), $.space, $.number, $.space, $.number),
         seq(token(prec(1, /global_scale/i)), $.space, $.number),
         seq(token(prec(2, /layout_dpi_translate/i)), $.space, $.string, $.space, $.number, $.space, $.string), // Лексический приоритет должен быть выше, чем у команды layout.
-        seq(token(prec(1, /want_os_type/i)), $.space, choice('0', '1')),
-      )),
-      optional($.space),
-      optional($.comment),
-      $.newLine,
-    )),
-
-    macroCallStatement: $ => prec(-1, seq(
+        seq(token(prec(2, /want_os_type/i)), $.space, choice('0', '1')), // Без понятия почему у этого токена приоритет должен быть выше, чем у macroCallStatement.
+      ),
+      choice(
+        seq(
+          optional($.space),
+          $.comment,
+          $.lineEnd,
+        ),
+        seq(
+          alias($.space, $.trailingSpace),
+          $.lineEnd,
+        ),
+        $.lineEnd,
+      ),
+    ),
+    macroCallStatement: $ => seq(
       optional($.space),
       $.identifier,
       optional(repeat1(seq(
@@ -186,12 +204,21 @@ module.exports = grammar({
           $.property,
           $.coordinateList,
         ),
-        optional($.accessExpression)
+        optional($.accessExpression),
       ))),
-      optional($.space),
-      optional($.comment), // TODO: detect trailing spaces after comments.
-      $.newLine,
-    )),
+      choice(
+        seq(
+          optional($.space),
+          $.comment,
+          $.lineEnd,
+        ),
+        seq(
+          alias($.space, $.trailingSpace),
+          $.lineEnd,
+        ),
+        $.lineEnd,
+      ),
+    ),
     
     ///////////////////////////////// COMMANDS /////////////////////////////////
 
@@ -200,17 +227,15 @@ module.exports = grammar({
       token(prec(1, /clear/i)),
       $.space,
       $.property,
-      optional(seq('.', '*')),
+      optional(token('.*')),
     ),
-    
     // Checked: принимает только один параметр, т.е. reset trans.* tcp.* - нельзя.
     resetCommand: $ => seq(
       token(prec(1, /reset/i)),
       $.space,
       $.property,
-      optional(seq('.', '*')),
+      optional(token('.*')),
     ),
-    
     setCommand: $ => seq(
       token(prec(1, /set/i)),
       $.space,
@@ -218,35 +243,32 @@ module.exports = grammar({
       $.space,
       $.expression,
     ),
-
     defCommand: $ => seq(
       token(prec(1, /def/i)),
       $.space,
       $.identifier,
       repeat1(seq($.space, $.anyWord)),
     ),
-
     frontCommand: $ => seq(
       token(prec(1, /front/i)),
       repeat1(seq($.space, $.property)),
     ),
-
     macroCommand: $ => seq(
-      token(prec(0, /macro/i)), // TODO: wtf?
+      token(prec(1, /macro/i)),
       $.space,
       $.identifier,
+      repeat(seq($.space, $.identifier)),
+      choice(
+        seq(optional($.space), $.comment, $.lineEnd),
+        seq(alias($.space, $.trailingSpace), $.lineEnd),
+        $.lineEnd,
+      ),
+      optional(repeat($._statement)),
       optional(seq(
-        $.space, seq(
-          $.identifier,
-          repeat(seq($.space, $.identifier)),
-        ),
+        optional($.space),
+        token(prec(1, /endmacro/i)),
       )),
-      seq(optional($.space), optional($.comment), $.newLine),
-      optional(repeat($.statement)),
-      seq(optional($.space), token(/endmacro/i)),
     ),
-
-    // TODO: сделать опциональные токены.
     defineParameterCommand: $ => seq(
       token(prec(1, /define_parameter/i)),
       $.space,
@@ -260,7 +282,6 @@ module.exports = grammar({
         $.space, choice($.number, $.identifier), // Maximum value.
       )),
     ),
-    
     customCommand: $ => seq(
       token(prec(1, /custom/i)),
       $.space,
@@ -270,15 +291,28 @@ module.exports = grammar({
       optional(seq($.space, $.string)),
       optional(seq($.space, $.string)),
     ),
-    
     layoutCommand: $ => seq(
       token(prec(1, /layout/i)),
       $.space,
       $.string,
       optional(seq($.space, $.string)),
-      seq(optional($.space), optional($.comment), $.newLine), // Пробелы после имени папки и перевод строки.
-      optional(repeat($.statement)),
-      seq(optional($.space), token(prec(2, /endlayout/i))),
+      choice(
+        seq(
+          optional($.space),
+          $.comment,
+          $.lineEnd,
+        ),
+        seq(
+          alias($.space, $.trailingSpace),
+          $.lineEnd,
+        ),
+        $.lineEnd,
+      ),
+      optional(repeat($._statement)),
+      optional(seq(
+        optional($.space),
+        token(prec(1, /endlayout/i)),
+      )),
     ),
 
     ////////////////////////////////////////////////////////////////////////////
@@ -319,7 +353,7 @@ module.exports = grammar({
       $.property,
       $.scalarValue,
       $.combinatorExpression,
-      $.conditionalExpression,
+      $._conditionalExpression,
       $.coordinateList,
       seq($.scalarValue, $.atExpression),
       seq($.property, $.accessExpression, $.atExpression),
@@ -377,7 +411,7 @@ module.exports = grammar({
       optional(seq($.space, $.expression)),
     ),
 
-    conditionalExpression: $ => choice(
+    _conditionalExpression: $ => choice(
       $.normalConditional,
       $.negativeConditional,
       $.relationalConditional,
@@ -385,45 +419,40 @@ module.exports = grammar({
     ),
     normalConditional: $ => seq(
       token('?'),
-      choice($.scalarValue, $.conditionalExpression), // TODO: ??val isn't working as intended.
-      $.space,
-      $.expression,
-      optional(choice(
-        seq($.space, $.expression),
-        seq($.space, $.placeholder),
-      )),
+      choice(
+        seq($._conditionalExpression, optional(seq($.space, $.expression))),
+        seq($.scalarValue, $.space, $.expression, optional(seq($.space, $.expression))),
+      ),
     ),
     negativeConditional: $ => seq(
-      '!',
-      choice($.scalarValue, $.conditionalExpression), // TODO: !!val isn't working as intended.
-      $.space,
-      $.expression,
-      optional(choice(
-        seq($.space, $.expression),
-        seq($.space, $.placeholder),
-      )),
+      token('!'),
+      choice(
+        seq($._conditionalExpression, optional(seq($.space, $.expression))),
+        seq($.scalarValue, $.space, $.expression, optional(seq($.space, $.expression))),
+      ),
     ),
     relationalConditional: $ => seq(
       $.scalarValue,
-      choice('<', '>', '<=', '>=', '==', '!='),
+      choice(
+        token('<'),
+        token('>'),
+        token('<='),
+        token('>='),
+        token('=='),
+        token('!='),
+      ),
       $.scalarValue,
       $.space,
       $.expression,
-      optional(choice(
-        seq($.space, $.expression),
-        seq($.space, $.placeholder),
-      )),
+      optional(seq($.space, $.expression)),
     ),
     bitwiseConditional: $ => seq(
       $.scalarValue,
-      '&',
+      token('&'),
       $.scalarValue,
       $.space,
       $.expression,
-      optional(choice(
-        seq($.space, $.expression),
-        seq($.space, $.placeholder),
-      )),
+      optional(seq($.space, $.expression)),
     ),
 
     scalarValue: $ => choice(
@@ -431,54 +460,53 @@ module.exports = grammar({
       $.property,
       $.predefinedScalarProperty,
       seq($.scalarValue, $.accessExpression), // Для ситуаций вроде w{0}. Технически это не ошибка, поэтому разрешаем.
-      seq($.property, $.accessExpression),
     ),
 
     // For both user-defined (myVar, my_var) and built-in (tcp.mute) properties
-    property: $ => seq(
+    property: $ => choice(
       $.identifier,
-      repeat(seq('.', $.identifier)),
+      prec.left(seq($.property, '.', $.identifier))
     ),
     predefinedScalarProperty: $ => choice(
-      token('w'),
-      token('h'),
-      token('reaper_version'),
-      token('os_type'),
-      token('folderstate'),
-      token('folderdepth'),
-      token('maxfolderdepth'),
-      token('mcp_maxfolderdepth'),
-      token('recarm'),
-      token('tcp_iconsize'),
-      token('mcp_iconsize'),
-      token('mcp_wantextmix'),
-      token('tracknch'),
-      token('trackpanmode'),
-      token('tcp_fxparms'),
-      token('tcp_fxembed'),
-      token('mcp_fxembed'),
-      token('tcp_sends_enabled'),
-      token('tcp_fxlist_enabled'),
-      token('trackpinned'),
-      token('tcp_hidden_overridden'),
-      token('send_cnt'),
-      token('fx_parm_cnt'),
-      token('fx_cnt'),
-      token('recfx_cnt'),
-      token('trackcolor_valid'),
-      token('trackcolor_r'),
-      token('trackcolor_g'),
-      token('trackcolor_b'),
-      token('mixer_visible'),
-      token('track_selected'),
-      token('trackidx'),
-      token('ntracks'),
-      token('trackfixedlanes'),
-      token('trans_flags'),
-      token('trans_docked'),
-      token('trans_center'),
-      token('envcp_type'),
-      token('env_selected'),
+      token(prec(2, 'w')),
+      token(prec(2, 'h')),
+      token(prec(2, 'reaper_version')),
+      token(prec(2, 'os_type')),
+      token(prec(2, 'folderstate')),
+      token(prec(2, 'folderdepth')),
+      token(prec(2, 'maxfolderdepth')),
+      token(prec(2, 'mcp_maxfolderdepth')),
+      token(prec(2, 'recarm')),
+      token(prec(2, 'tcp_iconsize')),
+      token(prec(2, 'mcp_iconsize')),
+      token(prec(2, 'mcp_wantextmix')),
+      token(prec(2, 'tracknch')),
+      token(prec(2, 'trackpanmode')),
+      token(prec(2, 'tcp_fxparms')),
+      token(prec(2, 'tcp_fxembed')),
+      token(prec(2, 'mcp_fxembed')),
+      token(prec(2, 'tcp_sends_enabled')),
+      token(prec(2, 'tcp_fxlist_enabled')),
+      token(prec(2, 'trackpinned')),
+      token(prec(2, 'tcp_hidden_overridden')),
+      token(prec(2, 'send_cnt')),
+      token(prec(2, 'fx_parm_cnt')),
+      token(prec(2, 'fx_cnt')),
+      token(prec(2, 'recfx_cnt')),
+      token(prec(2, 'trackcolor_valid')),
+      token(prec(2, 'trackcolor_r')),
+      token(prec(2, 'trackcolor_g')),
+      token(prec(2, 'trackcolor_b')),
+      token(prec(2, 'mixer_visible')),
+      token(prec(2, 'track_selected')),
+      token(prec(2, 'trackidx')),
+      token(prec(2, 'ntracks')),
+      token(prec(2, 'trackfixedlanes')),
+      token(prec(2, 'trans_flags')),
+      token(prec(2, 'trans_docked')),
+      token(prec(2, 'trans_center')),
+      token(prec(2, 'envcp_type')),
+      token(prec(2, 'env_selected')),
     ),
   }
 });

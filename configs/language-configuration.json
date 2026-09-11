@@ -7,8 +7,8 @@
   },
   "folding": {
     "markers": {
-      "start": ";---",
-      "end": ";-"
+      "start": "^\\s*;---",
+      "end": "^\\s*;-"
     }
   },
   "autoClosingPairs": [
