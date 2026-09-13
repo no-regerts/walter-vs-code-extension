@@ -84,12 +84,13 @@ set mcp.bottom.font [ 20 11 10.5 20 ]; comment
 set mcp.bottom.font [ tcp{x} myVar{x} 20 ];comment
 set mcp.bottom.font [ 20 11 10.5 20 ] ;comment   
 set mcp.bottom.font [20 hello 10.5 9]
-set tcp.mute 4{x}
+set tcp.mute 4@x
 set tcp.mute w{x}
 set tcp.mute var{x}
 set tcp.mute [0 tcp.custom.test{x} 10 10]
   set mcp.bottom.font [20 hello{w} 10.5 9]
   set mcp.bottom.font [trans.play{x} 9]
+  set myvar w<100 1 2
   set myvar w<100 [0 0 10 10] [20 20 10 10]
 set myvar w<100 [0 0 10 10] w<200 [20 20 10 10] [40 40 10 10]
 set tcp.width.label trackpanmode>=4 tcp.custom.test{x}>0 [tcp.width{w} 1] [0] [0]
@@ -104,7 +105,10 @@ set tcp.fxin ?recarm 123 * 234 456
 set tcp.fxin ?recarm 123 / 234 456
 set tcp.label.margin                    * scale ?hide_tcp.recarm [5 0 1 0] [3 0 1 0] ; layoutProperty являются поставщиками скалярными числами и какое число они дают, первое или соответствующее
 set elem_diff * scale -46@x ; правильная подсветка, добавить в тесты.
-set test !!!!!???!a>b 1
+set test a>b 1 2
+set test !a>b 1 2
+set test !a>b 1 2 1
+set test !!a>b 1 2 1 1
 set tcp.folder h<0 w>100 0
 
 set tcp [tcpFolderBalancer] ; проверить на валидность и добавить если так можно

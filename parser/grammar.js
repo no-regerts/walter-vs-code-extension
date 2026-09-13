@@ -1,10 +1,4 @@
-// Приоритетность всех отдельных команд (setCommand, ...) должна быть выше, чем у macroCallStatement.
-
-// Унарные минусы перед идентификаторами не поддерживаются:
-// set scalar -20
-// set trans.play [ scalar . . .] // сдвинет кнопку влево на 20.
-// set scalar 20
-// set trans.play [ -scalar . . .] // сдвинет кнопку на значение идентификатора '-scalar', а не 'scalar'.
+// TODO: добавить пробельные символы юникода: \u00A0\uFEFF\u3000
 
 const nonSpaceRegex = token(/[a-z0-9_+\-*/\\@&!?<>='"`:.,(){}\[\]]+/i);
 const commentWordRegex = token(/[\p{L}0-9_+\-*/\\@&!?<>='"`;:.,(){}\[\]]+/i);
@@ -37,19 +31,10 @@ module.exports = grammar({
     [$.macroCommand],
     [$.defineParameterCommand],
 
-    [$.relationalConditional],
-    [$.normalConditional],
-    [$.negativeConditional],
-    [$.bitwiseConditional],
+    [$.arithmeticExpression],
+    [$.unaryConditional],
+    [$.binaryConditional],
 
-    [$.weightedSumExpression],
-    [$.offsetProductExpression],
-    [$.additionExpression],
-    [$.subtractionExpression],
-    [$.multiplicationExpression],
-    [$.divisionExpression],
-
-    [$.macroCallStatement, $.property],
     [$._expression, $.scalarValue],
   ],
 
@@ -165,13 +150,11 @@ module.exports = grammar({
       optional(repeat1(seq(
         $.space,
         choice(
-          $.identifier,
-          $.number,
-          $.string,
-          $.property,
+          $.string, // TODO: verify.
           $.coordinateList,
+          seq(repeat(choice(token('!'), token('?'))), choice($.binaryConditionString, $.scalarValue)),
+          $.arithmeticOperatorString,
         ),
-        optional($.accessExpression),
       ))),
       choice(
         seq(
@@ -189,14 +172,12 @@ module.exports = grammar({
     
     ///////////////////////////////// COMMANDS /////////////////////////////////
 
-    // Verified: принимает только один параметр, т.е. reset trans.* tcp.* - нельзя.
     clearCommand: $ => seq(
       token(prec(1, /clear/i)),
       $.space,
       $.property,
       optional(token('.*')),
     ),
-    // Verified: принимает только один параметр, т.е. reset trans.* tcp.* - нельзя.
     resetCommand: $ => seq(
       token(prec(1, /reset/i)),
       $.space,
@@ -285,15 +266,14 @@ module.exports = grammar({
     //////////////////////////////// EXPRESSIONS ///////////////////////////////
 
     _expression: $ => choice(
-      $.placeholder, // Verified: 'set var 2>1 5 .' is a valid statement.
-      $.property,
+      $.placeholder,
       $.scalarValue,
-      $._combinatorExpression,
-      $._conditionalExpression,
+      $.arithmeticExpression,
+      $.conditionalExpression,
       $.coordinateList,
       seq($.scalarValue, $.atExpression),
       seq($.property, $.accessExpression, $.atExpression),
-      seq($.property, $.atExpression), // coordlist@x is a shorthand for coordlist{x}@x, as described in the documentation.
+      seq($.property, $.atExpression), // coordlist@x is shorthand for coordlist{x}@x, as described in the documentation.
     ),
 
     coordinateList: $ => seq(
@@ -334,80 +314,51 @@ module.exports = grammar({
       token(/[0-7]/),
     ),
 
-    _combinatorExpression: $ => choice(
-      $.weightedSumExpression, // +:
-      $.offsetProductExpression, // *:
-      $.additionExpression,
-      $.subtractionExpression,
-      $.multiplicationExpression,
-      $.divisionExpression,
-    ),
-    weightedSumExpression: $ => seq(
-      token('+:'),
-      $.scalarValue,
-      token(':'),
-      $.scalarValue,
+    arithmeticExpression: $ => seq(
+      $.arithmeticOperatorString,
       $.space,
       $._expression,
       optional(seq($.space, $._expression)),
     ),
-    offsetProductExpression: $ => seq(
-      token('*:'),
-      $.scalarValue,
-      token(':'),
-      $.scalarValue,
-      $.space,
-      $._expression,
-      optional(seq($.space, $._expression)),
-    ),
-    additionExpression: $ => seq(
+    arithmeticOperatorString: $ => choice(
+      seq(
+        choice(token('+:'), token('*:')),
+        $.scalarValue,
+        token(':'),
+        $.scalarValue,
+      ),
       token('+'),
-      $.space,
-      $._expression,
-      optional(seq($.space, $._expression)),
-    ),
-    subtractionExpression: $ => seq(
       token('-'),
-      $.space,
-      $._expression,
-      optional(seq($.space, $._expression)),
-    ),
-    multiplicationExpression: $ => seq(
       token('*'),
-      $.space,
-      $._expression,
-      optional(seq($.space, $._expression)),
-    ),
-    divisionExpression: $ => seq(
       token('/'),
-      $.space,
-      $._expression,
-      optional(seq($.space, $._expression)),
     ),
 
-    _conditionalExpression: $ => choice(
-      $.normalConditional,
-      $.negativeConditional,
-      $.relationalConditional,
-      $.bitwiseConditional,
+    conditionalExpression: $ => choice(
+      $.unaryConditional,
+      $.binaryConditional,
     ),
-    normalConditional: $ => seq(
-      token('?'),
+    unaryConditional: $ => seq(
+      choice(token('?'), token('!')),
       choice(
-        seq($._conditionalExpression, optional(seq($.space, $._expression))),
-        seq($.scalarValue, $.space, $._expression, optional(seq($.space, $._expression))),
+        $.scalarValue,
+        $.unaryConditional,
+        $.binaryConditional,
       ),
-    ),
-    negativeConditional: $ => seq(
-      token('!'),
       choice(
-        seq($._conditionalExpression, optional(seq($.space, $._expression))),
-        seq($.scalarValue, $.space, $._expression, optional(seq($.space, $._expression))),
-      ),
+        seq($.space, $._expression, optional(seq($.space, $._expression))),
+        seq(optional(seq($.space, $._expression))), // !! case.
+      )
     ),
-    relationalConditional: $ => seq(
+    binaryConditional: $ => seq(
+      $.binaryConditionString,
+      $.space,
+      $._expression,
+      optional(seq($.space, $._expression)),
+    ),
+    binaryConditionString: $ => seq(
       $.scalarValue,
       choice(
+        token('&'),
         token('<'),
         token('>'),
         token('<='),
@@ -416,24 +367,14 @@ module.exports = grammar({
         token('!='),
       ),
       $.scalarValue,
-      $.space,
-      $._expression,
-      optional(seq($.space, $._expression)),
-    ),
-    bitwiseConditional: $ => seq(
-      $.scalarValue,
-      token('&'),
-      $.scalarValue,
-      $.space,
-      $._expression,
-      optional(seq($.space, $._expression)),
     ),
 
     scalarValue: $ => choice(
       $.number,
       $.property,
       $.predefinedScalarProperty,
-      seq($.scalarValue, $.accessExpression),
+      seq($.property, $.accessExpression),
+      seq($.predefinedScalarProperty, $.accessExpression),
     ),
 
     // For both user-defined and built-in (tcp.mute) properties
