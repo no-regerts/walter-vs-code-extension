@@ -1,6 +1,5 @@
 Provides full feature support for WALTER language.
 
-> [!CAUTION]
 > **This extension is in early development. Many features are not ready yet, and some bugs are to be expected. Moreover, it deliberately introduces a few restrictions on possible language constructs to make WALTER more consistent and less error-prone, so you may see a number of diagnostic messages (i.e., errors) in your code, even if it is fully functional. All of this is explained further in this document.**
 
 # Supported features
@@ -63,7 +62,7 @@ Code linting is the automated process of analyzing source code to find formattin
 - **Only common characters are allowed in identifier names:**
   - WALTER allows variables to be given almost any name, no matter how unusual - for example, `...`, `-4.0`, `,`, or `"my           var"`. However, to improve code readability and prevent potential errors, the set of allowed characters is restricted to commonly accepted programming conventions: **the first character must be a letter or underscore, and subsequent characters may be letters, digits, underscores, or dots**.
   - The `#` character is temporarily permitted in identifiers (see the next item).
-- **Macros (`macro ... endmacro`) are not fully supported yet:**
+- **Macros (`macro ... endmacro`) are not supported yet:**
   - Implementing full macro support will take some time. If the highlighting of false errors inside macros annoys you, you can disable the parser. To do so, add `"walter.enableParser": false` to your `settings.json`.
   - For now, all `##` are treated as ordinary identifier characters.
 - **Using the `def` command is prohibited**, as it introduces ambiguity when reading source code.

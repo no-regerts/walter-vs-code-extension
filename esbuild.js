@@ -1,79 +1,66 @@
-// import esbuild from "esbuild";
-// import process from "node:process";
+import * as esbuild from 'esbuild';
+import { copy } from 'esbuild-plugin-copy';
 
-// const config = {
-//   entryPoints: ["src/extension.ts"],
+const isDev = process.argv.includes('--dev');
+const isProd = process.argv.includes('--prod');
 
-//   bundle: true,
-
-//   outfile: "out/src/extension.js",
-
-//   external: ["vscode"],
-
-//   format: "js",
-//   platform: "node",
-//   target: "node16",
-
-//   // sourcemap: !production,
-
-//   minify: true,
-
-//   logLevel: "info",
-// };
-
-// async function main() {
-//   if (false) {
-//     const ctx = await esbuild.context(config);
-//     await ctx.watch();
-
-//     console.log("Watching...");
-//   } else {
-//     await esbuild.build(config);
-
-//     console.log("Build complete");
-//   }
-// }
-
-// main().catch(() => {
-//   process.exit(1);
-// });
-
-
-import esbuild from "esbuild";
-import process from "node:process";
-
-const watch = process.argv.includes("--watch");
-const production = process.argv.includes("--production");
-
-/** @type {import('esbuild').BuildOptions} */
-const config = {
-  entryPoints: ["extension.ts"],
-  bundle: true,
-  outfile: "generated/extension.js",
-  external: ["vscode"],
-  format: "cjs",
-  platform: "node",
-  target: "node16",
-  sourcemap: !production,
-  minify: production,
-  minifyIdentifiers: production,
-  minifySyntax: production,
-  minifyWhitespace: production,
-  logLevel: "info",
+const vscodeProblemMatcherPlugin = {
+  name: 'vscode-problem-matcher',
+  setup(build) {
+    build.onStart(() => {
+      // Сигнал для VS Code: сборка началась
+      console.log('[esbuild] Starting build...');
+    });
+    build.onEnd((result) => {
+      // Сигнал для VS Code: сборка окончена (разрешает запуск по F5)
+      console.log('[esbuild] Build finished!');
+    });
+  },
 };
 
-async function main() {
-  if (watch) {
-    const ctx = await esbuild.context(config);
-    await ctx.rebuild();
-    await ctx.watch();
-    console.log("⚡ Watch mode enabled... watching for changes");
-  } else {
-    await esbuild.build(config);
-    console.log("🚀 Build complete");
+async function run() {
+  try {
+    const config = {
+      entryPoints: ['src/extension.ts'],
+      outfile: 'generated/src/extension.js',
+      external: ['vscode'],
+      bundle: true,
+      platform: 'node',
+      format: 'esm',
+      sourcemap: isDev,
+      minify: isProd,
+
+      // Needed to befriend esbuild and VS Code problem matcher:
+      plugins: isDev && [vscodeProblemMatcherPlugin],
+
+      // Nedeed to properly bundle web-tree-sitter:
+      banner: {
+        js: [
+          `import { createRequire as topLevelCreateRequire } from 'module';`,
+          `const require = topLevelCreateRequire(import.meta.url);`,
+        ].join('\n'),
+      },
+      plugins: [
+        copy({
+          assets: {
+            from: ['./node_modules/web-tree-sitter/web-tree-sitter.wasm'],
+            to: ['.'],
+          },
+        }),
+      ],
+    };
+
+    if (isProd) {
+      await esbuild.build(config);
+      console.log('⚡ Production build complete!');
+    } else {
+      const ctx = await esbuild.context(config);
+      await ctx.watch();
+      console.log('👀 Watching for changes in development mode...');
+    }
+  } catch (error) {
+    if (isProd) process.exit(1);
   }
 }
 
-main().catch(err => {
-  process.exit(1);
-});
+run();

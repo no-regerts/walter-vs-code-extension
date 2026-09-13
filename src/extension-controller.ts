@@ -165,7 +165,7 @@ export class ExtensionController {
 
     this.disposables.push(
       vscode.workspace.onDidChangeConfiguration((_) => {
-        this.restart();
+        // this.restart(); // TODO
       }),
     );
   };

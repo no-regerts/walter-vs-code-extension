@@ -30,14 +30,15 @@
   "type": "module",
   "scripts": {
     "lint": "eslint src",
-    "watch": "tsc -watch -p ./",
-    "compile": "tsc -p ./",
+    "watch": "node esbuild.js --dev",
+    "compile": "node esbuild.js --prod",
     "validate-syntax-grammar": "textmate-validate --verbose ./configs/syntax-patterns.json",
     "test-syntax-grammar": "vscode-tmgrammar-test testcases ./tests/**/*.test.txt -g ./configs/syntax-patterns.json",
     "pretest": "npm run compile && npm run lint",
     "test": "npm run validate-syntax-grammar && npm run test-syntax-grammar && vscode-test && tree-sitter test",
     "parser:build": "npm --prefix parser run generate && npm --prefix parser run build",
-    "build": "npm run parser:build && npm run compile && npm run test",
+    "build": "npm run parser:build && npm run compile",
+    "prepackage": "npm run test",
     "package": "npm run build && vsce package"
   },
   "contributes": {
@@ -105,6 +106,8 @@
     "@vscode/test-cli": "^0.0.15",
     "@vscode/test-electron": "^3.0.0",
     "@vscode/vsce": "^3.9.2",
+    "esbuild": "^0.28.2",
+    "esbuild-plugin-copy": "^2.1.1",
     "eslint": "^10.5.0",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.61.1",
@@ -113,5 +116,11 @@
   "overrides": {
     "diff": "^8.0.4",
     "serialize-javascript": "^7.0.6"
+  },
+  "allowScripts": {
+    "esbuild-plugin-copy@2.1.1": true,
+    "@vscode/vsce-sign@2.1.0": true,
+    "esbuild@0.28.2": true,
+    "keytar@7.9.0": true
   }
 }

@@ -1,22 +1,33 @@
 {
-  "version": "0.2.0",
-  "configurations": [
+  "version": "2.0.0",
+  "tasks": [
     {
-      "name": "Test syntax highlighting",
-      "type": "extensionHost",
-      "request": "launch",
-      "runtimeExecutable": "${execPath}",
-      "args": [
-        "--extensionDevelopmentPath=${workspaceFolder}",
-        "${workspaceFolder}/tests/visual-test/base/rtconfig.txt",
-        "${workspaceFolder}/tests/visual-test/default-theme/rtconfig.txt",
-        "${workspaceFolder}/tests/visual-test/reatips/rtconfig.txt",
-        "${workspaceFolder}/tests/visual-test/csix/rtconfig.txt"
-      ],
-      "outFiles": [
-        "${workspaceFolder}/out/**/*.js"
-      ],
-      "preLaunchTask": "${defaultBuildTask}"
+      "type": "npm",
+      "script": "watch",
+      "isBackground": true,
+      "presentation": {
+        "reveal": "never"
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": {
+        "owner": "esbuild",
+        "pattern": {
+          "regexp": "^(.*?):(\\d+):(\\d+):\\nbsp(error|warning):\\nbsp(.*)$",
+          "file": 1,
+          "line": 2,
+          "column": 3,
+          "severity": 4,
+          "message": 5
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^\\[esbuild\\] Starting build\\.\\.\\.$",
+          "endsPattern": "^\\[esbuild\\] Build finished\\!$"
+        }
+      }
     }
   ]
 }
