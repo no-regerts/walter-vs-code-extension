@@ -1,1 +1,1 @@
-mymacro !asd
+mymacro folderstate

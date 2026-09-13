@@ -77,9 +77,6 @@ export class StaticAnalizer extends Observer {
               })),
             );
           break;
-        case 3: // Consecutive newlines.
-        case 4:
-          break;
       }
     });
 

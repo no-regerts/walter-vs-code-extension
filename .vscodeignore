@@ -1,5 +1,4 @@
 .vscode/**
-tests/**
 .gitignore
 .vscode-test/**
 src/**
@@ -10,8 +9,8 @@ src/**
 **/*.ts
 **/.vscode-test.*
 notes.md
-file-icon.af
-./assets/icons/extension-icon.af
-./assets/icons/file-icon.af
+assets/icons/extension-icon.af
+assets/icons/file-icon.af
 parser/**
-*/tests/**
+tests/**
+esbuild.js
