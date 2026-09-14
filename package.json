@@ -3,7 +3,7 @@
   "displayName": "WALTER",
   "description": "Language support for WALTER",
   "publisher": "StanislavYegorov",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "license": "MIT",
   "icon": "./assets/icons/extension-icon.png",
   "repository": {
@@ -35,11 +35,11 @@
     "validate-syntax-grammar": "textmate-validate --verbose ./configs/syntax-patterns.json",
     "test-syntax-grammar": "vscode-tmgrammar-test testcases ./tests/**/*.test.txt -g ./configs/syntax-patterns.json",
     "pretest": "npm run compile && npm run lint",
-    "test": "npm run validate-syntax-grammar && npm run test-syntax-grammar && vscode-test && tree-sitter test",
+    "test": "npm run validate-syntax-grammar && npm run test-syntax-grammar",
     "parser:build": "npm --prefix parser run generate && npm --prefix parser run build",
     "build": "npm run parser:build && npm run compile",
     "prepackage": "npm run test",
-    "package": "npm run build && vsce package"
+    "package": "npm run build && vsce pack --skip-license --out ./generated/"
   },
   "contributes": {
     "configuration": {

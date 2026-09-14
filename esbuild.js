@@ -50,7 +50,7 @@ async function run() {
 
     if (isProd) {
       await esbuild.build(config);
-      console.log('⚡ Production build complete!');
+      console.log('Production build complete!');
     } else {
       const ctx = await esbuild.context(config);
       await ctx.watch();

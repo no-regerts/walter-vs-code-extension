@@ -74,3 +74,5 @@ Code linting is the automated process of analyzing source code to find formattin
   - This is a limitation of the tooling being used. Currently, the parser cannot properly handle the end-of-file (EOF) and relies on a trailing newline character to parse commands correctly. This restriction is expected to be removed in a future version.
 
 # Release Notes
+
+## [1.0.0] - 2026-09-14

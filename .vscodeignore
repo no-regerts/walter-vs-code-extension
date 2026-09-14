@@ -14,3 +14,4 @@ assets/icons/file-icon.af
 parser/**
 tests/**
 esbuild.js
+.github/**
