@@ -69,7 +69,7 @@ module.exports = grammar({
         $.clearCommand,
         $.resetCommand,
         $.setCommand,
-        $.defCommand,
+        alias($.defCommand, $.defCommands),
         $.frontCommand,
         $.defineParameterCommand,
         $.customCommand,
@@ -455,6 +455,6 @@ module.exports = grammar({
     doubleQuoteString: $ => token(/"[^\r\n"]*"/),
     backtickQuoteString: $ => token(/`[^\r\n`]*`/),
 
-    identifier: $ => token(/[a-z_#][a-z0-9_#]*/i),
+    identifier: $ => token(/[a-z_#](?:[a-z0-9._#]*[a-z0-9_#])?/i),
   }
 });

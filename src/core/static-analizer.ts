@@ -41,6 +41,7 @@ export class StaticAnalizer extends Observer {
       (ERROR) @error
       (MISSING) @missing
       (trailingSpace) @trailingSpaces
+      (defCommands) @defCommands
     `;
     let query = new wts.Query(this.language, queryString);
     const matches = query.matches(this.ast!.rootNode);
@@ -76,6 +77,16 @@ export class StaticAnalizer extends Observer {
                 endPosition: capture.node.endPosition,
               })),
             );
+          break;
+        case 3: // 'def' command.
+          this.diagnosticMessages.push(
+            ...match.captures.map((capture) => ({
+              type: DiagnosticMessageType.warning,
+              text: "Using the `def` command is prohibited",
+              startPosition: capture.node.startPosition,
+              endPosition: capture.node.endPosition,
+            })),
+          );
           break;
       }
     });
