@@ -8,12 +8,10 @@ const vscodeProblemMatcherPlugin = {
   name: 'vscode-problem-matcher',
   setup(build) {
     build.onStart(() => {
-      // Сигнал для VS Code: сборка началась
-      console.log('[esbuild] Starting build...');
+      console.log('[watch] build started');
     });
     build.onEnd((result) => {
-      // Сигнал для VS Code: сборка окончена (разрешает запуск по F5)
-      console.log('[esbuild] Build finished!');
+      console.log('[watch] build finished');
     });
   },
 };
@@ -56,7 +54,7 @@ async function run() {
     } else {
       const ctx = await esbuild.context(config);
       await ctx.watch();
-      console.log('👀 Watching for changes in development mode...');
+      console.log('[watch] build finished');
     }
   } catch (error) {
     if (isProd) process.exit(1);

@@ -12,13 +12,13 @@
       "./node_modules/@types"
     ],
     "sourceMap": true,
-    // "rootDir": "./src",
     "rootDirs": [
       "./src",
       "./tests"
     ],
     "strict": true,
     "noImplicitReturns": true,
-    "noUnusedParameters": true
+    "noUnusedParameters": true,
+    "resolveJsonModule": true
   }
 }

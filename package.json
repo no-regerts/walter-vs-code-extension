@@ -49,6 +49,11 @@
           "default": true,
           "description": "Enables or disables the core feature of this extension (restart required)"
         },
+        "walter.showDebugInfo": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enables or disables the debug mode (restart required)"
+        },
         "walter.parserInterval": {
           "type": "number",
           "default": 200,
