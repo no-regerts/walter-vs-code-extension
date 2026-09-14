@@ -13,6 +13,8 @@ export class ExtensionController {
   private context?: vscode.ExtensionContext;
   private disposables: vscode.Disposable[] = [];
 
+  private showDebugInfo: boolean = false;
+
   private configManager: ConfigManager;
   private walterParser!: WalterParser;
   private staticAnalizer: StaticAnalizer;
@@ -99,7 +101,7 @@ export class ExtensionController {
   };
 
   private setupHoverProvider = () => {
-    const hp = new WalterHoverProvider(this.walterParser);
+    const hp = new WalterHoverProvider(this.walterParser, this.showDebugInfo);
     vscode.languages.registerHoverProvider("walter", hp);
   };
 
@@ -174,6 +176,7 @@ export class ExtensionController {
     this.context = context;
 
     if (!this.configManager.config?.isParserEnabled) return;
+    this.showDebugInfo =this.configManager.config?.showDebugInfo;
 
     await wts.Parser.init();
     const wasmPath = vscode.Uri.joinPath(

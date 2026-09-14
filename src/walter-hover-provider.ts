@@ -1,14 +1,21 @@
 import * as vscode from "vscode";
 import * as wts from "web-tree-sitter";
 import { WalterParser } from "./core/walter-parser";
+import * as keywordData from "./core/hover-reference.json";
 
-const scalarInfo: Record<string, string> = {
-  "reaper_version": 'REAPER version (i.e. 4.25)',
-  "folderstate": 'Folder state of track, if applicable (0 for normal, 1 for folder, -n for last track in folder(s))',
-};
+interface KeywordInfo {
+  title: string;
+  meta: string;
+  info: string;
+}
+
+const keywordInfo: Record<string, string | KeywordInfo> = keywordData;
 
 export class WalterHoverProvider implements vscode.HoverProvider {
-  constructor(private walterParser: WalterParser) {}
+  constructor(
+    private walterParser: WalterParser,
+    private showDebugInfo: boolean,
+  ) {}
 
   public provideHover = (
     _document: vscode.TextDocument,
@@ -20,20 +27,27 @@ export class WalterHoverProvider implements vscode.HoverProvider {
       position.character,
     );
     if (!node) return;
-    
-    let info = '';
-    if (scalarInfo[node.text])
-      info = `${scalarInfo[node.text]}`;
-    
-    const resultString = [
-      info,
-      `Debug info: ${this.buildDebugInfo(node)}`,
-    ].join('<br><br>');
 
-    const markdown = new vscode.MarkdownString(resultString);
+    const nodeText = node.text.split(" ")[0];
+    const nodeDescription = keywordInfo[nodeText];
+
+    const resultString = [];
+    if (nodeDescription)
+      if (typeof nodeDescription === "string")
+        resultString.push(`### \`${nodeText}\``, `${nodeDescription}`);
+      else {
+        resultString.push(`### \`${nodeDescription.title}\``);
+        resultString.push(`${nodeDescription.info}`);
+        resultString.push(`${nodeDescription.meta}`);
+      }
+    if (this.showDebugInfo) {
+      resultString.push(`Debug info: ${this.buildDebugInfo(node)}`);
+    }
+
+    const markdown = new vscode.MarkdownString(
+      resultString.join(" \n\n --- \n\n "),
+    );
     markdown.supportHtml = true;
-    // markdown.appendMarkdown(`**${word}**\n\n`);
-
     return new vscode.Hover(markdown);
   };
 
@@ -47,6 +61,6 @@ export class WalterHoverProvider implements vscode.HoverProvider {
       node = node.parent;
     }
 
-    return `${result.reverse().join(" > ")}>${lastNode.text}`;
+    return `${result.reverse().join(" > ")} > ${lastNode.text}`;
   };
 }

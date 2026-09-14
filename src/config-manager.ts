@@ -6,6 +6,7 @@ export interface LinterRules {
 
 export interface ConfigData {
   isParserEnabled: boolean;
+  showDebugInfo: boolean;
   parserInterval: number;
   linterRules: LinterRules;
 }
@@ -24,6 +25,10 @@ export class ConfigManager {
       "parserInterval",
       200,
     );
+    const showDebugInfo = this.workspaceConfig.get<boolean>(
+      "enableDebugMode",
+      false,
+    );
     const linterRules = {
       noTrailingSpaces: this.workspaceConfig.get<boolean>(
         "linter.noTrailingSpaces",
@@ -33,6 +38,7 @@ export class ConfigManager {
 
     this.config = {
       isParserEnabled,
+      showDebugInfo,
       parserInterval,
       linterRules,
     };
