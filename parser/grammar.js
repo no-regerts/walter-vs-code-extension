@@ -1,4 +1,4 @@
-// TODO: добавить пробельные символы юникода: \u00A0\uFEFF\u3000
+// TODO: add Unicode whitespaces (\u00A0 \uFEFF \u3000)?
 
 const nonSpaceRegex = token(/[a-z0-9_+\-*/\\@&!?<>='"`:.,(){}\[\]]+/i);
 const commentWordRegex = token(/[\p{L}0-9_+\-*/\\@&!?<>='"`;:.,(){}\[\]]+/i);
@@ -95,8 +95,8 @@ module.exports = grammar({
         seq(token(prec(1, /version/i)), $.space, $.number),
         seq(token(prec(1, /use_pngs/i)), $.space, choice('0', '1')),
         seq(token(prec(1, /use_overlays/i)), $.space, choice('0', '1')),
-        seq(token(prec(1, /tinttcp/i)), $.space, $.number), // TODO: пометить как предупреждение, т.к. не стоит отбирать контроль у пользователя.
-        seq(token(prec(1, /peaksedges/i)), $.space, $.number), // TODO: пометить как предупреждение, т.к. не стоит отбирать контроль у пользователя.
+        seq(token(prec(1, /tinttcp/i)), $.space, $.number),
+        seq(token(prec(1, /peaksedges/i)), $.space, $.number),
         seq(token(prec(1, /tcp_folderindent/i)), $.space, $.number),
         seq(token(prec(1, /tcp_heights/i)), $.space, $.number, $.space, $.number, $.space, $.number, $.space, $.number),
         seq(token(prec(1, /tcp_master_minheight/i)), $.space, $.number),
@@ -128,8 +128,8 @@ module.exports = grammar({
         seq(token(prec(1, /adjuster_script/i)), $.space, $.string),
         seq(token(prec(1, /misc_dpi_translate/i)), $.space, $.number, $.space, $.number),
         seq(token(prec(1, /global_scale/i)), $.space, $.number),
-        seq(token(prec(2, /layout_dpi_translate/i)), $.space, $.string, $.space, $.number, $.space, $.string), // Лексический приоритет должен быть выше, чем у команды layout.
-        seq(token(prec(2, /want_os_type/i)), $.space, choice('0', '1')), // Без понятия почему у этого токена приоритет должен быть выше, чем у macroCallStatement.
+        seq(token(prec(2, /layout_dpi_translate/i)), $.space, $.string, $.space, $.number, $.space, $.string), // Lexical precidence should be higher than the layout command have.
+        seq(token(prec(2, /want_os_type/i)), $.space, choice('0', '1')), // TODO: no idea why this particular property is bugging out. For now, its priority should be higher than the priority of macroCallStatement.
       ),
       choice(
         seq(
