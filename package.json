@@ -69,15 +69,25 @@
     "commands": [
       {
         "command": "walter.printAst",
-        "title": "Print AST",
-        "when": "editorLangId == python"
+        "title": "WALTER (DEBUG): Print AST"
       },
       {
         "command": "walter.printErrors",
-        "title": "Print Errors",
-        "when": "editorLangId == python"
+        "title": "WALTER (DEBUG): Print Errors"
       }
     ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "walter.printAst",
+          "when": "editorLangId == walter && config.walter.showDebugInfo == true"
+        },
+        {
+          "command": "walter.printErrors",
+          "when": "editorLangId == walter && config.walter.showDebugInfo == true"
+        }
+      ]
+    },
     "languages": [
       {
         "id": "walter",
