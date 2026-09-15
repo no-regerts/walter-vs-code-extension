@@ -7,7 +7,7 @@
     },
     {
       "name": "entity.name.tag.walter",
-      "match": "(?i)(?:adjuster_script|envcp_min_height|gen_(?:(?:pan|vol)_zeroline)|global_scale|item_volknobfg|layout_dpi_translate|mcp_(?:altmeterpos|master_vol_zeroline|master_voltext_flags|mastervupeakheight|min_height|pan_zeroline|showborders|vol_zeroline|voltext_flags|vupeakheight|width_zeroline)|misc_dpi_translate|no_meter_reclbl|peaksedges|tcp_(?:folderindent|heights|margin|master_minheight|master_voltext_flags|pan_zeroline|showborders|vol_zeroline|voltext_flags|vupeakwidth|width_zeroline)|tinttcp|trans_(?:showborders|speed_zeroline)|use_(?:overlays|pngs)|version|want_os_type|warnings\\s+(?:all|pedantic))"
+      "match": "(?i)(?:adjuster_script|envcp_min_height|gen_(?:(?:pan|vol)_zeroline)|global_scale|item_volknobfg|layout_dpi_translate|mcp_(?:altmeterpos|master_vol_zeroline|master_voltext_flags|mastervupeakheight|min_height|pan_zeroline|showborders|vol_zeroline|voltext_flags|vupeakheight|width_zeroline)|misc_dpi_translate|no_meter_reclbl|peaksedges|tcp_(?:folderindent|heights|margin|master_minheight|master_voltext_flags|pan_zeroline|showborders|vol_zeroline|voltext_flags|vupeakwidth|width_zeroline)|tinttcp|trans_(?:showborders|speed_zeroline)|use_(?:overlays|pngs)|version|want_os_type|warnings\\s+(?:all|pedantic))(?=[\\s;])"
     },
     {
       "name": "support.variable.scalar.walter",
@@ -21,7 +21,7 @@
     },
     {
       "name": "keyword.control.commands.walter",
-      "match": "(?i)(clear|custom|def|define_parameter|endlayout|endmacro|front|globallayout|layout|macro|reset|set)(?=\\s)",
+      "match": "(?i)(clear|custom|def|define_parameter|endlayout|endmacro|front|globallayout|layout|macro|reset|set)(?=[\\s;])",
       "comment": "(?=\\s) at the end ensures that 'custom' in text like tcp.custom.myPanel won't be highlighted as a command."
     },
     {

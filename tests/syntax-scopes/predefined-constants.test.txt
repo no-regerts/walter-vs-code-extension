@@ -124,3 +124,13 @@
 
  tcp.custom.trackidx
 ;           ^^^^^^^^ - variable.language.predefined.walter
+
+
+ tcp_margin_
+;^^^^^^^^^^^ - variable.language.predefined.walter
+ tcp_margin{x}
+;^^^^^^^^^^^^^ - variable.language.predefined.walter
+ tcp_margin.
+;^^^^^^^^^^^ - variable.language.predefined.walter
+ tcp_margin123
+;^^^^^^^^^^^^^ - variable.language.predefined.walter
