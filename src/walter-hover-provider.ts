@@ -1,12 +1,13 @@
 import * as vscode from "vscode";
 import * as wts from "web-tree-sitter";
 import { WalterParser } from "./core/walter-parser";
-import * as keywordData from "./core/hover-reference.json";
+import * as keywordData from "./core/keyword-reference.json";
 
 interface KeywordInfo {
   title: string;
-  meta: string;
-  info: string;
+  meta?: string;
+  info?: string;
+  example?: string;
 }
 
 const keywordInfo: Record<string, string | KeywordInfo> = keywordData;
@@ -28,27 +29,32 @@ export class WalterHoverProvider implements vscode.HoverProvider {
     );
     if (!node) return;
 
-    const nodeText = node.text.split(" ")[0];
-    const nodeDescription = keywordInfo[nodeText];
+    const nodeText = node.text.split(" ")[0].toLowerCase();
+    const nodeDescription = keywordInfo[nodeText] as KeywordInfo;
+    const mdString = new vscode.MarkdownString();
+    mdString.supportHtml = true;
 
-    const resultString = [];
     if (nodeDescription)
-      if (typeof nodeDescription === "string")
-        resultString.push(`### \`${nodeText}\``, `${nodeDescription}`);
-      else {
-        resultString.push(`### \`${nodeDescription.title}\``);
-        resultString.push(`${nodeDescription.info}`);
-        resultString.push(`${nodeDescription.meta}`);
+      mdString.appendMarkdown(nodeDescription.title);
+      if (nodeDescription.info) {
+        mdString.appendMarkdown(`\n\n --- \n\n`);
+        mdString.appendMarkdown(`${nodeDescription.info}`);
       }
+      if (nodeDescription.meta) {
+        mdString.appendMarkdown(`\n\n --- \n\n`);
+        mdString.appendMarkdown(`${nodeDescription.meta}`);
+      }
+      if (nodeDescription.example) {
+        mdString.appendMarkdown(`\n\n --- \n\n`);
+        mdString.appendMarkdown(`Usage:\n\n`);
+        mdString.appendCodeblock(nodeDescription.example, 'walter');
+      }
+
     if (this.showDebugInfo) {
-      resultString.push(`Debug info: ${this.buildDebugInfo(node)}`);
+      mdString.appendCodeblock(`Debug info: ${this.buildDebugInfo(node)}`);
     }
 
-    const markdown = new vscode.MarkdownString(
-      resultString.join(" \n\n --- \n\n "),
-    );
-    markdown.supportHtml = true;
-    return new vscode.Hover(markdown);
+    return new vscode.Hover(mdString);
   };
 
   private buildDebugInfo = (node: wts.Node) => {

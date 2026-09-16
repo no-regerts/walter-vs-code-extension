@@ -1,0 +1,1686 @@
+{
+"w": {
+    "title": "### `w` scalar value",
+    "info": "Width of parent, pixels."
+  },
+  "h": {
+    "title": "### `h` scalar value",
+    "info": "Height of parent, pixels."
+  },
+  "reaper_version": {
+    "title": "### `reaper_version` scalar value",
+    "info": "REAPER version.",
+    "meta": "Since: 4.15"
+  },
+  "os_type": {
+    "title": "### `os_type` scalar value",
+    "info": "Operating system type.\n\n0 = Windows\n\n1 = macOS (pre v7.70)\n\n2 = Linux (pre v7.70)\n\nOn v7.71+, 0 is returned for all platforms unless the theme specifies `want_os_type 1` in rtconfig.txt. In that case, macOS = 3 and Linux = 4.\n\nv7.70 always reports 3 for macOS and 4 for Linux.",
+    "meta": "Since: 5.972"
+  },
+  "folderstate": {
+    "title": "### `folderstate` scalar value",
+    "info": "Folder state of track, if applicable.\n\n0 = normal\n\n-n = last track in folder(s).",
+    "meta": "Scope: track"
+  },
+  "folderdepth": {
+    "title": "### `folderdepth` scalar value",
+    "info": "Positive if in a folder. Indicates how many folders deep.",
+    "meta": "Scope: track"
+  },
+  "maxfolderdepth": {
+    "title": "### `maxfolderdepth` scalar value",
+    "info": "Highest folder depth of any track.",
+    "meta": "Scope: track"
+  },
+  "mcp_maxfolderdepth": {
+    "title": "### `mcp_maxfolderdepth` scalar value",
+    "info": "Highest folder depth of any track in the mixer.",
+    "meta": "Since: 4.15; Scope: track"
+  },
+  "recarm": {
+    "title": "### `recarm` scalar value",
+    "info": "Nonzero if track is record armed.",
+    "meta": "Scope: track"
+  },
+  "tcp_iconsize": {
+    "title": "### `tcp_iconsize` scalar value",
+    "info": "Size of track panel icon column, if any.",
+    "meta": "Scope: track"
+  },
+  "mcp_iconsize": {
+    "title": "### `mcp_iconsize` scalar value",
+    "info": "Size of mixer icon row, if any.",
+    "meta": "Scope: track"
+  },
+  "mcp_wantextmix": {
+    "title": "### `mcp_wantextmix` scalar value",
+    "info": "Flags indicating which extended mixer settings are desired.\n\n&1 = inserts\n\n&2 = sends\n\n&4 = FX parameters.",
+    "meta": "Scope: track"
+  },
+  "tracknch": {
+    "title": "### `tracknch` scalar value",
+    "info": "Number of track channels (2-64).",
+    "meta": "Scope: track"
+  },
+  "trackpanmode": {
+    "title": "### `trackpanmode` scalar value",
+    "info": "Pan mode of track.\n\n0 = classic 3.x\n\n3 = new balance\n\n5 = stereo pan\n\n6 = dual pan.",
+    "meta": "Scope: track"
+  },
+  "tcp_fxparms": {
+    "title": "### `tcp_fxparms` scalar value",
+    "info": "Count of TCP FX parameters visible (0-n), including sends or FX items if visible.",
+    "meta": "Scope: track"
+  },
+  "tcp_fxembed": {
+    "title": "### `tcp_fxembed` scalar value",
+    "info": "Count of TCP embedded FX visible.",
+    "meta": "Since: 6.0; Scope: track"
+  },
+  "mcp_fxembed": {
+    "title": "### `mcp_fxembed` scalar value",
+    "info": "Count of MCP embedded FX visible.",
+    "meta": "Since: 6.38; Scope: track"
+  },
+  "tcp_sends_enabled": {
+    "title": "### `tcp_sends_enabled` scalar value",
+    "info": "User preference to show sends in TCP is enabled.",
+    "meta": "Since: 7.0; Scope: track"
+  },
+  "tcp_fxlist_enabled": {
+    "title": "### `tcp_fxlist_enabled` scalar value",
+    "info": "User preference to show FX inserts in TCP is enabled.",
+    "meta": "Since: 7.0; Scope: track"
+  },
+  "trackpinned": {
+    "title": "### `trackpinned` scalar value",
+    "info": "TCP-pinned state.\n\n1 = pinned, but globally disabled\n\n2 = pinned.",
+    "meta": "Since: 7.46; Scope: track"
+  },
+  "tcp_hidden_overridden": {
+    "title": "### `tcp_hidden_overridden` scalar value",
+    "info": "1 if track is marked hidden in TCP but being displayed due to global override.",
+    "meta": "Since: 7.46; Scope: track"
+  },
+  "send_cnt": {
+    "title": "### `send_cnt` scalar value",
+    "info": "Number of sends.",
+    "meta": "Since: 7.0; Scope: track"
+  },
+  "fx_parm_cnt": {
+    "title": "### `fx_parm_cnt` scalar value",
+    "info": "Number of FX parameters.",
+    "meta": "Since: 7.0; Scope: track"
+  },
+  "fx_cnt": {
+    "title": "### `fx_cnt` scalar value",
+    "info": "Number of FX inserts.",
+    "meta": "Since: 7.0; Scope: track"
+  },
+  "recfx_cnt": {
+    "title": "### `recfx_cnt` scalar value",
+    "info": "Number of record input FX.",
+    "meta": "Since: 7.0; Scope: track"
+  },
+  "trackcolor_valid": {
+    "title": "### `trackcolor_valid` scalar value",
+    "info": "Set to 1 if track color is set.",
+    "meta": "Since: 5.0; Scope: track"
+  },
+  "trackcolor_r": {
+    "title": "### `trackcolor_r` scalar value",
+    "info": "Red value, 0-255.\n\nValid if `trackcolor_valid` is set.",
+    "meta": "Since: 5.0; Scope: track"
+  },
+  "trackcolor_g": {
+    "title": "### `trackcolor_g` scalar value",
+    "info": "Green value, 0-255.\n\nValid if `trackcolor_valid` is set.",
+    "meta": "Since: 5.0; Scope: track"
+  },
+  "trackcolor_b": {
+    "title": "### `trackcolor_b` scalar value",
+    "info": "Blue value, 0-255.\n\nValid if `trackcolor_valid` is set.",
+    "meta": "Since: 5.0; Scope: track"
+  },
+  "mixer_visible": {
+    "title": "### `mixer_visible` scalar value",
+    "info": "Set to 1 if the mixer is visible.",
+    "meta": "Since: 5.972; Scope: track"
+  },
+  "track_selected": {
+    "title": "### `track_selected` scalar value",
+    "info": "Set to 1 if track is selected.",
+    "meta": "Since: 5.972; Scope: track"
+  },
+  "trackidx": {
+    "title": "### `trackidx` scalar value",
+    "info": "Track index.\n\n0 = master\n\n1+ = regular track.",
+    "meta": "Since: 6.47; Scope: track"
+  },
+  "ntracks": {
+    "title": "### `ntracks` scalar value",
+    "info": "Total track count, not including master.",
+    "meta": "Since: 6.47; Scope: track"
+  },
+  "trackfixedlanes": {
+    "title": "### `trackfixedlanes` scalar value",
+    "info": "Number of fixed lanes, or 0.",
+    "meta": "Since: 7.0; Scope: track"
+  },
+  "trans_flags": {
+    "title": "### `trans_flags` scalar value",
+    "info": "Transport display flags.\n\n`trans_flags&1` is nonzero if transport is centered.\n\n`trans_flags&2` is nonzero if user wants play speed controls visible.\n\n`trans_flags&4` is nonzero if user wants current time signature visible.",
+    "meta": "Scope: transport"
+  },
+  "trans_docked": {
+    "title": "### `trans_docked` scalar value",
+    "info": "Nonzero if docked transport.",
+    "meta": "Scope: transport"
+  },
+  "trans_center": {
+    "title": "### `trans_center` scalar value",
+    "info": "Nonzero if transport is centered.",
+    "meta": "Scope: transport"
+  },
+  "envcp_type": {
+    "title": "### `envcp_type` scalar value",
+    "info": "4 if FX envelope, which can display additional controls.",
+    "meta": "Scope: envelope"
+  },
+  "env_selected": {
+    "title": "### `env_selected` scalar value",
+    "info": "Set to 1 if envelope is selected.",
+    "meta": "Scope: envelope"
+  },
+
+
+  "clear": {
+    "title": "### `clear` command",
+    "info": "Clears a particular attribute (or wildcard list of attributes) to empty.",
+    "example": "clear tcp.mute\nclear tcp.*"
+  },
+  "reset": {
+    "title": "### `reset` command",
+    "info": "Resets a particular attribute (or wildcard list of attributes) to their default settings.",
+    "example": "reset tcp.mute\nreset tcp.*"
+  },
+  "set": {
+    "title": "### `set` command",
+    "info": "Sets an attribute or user variable to an expression.\n\nNote that you do not need to declare user variables, simply setting them is sufficient. As a matter of etiquette, do not use `.` in user variables (although you can), names with `.` in them are reserved for future expansion.",
+    "example": "set tcp.mute [0 0 10 10]\nset myvar w<100 [0 0 10 10] [20 20 10 10]\nset myvar w<100 [0 0 10 10] w<200 [20 20 10 10] [40 40 10 10]"
+  },
+  "def": {
+    "title": "### `def` command",
+    "info": "Defines a value to be replaced with another value (e.g. a preprocessor #define).",
+    "example": "def square10 10 10\nset tcp.mute [0 0 square10] ; sets tcp.mute to [0 0 10 10]\ndef two_coords [10 10 0 0] [0 0 10 10]\nset tcp.mute + two_coords   ; sets tcp.mute to [10 10 10 10]\nset tcp.mute w<100 two_coords ; like set.tcp.mute w<100 [10 10 0 0] [0 0 10 10]"
+  },
+  "front": {
+    "title": "### `front` command",
+    "info": "Brings an element to the front of the Z order. Note that the ordering of elements is static and can't be affected by logic.",
+    "example": "front tcp.solo\nfront tcp.mute"
+  },
+  "macro": {
+    "title": "### `macro` command",
+    "info": "Defines a macro with any number of parameters which can be used later.\n\nNote that using `##` in a macro allows the parameter to be concatenated with another named string.",
+    "meta": "Since: 5.0",
+    "example": "macro setall dest src\n  set dest [src src src src src src src src]\n  set master.##dest dest\nendmacro\nsetall tcp.mute 1  ; set tcp.mute [1 1 1 1 1 1 1], set master.tcp.mute tcp.mute"
+  },
+  "define_parameter": {
+    "title": "### `define_parameter` command",
+    "info": "Defines a ReaScript-accessible user-defined parameter which the WALTER code can use.\n\nThe default theme adjuster script will allow tweaking the first 10 parameters. Note that variable name is used to make the value persist for this theme",
+    "meta": "Since: 6.0",
+    "example": ";                variable name     description for user   default  minimum maximum\ndefine_parameter \"hide_mute\"       \"Hide Mute Button\"     0        0       1\n; later in script\nset tcp.mute hide_mute==1 [0] ; hide tcp.mute if hide_mute is set"
+  },
+  "custom": {
+    "title": "### `custom` command",
+    "info": "Defines a custom element.\n\nNote that the custom element name must include the string `custom`. Custom elements become a normal part of the layout that contains them and can be used with `set`, `front`, etc. If `command_id` is specified and valid, and `button_image` is a valid image name, element will be a button. Otherwise, it will be a static text element with `text_label`. `tcp.custom.xyz.font`, `.color` and `.margin` may all be specified.",
+    "meta": "Since: 7.0",
+    "example": "custom tcp.custom.xyz \"text_label\" command_id \"accessibility_description\" \"button_image\""
+  },
+  "layout": {
+    "title": "### `layout` command",
+    "info": "Theme author can define layouts, by using the commands `layout` and `lndLayout`.\n\nWhen defining a layout, it inherits the behavior from the parent (or default) layout (at the time of first use in that UI context).\n\nThe `layout` command can take one or two paraemeters - the first parameter defines the name of that layout, and the optional second parameter defines the theme image subdirectory to use for that layout.\n\nYou can specify multiple layouts with the same name, and they will be treated similar to a single layout definiton, though for clarity it might be good to separate them based on the UI context (i.e. tcp.*, mcp.*, etc). If you define layouts with the same name for various UI contexts, you may wish to expose them as a global theme layout using `globalLayout`, which then lists that layout in the main layout list.",
+    "example": "layout \"Mute button mixer\"\n  clear mcp.*\n  set mcp.size [20 20]\n  set mcp.mute [0 0 20 20 0 0 1 1]\nendLayout"
+  },
+
+
+  "version": {
+    "title": "### `version` theme parameter",
+    "info": "Version 5 uses the newer v5 theme composition mode, recommended for new themes. Also enables PNG support.",
+    "meta": "Since: 5.0",
+    "example": "version 7.7"
+  },
+  "use_pngs": {
+    "title": "### `use_pngs` theme parameter",
+    "info": "Enables PNG support.",
+    "example": "use_pngs 1"
+  },
+  "use_overlays": {
+    "title": "### `use_overlays` theme parameter",
+    "info": "Enables button overlay image support.",
+    "example": "use_overlays 1"
+  },
+  "tinttcp": {
+    "title": "### `tinttcp` theme parameter",
+    "info": "Overrides the `tinttcp=` line in reaper.ini.",
+    "meta": "Since: 5.0",
+    "example": "tinttcp 298"
+  },
+  "peaksedges": {
+    "title": "### `peaksedges` theme parameter",
+    "info": "Overrides the `peaksedges=` line in reaper.ini.",
+    "meta": "Since: 5.0",
+    "example": "peaksedges 0"
+  },
+  "tcp_folderindent": {
+    "title": "### `tcp_folderindent` theme parameter",
+    "info": "Size of folder indentation.",
+    "example": "tcp_folderindent 0"
+  },
+  "tcp_heights": {
+    "title": "### `tcp_heights` theme parameter",
+    "info": "Default height of TCP panels: super-collapsed, small, medium, and full heights.",
+    "example": "tcp_heights 4 25 50 79"
+  },
+  "tcp_master_minheight": {
+    "title": "### `tcp_master_minheight` theme parameter",
+    "info": "Minimum height of the TCP master.",
+    "example": "tcp_master_minheight 94"
+  },
+  "tcp_voltext_flags": {
+    "title": "### `tcp_voltext_flags` theme parameter",
+    "info": "Flags for volume strings.\n\n1 = no dB\n\n2 = no fractional precision\n\n4 = no + on positive values\n\n8 = always show two digits of precision\n\nOptional second value specifies the maximum length of the total string.",
+    "example": "tcp_voltext_flags 7 4"
+  },
+  "tcp_master_voltext_flags": {
+    "title": "### `tcp_master_voltext_flags` theme parameter",
+    "info": "Flags for volume strings.\n\n1 = no dB\n\n2 = no fractional precision\n\n4 = no + on positive values\n\n8 = always show two digits of precision\n\nOptional second value specifies the maximum length of the total string.",
+    "example": "tcp_master_voltext_flags 12"
+  },
+  "mcp_voltext_flags": {
+    "title": "### `mcp_voltext_flags` theme parameter",
+    "info": "Flags for volume strings.\n\n1 = no dB\n\n2 = no fractional precision\n\n4 = no + on positive values\n\n8 = always show two digits of precision\n\nOptional second value specifies the maximum length of the total string.",
+    "example": "mcp_voltext_flags 5 5"
+  },
+  "mcp_master_voltext_flags": {
+    "title": "### `mcp_master_voltext_flags` theme parameter",
+    "info": "Flags for volume strings.\n\n1 = no dB\n\n2 = no fractional precision\n\n4 = no + on positive values\n\n8 = always show two digits of precision\n\nOptional second value specifies the maximum length of the total string.",
+    "example": "mcp_master_voltext_flags 12"
+  },
+  "tcp_vupeakwidth": {
+    "title": "### `tcp_vupeakwidth` theme parameter",
+    "info": "Size, in pixels, of the peak-hold indicator for the track panel meter.",
+    "example": "tcp_vupeakwidth 2"
+  },
+  "mcp_vupeakheight": {
+    "title": "### `mcp_vupeakheight` theme parameter",
+    "info": "Size, in pixels, of the peak-hold indicator for the mixer meter.",
+    "example": "mcp_vupeakheight 2"
+  },
+  "mcp_mastervupeakheight": {
+    "title": "### `mcp_mastervupeakheight` theme parameter",
+    "info": "Size, in pixels, of the peak-hold indicator for the mixer master meter.",
+    "example": "mcp_mastervupeakheight 4"
+  },
+  "tcp_showborders": {
+    "title": "### `tcp_showborders` theme parameter",
+    "info": "Set to 0 to disable borders in the track panels.",
+    "meta": "Deprecated",
+    "example": "tcp_showborders 0"
+  },
+  "mcp_showborders": {
+    "title": "### `mcp_showborders` theme parameter",
+    "info": "Set to 0 to disable borders in the mixer.",
+    "meta": "Deprecated",
+    "example": "mcp_showborders 0"
+  },
+  "trans_showborders": {
+    "title": "### `trans_showborders` theme parameter",
+    "info": "Set to 0 to disable borders in the transport.",
+    "example": "trans_showborders 0"
+  },
+  "mcp_altmeterpos": {
+    "title": "### `mcp_altmeterpos` theme parameter",
+    "info": "Puts MCP meters on the right side.",
+    "meta": "Deprecated",
+    "example": "mcp_altmeterpos 0"
+  },
+  "tcp_vol_zeroline": {
+    "title": "### `tcp_vol_zeroline` theme parameter",
+    "info": "Sets the ABGR value of the TCP volume fader zero-line color. For example, `FFFF0000` produces solid blue. This was previously documented incorrectly.",
+    "meta": "Since: 2.0",
+    "example": "tcp_vol_zeroline 88FFFFFF"
+  },
+  "tcp_pan_zeroline": {
+    "title": "### `tcp_pan_zeroline` theme parameter",
+    "info": "TCP pan fader zero-line color.",
+    "meta": "Since: 2.0",
+    "example": "tcp_pan_zeroline 88FFFFFF"
+  },
+  "tcp_width_zeroline": {
+    "title": "### `tcp_width_zeroline` theme parameter",
+    "info": "TCP width fader zero-line color.",
+    "example": ""
+  },
+  "mcp_vol_zeroline": {
+    "title": "### `mcp_vol_zeroline` theme parameter",
+    "info": "MCP volume fader zero-line color.",
+    "meta": "Since: 2.0",
+    "example": "mcp_vol_zeroline 88FFFFFF"
+  },
+  "mcp_pan_zeroline": {
+    "title": "### `mcp_pan_zeroline` theme parameter",
+    "info": "MCP pan fader zero-line color.",
+    "meta": "Since: 2.0",
+    "example": "mcp_pan_zeroline 88FFFFFF"
+  },
+  "mcp_width_zeroline": {
+    "title": "### `mcp_width_zeroline` theme parameter",
+    "info": "MCP width fader zero-line color.",
+    "example": ""
+  },
+  "trans_speed_zeroline": {
+    "title": "### `trans_speed_zeroline` theme parameter",
+    "info": "Transport speed fader zero-line color.",
+    "meta": "Since: 2.0",
+    "example": "trans_speed_zeroline FFA7D2E1"
+  },
+  "item_volknobfg": {
+    "title": "### `item_volknobfg` theme parameter",
+    "info": "Item volume knob colors.\n\n`parm2`: zero-gain color\n\n`parm3`: pushed color",
+    "example": "item_volknobfg 85FFFFFF 85FFFFFF 85FFFFFF"
+  },
+  "envcp_min_height": {
+    "title": "### `envcp_min_height` theme parameter",
+    "info": "Minimum envelope panel height.",
+    "example": "envcp_min_height 20"
+  },
+  "mcp_min_height": {
+    "title": "### `mcp_min_height` theme parameter",
+    "info": "Minimum mixer panel height.",
+    "example": "mcp_min_height 260"
+  },
+  "no_meter_reclbl": {
+    "title": "### `no_meter_reclbl` theme parameter",
+    "info": "Hides the TCP meter record-input label.",
+    "example": "no_meter_reclbl 1"
+  },
+  "gen_pan_zeroline": {
+    "title": "### `gen_pan_zeroline` theme parameter",
+    "info": "General pan fader zero-line color.",
+    "example": "gen_pan_zeroline 88FFFFFF"
+  },
+  "gen_vol_zeroline": {
+    "title": "### `gen_vol_zeroline` theme parameter",
+    "info": "General volume fader zero-line color.",
+    "example": "gen_vol_zeroline 88FFFFFF"
+  },
+  "warnings": {
+    "title": "### `warnings` theme parameter",
+    "info": "Warning level: `all` or `pedantic`.\n\nThis is only used if the theme is not zipped.",
+    "example": "warnings all"
+  },
+  "adjuster_script": {
+    "title": "### `adjuster_script` theme parameter",
+    "info": "",
+    "example": "adjuster_script 'theme_adjuster.lua'"
+  },
+  "misc_dpi_translate": {
+    "title": "### `misc_dpi_translate` theme parameter",
+    "info": "Affects elements such as toolbar images. The theme can specify one or more of these lines. If the DPI scaling is higher than `src_scale_percent`, `dest_scale_percent` is used. For example, `misc_dpi_translate 126 150` ensures that 1.5× images are used when the DPI is above 126%.",
+    "example": "misc_dpi_translate 50 100\nmisc_dpi_translate 134 150\nmisc_dpi_translate 174 200"
+  },
+  "global_scale": {
+    "title": "### `global_scale` theme parameter",
+    "info": "Specifies the inherent DPI scaling of the theme. For example, if the theme uses only HiDPI images, setting this to 2.0 prevents a 2× display from scaling those images up further.",
+    "example": ""
+  },
+  "layout_dpi_translate": {
+    "title": "### `layout_dpi_translate` theme parameter",
+    "info": "Remaps layouts by DPI. If the DPI is greater than `min_scale` (where 1.0 = 100%, 1.5 = 150%, etc.), and the user selects `requested_layout_name`, `destination_layout_name` is used instead.\n\nAn empty `requested_layout_name` can be used to match the default layout.",
+    "example": "layout_dpi_translate    '50%_A'     1.0         'A'\nlayout_dpi_translate    'A'         1.34        'A'\nlayout_dpi_translate    'A'         1.74        '~2x_A'"
+  },
+  "want_os_type": {
+    "title": "### `want_os_type` theme parameter",
+    "example": "want_os_type 1"
+  },
+
+
+  "tcp": {
+    "title": "### `tcp` layout element",
+    "info": "Track Control Panel"
+  },
+  "tcp.dragdropinfo": {
+    "title": "### `tcp.dragdropinfo` layout element",
+    "info": "Additional offsets relating to drag/drop.\n\nFirst value: additional indentation for a sibling track\n\nSecond value: additional indentation for a child track, used for drawing and mouse hit testing to determine whether a dragged track will be a child track"
+  },
+  "tcp.env": {
+    "title": "### `tcp.env` layout element",
+    "info": "Envelope/automation mode button"
+  },
+  "tcp.folder": {
+    "title": "### `tcp.folder` layout element",
+    "info": "Folder button"
+  },
+  "tcp.foldercomp": {
+    "title": "### `tcp.foldercomp` layout element",
+    "info": "Folder compact button"
+  },
+  "tcp.fx": {
+    "title": "### `tcp.fx` layout element",
+    "info": "FX button"
+  },
+  "tcp.fxbyp": {
+    "title": "### `tcp.fxbyp` layout element",
+    "info": "FX bypass button"
+  },
+  "tcp.fxembed": {
+    "title": "### `tcp.fxembed` layout element",
+    "info": "FX Embed area rectangle. If omitted or given a negative width/height, the FX Embed area is shared with the FX parameter list."
+  },
+  "tcp.fxembedheader.color": {
+    "title": "### `tcp.fxembedheader.color` layout element",
+    "info": "FX Embed header color"
+  },
+  "tcp.fxin": {
+    "title": "### `tcp.fxin` layout element",
+    "info": "Input-FX button"
+  },
+  "tcp.fxlist": {
+    "title": "### `tcp.fxlist` layout element",
+    "info": "FX insert list"
+  },
+  "tcp.fxlist.font": {
+    "title": "### `tcp.fxlist.font` layout element",
+    "info": "FX insert list font.\n\nFirst coordinate: font index (1–8 = user, 0 = main, −1 = volpan)\n\nSecond coordinate: row height, if nonzero\n\nThird and fourth coordinates: minimum and maximum column width, if nonzero\n\nFifth coordinate: line spacing adjustment\n\nSeventh coordinate: scrollbar gap size (scrollbar size includes this gap)\n\nEighth coordinate: scrollbar size, if nonzero"
+  },
+  "tcp.fxlist.margin": {
+    "title": "### `tcp.fxlist.margin` layout element",
+    "info": "FX insert list margins.\n\nFirst coordinate: left margin\n\nThird coordinate: right margin\n\nFifth coordinate: alignment (0 = left, 0.5 = center, 1 = right)\n\nSixth coordinate: scroll button size, if positive\n\nEighth coordinate: gap between columns, if any"
+  },
+  "tcp.fxparm": {
+    "title": "### `tcp.fxparm` layout element",
+    "info": "FX parameter list"
+  },
+  "tcp.fxparm.font": {
+    "title": "### `tcp.fxparm.font` layout element",
+    "info": "FX parameter list font.\n\nFirst coordinate: font index (1–8 = user, 0 = main, −1 = volpan)\n\nSecond coordinate: row height, if nonzero\n\nThird and fourth coordinates: minimum and maximum column width, if nonzero\n\nFifth coordinate: line spacing adjustment\n\nSeventh coordinate: scrollbar gap size (scrollbar size includes this gap)\n\nEighth coordinate: scrollbar size, if nonzero"
+  },
+  "tcp.fxparm.margin": {
+    "title": "### `tcp.fxparm.margin` layout element",
+    "info": "FX parameter list margins.\n\nFirst coordinate: left margin\n\nThird coordinate: right margin\n\nFifth coordinate: alignment (0 = left, 0.5 = center, 1 = right)\n\nSixth coordinate: scroll button size, if positive\n\nSeventh coordinate: alignment for FX instances\n\nEighth coordinate: gap between columns, if any"
+  },
+  "tcp.fxparm.visflags": {
+    "title": "### `tcp.fxparm.visflags` layout element",
+    "info": "Visibility flags.\n\nFirst element: FX parameters\n\nSecond element: FX inserts\n\nThird element: sends\n\nSet each element to −1 to force hide, 0 to use the user preference, or 1 to force show."
+  },
+  "tcp.infoblock": {
+    "title": "### `tcp.infoblock` layout element",
+    "info": "Track information display"
+  },
+  "tcp.infoblock.color": {
+    "title": "### `tcp.infoblock.color` layout element",
+    "info": "Track information display colors.\n\nFirst four coordinates: foreground\n\nSecond four coordinates: background"
+  },
+  "tcp.infoblock.font": {
+    "title": "### `tcp.infoblock.font` layout element",
+    "info": "Track information display font.\n\nFirst coordinate: font index (1–8 = user, 0 = main, −1 = volpan)"
+  },
+  "tcp.infoblock.margin": {
+    "title": "### `tcp.infoblock.margin` layout element",
+    "info": "Track information display margins (l, t, r, b) and alignment.\n\nAlignment: 0 = left, 0.5 = center, 1 = right"
+  },
+  "tcp.io": {
+    "title": "### `tcp.io` layout element",
+    "info": "IO button"
+  },
+  "tcp.label": {
+    "title": "### `tcp.label` layout element",
+    "info": "Track name text"
+  },
+  "tcp.label.color": {
+    "title": "### `tcp.label.color` layout element",
+    "info": "Track name text colors.\n\nFirst four coordinates: foreground\n\nSecond four coordinates: background"
+  },
+  "tcp.label.font": {
+    "title": "### `tcp.label.font` layout element",
+    "info": "Track name text font.\n\nFirst coordinate: font index (1–8 = user, 0 = main, −1 = volpan)"
+  },
+  "tcp.label.margin": {
+    "title": "### `tcp.label.margin` layout element",
+    "info": "Track name text margins (l, t, r, b) and alignment.\n\nAlignment: 0 = left, 0.5 = center, 1 = right"
+  },
+  "tcp.margin": {
+    "title": "### `tcp.margin` layout element",
+    "info": "Inner margins"
+  },
+  "tcp.meter": {
+    "title": "### `tcp.meter` layout element",
+    "info": "Meter outer coordinates"
+  },
+  "tcp.meter.inputlabel.color": {
+    "title": "### `tcp.meter.inputlabel.color` layout element",
+    "info": "Meter input source label text color.\n\nFirst four coordinates: color"
+  },
+  "tcp.meter.inputlabelbox.color": {
+    "title": "### `tcp.meter.inputlabelbox.color` layout element",
+    "info": "Meter input source label box colors.\n\nFirst four coordinates: background\n\nSecond four coordinates: foreground/border color"
+  },
+  "tcp.meter.readout.color": {
+    "title": "### `tcp.meter.readout.color` layout element",
+    "info": "Peak text colors.\n\nFirst four coordinates: non-clipped peak text color\n\nSecond four coordinates: clipped peak text color"
+  },
+  "tcp.meter.rmsreadout.color": {
+    "title": "### `tcp.meter.rmsreadout.color` layout element",
+    "info": "RMS/LUFS mode readout text color.\n\nFirst four coordinates: color"
+  },
+  "tcp.meter.scale.color.lit.bottom": {
+    "title": "### `tcp.meter.scale.color.lit.bottom` layout element",
+    "info": "Meter scale, lit/bottom colors.\n\nFirst four coordinates: foreground\n\nSecond four coordinates: shadow color"
+  },
+  "tcp.meter.scale.color.lit.top": {
+    "title": "### `tcp.meter.scale.color.lit.top` layout element",
+    "info": "Meter scale, lit/top colors.\n\nFirst four coordinates: foreground\n\nSecond four coordinates: shadow color"
+  },
+  "tcp.meter.scale.color.unlit.bottom": {
+    "title": "### `tcp.meter.scale.color.unlit.bottom` layout element",
+    "info": "Meter scale, unlit/bottom colors.\n\nFirst four coordinates: foreground\n\nSecond four coordinates: shadow color"
+  },
+  "tcp.meter.scale.color.unlit.top": {
+    "title": "### `tcp.meter.scale.color.unlit.top` layout element",
+    "info": "Meter scale, unlit/top colors.\n\nFirst four coordinates: foreground\n\nSecond four coordinates: shadow color"
+  },
+  "tcp.meter.vu.div": {
+    "title": "### `tcp.meter.vu.div` layout element",
+    "info": "Meter channel division settings.\n\nFirst coordinate: division between channels in meter\n\nSecond coordinate: division mode:\n0 = default (increase center division as necessary)\n1 = center, increasing middle by 1 px max\n−1 = for all even divisions/sizes (possibly uncentered)\n−2 = possibly uneven-sized channels\n\nThird coordinate: GR division adjustment; space to add or subtract between the last channel and the gain reduction meter. Default spacing is half the regular channel division.\n\nFourth coordinate: maximum width for GR meter"
+  },
+  "tcp.mute": {
+    "title": "### `tcp.mute` layout element",
+    "info": "Mute button"
+  },
+  "tcp.pan": {
+    "title": "### `tcp.pan` layout element",
+    "info": "Pan fader/knob"
+  },
+  "tcp.pan.color": {
+    "title": "### `tcp.pan.color` layout element",
+    "info": "Pan fader/knob colors.\n\nFirst four coordinates: knob line color\n\nSecond four coordinates: fader zero-line color"
+  },
+  "tcp.pan.fadermode": {
+    "title": "### `tcp.pan.fadermode` layout element",
+    "info": "Pan fader/knob mode.\n\nFirst coordinate: −1 to prevent knob, 1 to force knob, 0 for default"
+  },
+  "tcp.pan.label": {
+    "title": "### `tcp.pan.label` layout element",
+    "info": "Pan readout text"
+  },
+  "tcp.pan.label.color": {
+    "title": "### `tcp.pan.label.color` layout element",
+    "info": "Pan readout text colors.\n\nFirst four coordinates: foreground\n\nSecond four coordinates: background"
+  },
+  "tcp.pan.label.font": {
+    "title": "### `tcp.pan.label.font` layout element",
+    "info": "Pan readout text font.\n\nFirst coordinate: font index (1–8 = user, 0 = main, −1 = volpan)"
+  },
+  "tcp.pan.label.margin": {
+    "title": "### `tcp.pan.label.margin` layout element",
+    "info": "Pan readout text margins (l, t, r, b) and alignment.\n\nAlignment: 0 = left, 0.5 = center, 1 = right"
+  },
+  "tcp.phase": {
+    "title": "### `tcp.phase` layout element",
+    "info": "Phase/polarity button"
+  },
+  "tcp.recarm": {
+    "title": "### `tcp.recarm` layout element",
+    "info": "Record arm button"
+  },
+  "tcp.recinput": {
+    "title": "### `tcp.recinput` layout element",
+    "info": "Record input text field"
+  },
+  "tcp.recinput.color": {
+    "title": "### `tcp.recinput.color` layout element",
+    "info": "Record input text field colors.\n\nFirst four coordinates: text color\n\nSecond four coordinates: background color"
+  },
+  "tcp.recinput.font": {
+    "title": "### `tcp.recinput.font` layout element",
+    "info": "Record input text field font.\n\nFirst coordinate: font index (1–8 = user, 0 = main, −1 = volpan)"
+  },
+  "tcp.recinput.margin": {
+    "title": "### `tcp.recinput.margin` layout element",
+    "info": "Record input text field margins (l, t, r, b) and alignment.\n\nAlignment: 0 = left, 0.5 = center, 1 = right"
+  },
+  "tcp.recmode": {
+    "title": "### `tcp.recmode` layout element",
+    "info": "Record mode button"
+  },
+  "tcp.recmon": {
+    "title": "### `tcp.recmon` layout element",
+    "info": "Record monitor mode button"
+  },
+  "tcp.sendlist": {
+    "title": "### `tcp.sendlist` layout element",
+    "info": "TCP send list area (dedicated for sends, optional)"
+  },
+  "tcp.sendlist.font": {
+    "title": "### `tcp.sendlist.font` layout element",
+    "info": "TCP send list font.\n\nFirst coordinate: font index (1–8 = user, 0 = main, −1 = volpan)\n\nSecond coordinate: row height, if nonzero\n\nThird and fourth coordinates: minimum and maximum column width, if nonzero\n\nFifth coordinate: line spacing adjustment\n\nSeventh coordinate: scrollbar gap size (scrollbar size includes this gap)\n\nEighth coordinate: scrollbar size, if nonzero"
+  },
+  "tcp.sendlist.margin": {
+    "title": "### `tcp.sendlist.margin` layout element",
+    "info": "TCP send list margins.\n\nFirst coordinate: left margin\n\nThird coordinate: right margin\n\nFifth coordinate: alignment (0 = left, 0.5 = center, 1 = right)\n\nSixth coordinate: scroll button size, if positive\n\nEighth coordinate: gap between columns, if any"
+  },
+  "tcp.size": {
+    "title": "### `tcp.size` layout element",
+    "info": "First two coordinates: baseline size\n\nSecond two coordinates: minimum size"
+  },
+  "tcp.solo": {
+    "title": "### `tcp.solo` layout element",
+    "info": "Solo button"
+  },
+  "tcp.trackidx": {
+    "title": "### `tcp.trackidx` layout element",
+    "info": "Track index"
+  },
+  "tcp.trackidx.color": {
+    "title": "### `tcp.trackidx.color` layout element",
+    "info": "Track index colors.\n\nFirst four coordinates: foreground\n\nSecond four coordinates: background"
+  },
+  "tcp.trackidx.font": {
+    "title": "### `tcp.trackidx.font` layout element",
+    "info": "Track index font.\n\nFirst coordinate: font index (1–8 = user, 0 = main, −1 = volpan)"
+  },
+  "tcp.trackidx.margin": {
+    "title": "### `tcp.trackidx.margin` layout element",
+    "info": "Track index margins (l, t, r, b) and alignment.\n\nAlignment: 0 = left, 0.5 = center, 1 = right"
+  },
+  "tcp.volume": {
+    "title": "### `tcp.volume` layout element",
+    "info": "Volume fader"
+  },
+  "tcp.volume.color": {
+    "title": "### `tcp.volume.color` layout element",
+    "info": "Volume fader colors.\n\nFirst four coordinates: knob line color\n\nSecond four coordinates: fader zero-line color"
+  },
+  "tcp.volume.fadermode": {
+    "title": "### `tcp.volume.fadermode` layout element",
+    "info": "Volume fader/knob mode.\n\nFirst coordinate: −1 to prevent knob, 1 to force knob, 0 for default"
+  },
+  "tcp.volume.label": {
+    "title": "### `tcp.volume.label` layout element",
+    "info": "Volume readout text"
+  },
+  "tcp.volume.label.color": {
+    "title": "### `tcp.volume.label.color` layout element",
+    "info": "Volume readout text colors.\n\nFirst four coordinates: foreground\n\nSecond four coordinates: background"
+  },
+  "tcp.volume.label.font": {
+    "title": "### `tcp.volume.label.font` layout element",
+    "info": "Volume readout text font.\n\nFirst coordinate: font index (1–8 = user, 0 = main, −1 = volpan)"
+  },
+  "tcp.volume.label.margin": {
+    "title": "### `tcp.volume.label.margin` layout element",
+    "info": "Volume readout text margins (l, t, r, b) and alignment.\n\nAlignment: 0 = left, 0.5 = center, 1 = right"
+  },
+  "tcp.width": {
+    "title": "### `tcp.width` layout element",
+    "info": "Width fader/knob"
+  },
+  "tcp.width.color": {
+    "title": "### `tcp.width.color` layout element",
+    "info": "Width fader/knob colors.\n\nFirst four coordinates: knob line color\n\nSecond four coordinates: fader zero-line color"
+  },
+  "tcp.width.fadermode": {
+    "title": "### `tcp.width.fadermode` layout element",
+    "info": "Width fader/knob mode.\n\nFirst coordinate: −1 to prevent knob, 1 to force knob, 0 for default"
+  },
+  "tcp.width.label": {
+    "title": "### `tcp.width.label` layout element",
+    "info": "Width readout text"
+  },
+  "tcp.width.label.color": {
+    "title": "### `tcp.width.label.color` layout element",
+    "info": "Width readout text colors.\n\nFirst four coordinates: foreground\n\nSecond four coordinates: background"
+  },
+  "tcp.width.label.font": {
+    "title": "### `tcp.width.label.font` layout element",
+    "info": "Width readout text font.\n\nFirst coordinate: font index (1–8 = user, 0 = main, −1 = volpan)"
+  },
+  "tcp.width.label.margin": {
+    "title": "### `tcp.width.label.margin` layout element",
+    "info": "Width readout text margins (l, t, r, b) and alignment.\n\nAlignment: 0 = left, 0.5 = center, 1 = right"
+  },
+
+  "master.tcp": {
+    "title": "### `master.tcp` layout element",
+    "info": "Master Track Control Panel"
+  },
+  "master.tcp.env": {
+    "title": "### `master.tcp.env` layout element",
+    "info": "Envelope/automation mode button"
+  },
+  "master.tcp.fx": {
+    "title": "### `master.tcp.fx` layout element",
+    "info": "FX button"
+  },
+  "master.tcp.fxbyp": {
+    "title": "### `master.tcp.fxbyp` layout element",
+    "info": "FX bypass button"
+  },
+  "master.tcp.fxembed": {
+    "title": "### `master.tcp.fxembed` layout element",
+    "info": "FX Embed area rectangle. If omitted or given a negative width/height, the FX Embed area is shared with the FX parameter list."
+  },
+  "master.tcp.fxembedheader.color": {
+    "title": "### `master.tcp.fxembedheader.color` layout element",
+    "info": "FX Embed header color"
+  },
+  "master.tcp.fxlist": {
+    "title": "### `master.tcp.fxlist` layout element",
+    "info": "FX insert list"
+  },
+  "master.tcp.fxlist.font": {
+    "title": "### `master.tcp.fxlist.font` layout element",
+    "info": "FX insert list font.\n\nFirst coordinate: font index (1–8 = user, 0 = main, −1 = volpan)\n\nSecond coordinate: row height, if nonzero\n\nThird and fourth coordinates: minimum and maximum column width, if nonzero\n\nFifth coordinate: line spacing adjustment\n\nSeventh coordinate: scrollbar gap size (scrollbar size includes this gap)\n\nEighth coordinate: scrollbar size, if nonzero"
+  },
+  "master.tcp.fxlist.margin": {
+    "title": "### `master.tcp.fxlist.margin` layout element",
+    "info": "FX insert list margins.\n\nFirst coordinate: left margin\n\nThird coordinate: right margin\n\nFifth coordinate: alignment (0 = left, 0.5 = center, 1 = right)\n\nSixth coordinate: scroll button size, if positive\n\nEighth coordinate: gap between columns, if any"
+  },
+  "master.tcp.fxparm": {
+    "title": "### `master.tcp.fxparm` layout element",
+    "info": "FX parameter list"
+  },
+  "master.tcp.fxparm.font": {
+    "title": "### `master.tcp.fxparm.font` layout element",
+    "info": "FX parameter list font.\n\nFirst coordinate: font index (1–8 = user, 0 = main, −1 = volpan)\n\nSecond coordinate: row height, if nonzero\n\nThird and fourth coordinates: minimum and maximum column width, if nonzero\n\nFifth coordinate: line spacing adjustment\n\nSeventh coordinate: scrollbar gap size (scrollbar size includes this gap)\n\nEighth coordinate: scrollbar size, if nonzero"
+  },
+  "master.tcp.fxparm.margin": {
+    "title": "### `master.tcp.fxparm.margin` layout element",
+    "info": "FX parameter list margins.\n\nFirst coordinate: left margin\n\nThird coordinate: right margin\n\nFifth coordinate: alignment (0 = left, 0.5 = center, 1 = right)\n\nSixth coordinate: scroll button size, if positive\n\nSeventh coordinate: alignment for FX instances\n\nEighth coordinate: gap between columns, if any"
+  },
+  "master.tcp.fxparm.visflags": {
+    "title": "### `master.tcp.fxparm.visflags` layout element",
+    "info": "Visibility flags.\n\nFirst element: FX parameters\n\nSecond element: FX inserts\n\nThird element: sends\n\nSet each element to −1 to force hide, 0 to use the user preference, or 1 to force show."
+  },
+  "master.tcp.io": {
+    "title": "### `master.tcp.io` layout element",
+    "info": "IO button"
+  },
+  "master.tcp.label": {
+    "title": "### `master.tcp.label` layout element",
+    "info": "Track name text"
+  },
+  "master.tcp.label.color": {
+    "title": "### `master.tcp.label.color` layout element",
+    "info": "Track name text colors.\n\nFirst four coordinates: foreground\n\nSecond four coordinates: background"
+  },
+  "master.tcp.label.font": {
+    "title": "### `master.tcp.label.font` layout element",
+    "info": "Font.\n\nFirst coordinate: font index (1–8 = user, 0 = main, −1 = volpan)"
+  },
+  "master.tcp.label.margin": {
+    "title": "### `master.tcp.label.margin` layout element",
+    "info": "Track name text margins (l, t, r, b) and alignment.\n\nAlignment: 0 = left, 0.5 = center, 1 = right"
+  },
+  "master.tcp.margin": {
+    "title": "### `master.tcp.margin` layout element",
+    "info": "Inner margins"
+  },
+  "master.tcp.meter": {
+    "title": "### `master.tcp.meter` layout element",
+    "info": "Meter outer coordinates"
+  },
+  "master.tcp.meter.readout.color": {
+    "title": "### `master.tcp.meter.readout.color` layout element",
+    "info": "Peak text colors.\n\nFirst four coordinates: non-clipped peak text color\n\nSecond four coordinates: clipped peak text color"
+  },
+  "master.tcp.meter.rmsreadout.color": {
+    "title": "### `master.tcp.meter.rmsreadout.color` layout element",
+    "info": "RMS/LUFS mode readout text color.\n\nFirst four coordinates: color"
+  },
+  "master.tcp.meter.scale.color.lit.bottom": {
+    "title": "### `master.tcp.meter.scale.color.lit.bottom` layout element",
+    "info": "Meter scale, lit/bottom colors.\n\nFirst four coordinates: foreground\n\nSecond four coordinates: shadow color"
+  },
+  "master.tcp.meter.scale.color.lit.top": {
+    "title": "### `master.tcp.meter.scale.color.lit.top` layout element",
+    "info": "Meter scale, lit/top colors.\n\nFirst four coordinates: foreground\n\nSecond four coordinates: shadow color"
+  },
+  "master.tcp.meter.scale.color.unlit.bottom": {
+    "title": "### `master.tcp.meter.scale.color.unlit.bottom` layout element",
+    "info": "Meter scale, unlit/bottom colors.\n\nFirst four coordinates: foreground\n\nSecond four coordinates: shadow color"
+  },
+  "master.tcp.meter.scale.color.unlit.top": {
+    "title": "### `master.tcp.meter.scale.color.unlit.top` layout element",
+    "info": "Meter scale, unlit/top colors.\n\nFirst four coordinates: foreground\n\nSecond four coordinates: shadow color"
+  },
+  "master.tcp.meter.vu.div": {
+    "title": "### `master.tcp.meter.vu.div` layout element",
+    "info": "Meter channel division settings.\n\nFirst coordinate: division between channels in meter\n\nSecond coordinate: division mode:\n0 = default (increase center division as necessary)\n1 = center, increasing middle by 1 px max\n−1 = for all even divisions/sizes (possibly uncentered)\n−2 = possibly uneven-sized channels\n\nThird coordinate: GR division adjustment; space to add or subtract between the last channel and the gain reduction meter. Default spacing is half the regular channel division.\n\nFourth coordinate: maximum width for GR meter"
+  },
+  "master.tcp.mono": {
+    "title": "### `master.tcp.mono` layout element",
+    "info": "Mono button"
+  },
+  "master.tcp.mute": {
+    "title": "### `master.tcp.mute` layout element",
+    "info": "Mute button"
+  },
+  "master.tcp.pan": {
+    "title": "### `master.tcp.pan` layout element",
+    "info": "Pan fader/knob"
+  },
+  "master.tcp.pan.color": {
+    "title": "### `master.tcp.pan.color` layout element",
+    "info": "Pan fader/knob colors.\n\nFirst four coordinates: knob line color\n\nSecond four coordinates: fader zero-line color"
+  },
+  "master.tcp.pan.fadermode": {
+    "title": "### `master.tcp.pan.fadermode` layout element",
+    "info": "Pan fader/knob mode.\n\nFirst coordinate: −1 to prevent knob, 1 to force knob, 0 for default"
+  },
+  "master.tcp.pan.label": {
+    "title": "### `master.tcp.pan.label` layout element",
+    "info": "Pan readout text"
+  },
+  "master.tcp.pan.label.color": {
+    "title": "### `master.tcp.pan.label.color` layout element",
+    "info": "Pan readout text colors.\n\nFirst four coordinates: foreground\n\nSecond four coordinates: background"
+  },
+  "master.tcp.pan.label.font": {
+    "title": "### `master.tcp.pan.label.font` layout element",
+    "info": "Font.\n\nFirst coordinate: font index (1–8 = user, 0 = main, −1 = volpan)"
+  },
+  "master.tcp.pan.label.margin": {
+    "title": "### `master.tcp.pan.label.margin` layout element",
+    "info": "Pan readout text margins (l, t, r, b) and alignment.\n\nAlignment: 0 = left, 0.5 = center, 1 = right"
+  },
+  "master.tcp.sendlist": {
+    "title": "### `master.tcp.sendlist` layout element",
+    "info": "Send list (hardware output list) area"
+  },
+  "master.tcp.sendlist.font": {
+    "title": "### `master.tcp.sendlist.font` layout element",
+    "info": "Send list area font.\n\nFirst coordinate: font index (1–8 = user, 0 = main, −1 = volpan)\n\nSecond coordinate: row height, if nonzero\n\nThird and fourth coordinates: minimum and maximum column width, if nonzero\n\nFifth coordinate: line spacing adjustment\n\nSeventh coordinate: scrollbar gap size (scrollbar size includes this gap)\n\nEighth coordinate: scrollbar size, if nonzero"
+  },
+  "master.tcp.sendlist.margin": {
+    "title": "### `master.tcp.sendlist.margin` layout element",
+    "info": "Send list area margins.\n\nFirst coordinate: left margin\n\nThird coordinate: right margin\n\nFifth coordinate: alignment (0 = left, 0.5 = center, 1 = right)\n\nSixth coordinate: scroll button size, if positive\n\nEighth coordinate: gap between columns, if any"
+  },
+  "master.tcp.size": {
+    "title": "### `master.tcp.size` layout element",
+    "info": "First two coordinates: baseline size\n\nSecond two coordinates: minimum size"
+  },
+  "master.tcp.solo": {
+    "title": "### `master.tcp.solo` layout element",
+    "info": "Solo button"
+  },
+  "master.tcp.volume": {
+    "title": "### `master.tcp.volume` layout element",
+    "info": "Volume fader"
+  },
+  "master.tcp.volume.color": {
+    "title": "### `master.tcp.volume.color` layout element",
+    "info": "Volume fader colors.\n\nFirst four coordinates: knob line color\n\nSecond four coordinates: fader zero-line color"
+  },
+  "master.tcp.volume.fadermode": {
+    "title": "### `master.tcp.volume.fadermode` layout element",
+    "info": "Volume fader/knob mode.\n\nFirst coordinate: −1 to prevent knob, 1 to force knob, 0 for default"
+  },
+  "master.tcp.volume.label": {
+    "title": "### `master.tcp.volume.label` layout element",
+    "info": "Volume readout text"
+  },
+  "master.tcp.volume.label.color": {
+    "title": "### `master.tcp.volume.label.color` layout element",
+    "info": "Volume readout text colors.\n\nFirst four coordinates: foreground\n\nSecond four coordinates: background"
+  },
+  "master.tcp.volume.label.font": {
+    "title": "### `master.tcp.volume.label.font` layout element",
+    "info": "Font.\n\nFirst coordinate: font index (1–8 = user, 0 = main, −1 = volpan)"
+  },
+  "master.tcp.volume.label.margin": {
+    "title": "### `master.tcp.volume.label.margin` layout element",
+    "info": "Volume readout text margins (l, t, r, b) and alignment.\n\nAlignment: 0 = left, 0.5 = center, 1 = right"
+  },
+  "master.tcp.width": {
+    "title": "### `master.tcp.width` layout element",
+    "info": "Width fader/knob"
+  },
+  "master.tcp.width.color": {
+    "title": "### `master.tcp.width.color` layout element",
+    "info": "Width fader/knob colors.\n\nFirst four coordinates: knob line color\n\nSecond four coordinates: fader zero-line color"
+  },
+  "master.tcp.width.fadermode": {
+    "title": "### `master.tcp.width.fadermode` layout element",
+    "info": "Width fader/knob mode.\n\nFirst coordinate: −1 to prevent knob, 1 to force knob, 0 for default"
+  },
+  "master.tcp.width.label": {
+    "title": "### `master.tcp.width.label` layout element",
+    "info": "Width readout text"
+  },
+  "master.tcp.width.label.color": {
+    "title": "### `master.tcp.width.label.color` layout element",
+    "info": "Width readout text colors.\n\nFirst four coordinates: foreground\n\nSecond four coordinates: background"
+  },
+  "master.tcp.width.label.font": {
+    "title": "### `master.tcp.width.label.font` layout element",
+    "info": "Font.\n\nFirst coordinate: font index (1–8 = user, 0 = main, −1 = volpan)"
+  },
+  "master.tcp.width.label.margin": {
+    "title": "### `master.tcp.width.label.margin` layout element",
+    "info": "Width readout text margins (l, t, r, b) and alignment.\n\nAlignment: 0 = left, 0.5 = center, 1 = right"
+  },
+
+  "mcp": {
+    "title": "### `mcp` layout element",
+    "info": "Mixer Control Panel"
+  },
+  "mcp.env": {
+    "title": "### `mcp.env` layout element",
+    "info": "Envelope/automation mode button"
+  },
+  "mcp.extmixer.mode": {
+    "title": "### `mcp.extmixer.mode` layout element",
+    "info": "Set to [1] to use `mcp.extmixer.position`.\n\nSet to [-1] to use the default handling, but with `mcp.extmixer.position` as a margin."
+  },
+  "mcp.extmixer.position": {
+    "title": "### `mcp.extmixer.position` layout element",
+    "info": "Position of extended mixer elements, including FX, sends, and FX parameters. Only used if `mcp.extmixer.mode` is set to [1]. Also used as a margin if `mcp.extmixer.mode` is set to [-1]."
+  },
+  "mcp.folder": {
+    "title": "### `mcp.folder` layout element",
+    "info": "Folder button"
+  },
+  "mcp.fx": {
+    "title": "### `mcp.fx` layout element",
+    "info": "FX button"
+  },
+  "mcp.fxbyp": {
+    "title": "### `mcp.fxbyp` layout element",
+    "info": "FX bypass button"
+  },
+  "mcp.fxin": {
+    "title": "### `mcp.fxin` layout element",
+    "info": "Input-FX button"
+  },
+  "mcp.fxlist.font": {
+    "title": "### `mcp.fxlist.font` layout element",
+    "info": "FX list font.\n\nFirst coordinate: font index (1–8 = user, 0 = main, −1 = volpan)\n\nSecond coordinate: row height, if nonzero\n\nThird and fourth coordinates: minimum and maximum column width, if nonzero\n\nFifth coordinate: line spacing adjustment\n\nSeventh coordinate: scrollbar gap size (scrollbar size includes this gap)\n\nEighth coordinate: scrollbar size, if nonzero"
+  },
+  "mcp.fxlist.margin": {
+    "title": "### `mcp.fxlist.margin` layout element",
+    "info": "FX list margins.\n\nFirst coordinate: left margin\n\nThird coordinate: right margin\n\nFifth coordinate: alignment (0 = left, 0.5 = center, 1 = right)\n\nSixth coordinate: scroll button size, if positive\n\nEighth coordinate: gap between columns, if any"
+  },
+  "mcp.fxparm.font": {
+    "title": "### `mcp.fxparm.font` layout element",
+    "info": "FX parameter list font.\n\nFirst coordinate: font index (1–8 = user, 0 = main, −1 = volpan)\n\nSecond coordinate: row height, if nonzero\n\nThird and fourth coordinates: minimum and maximum column width, if nonzero\n\nFifth coordinate: line spacing adjustment\n\nSeventh coordinate: scrollbar gap size (scrollbar size includes this gap)\n\nEighth coordinate: scrollbar size, if nonzero"
+  },
+  "mcp.fxparm.margin": {
+    "title": "### `mcp.fxparm.margin` layout element",
+    "info": "FX parameter list margins.\n\nFirst coordinate: left margin\n\nThird coordinate: right margin\n\nFifth coordinate: alignment (0 = left, 0.5 = center, 1 = right)\n\nSixth coordinate: scroll button size, if positive\n\nEighth coordinate: gap between columns, if any"
+  },
+  "mcp.io": {
+    "title": "### `mcp.io` layout element",
+    "info": "IO button"
+  },
+  "mcp.label": {
+    "title": "### `mcp.label` layout element",
+    "info": "Track name text"
+  },
+  "mcp.label.color": {
+    "title": "### `mcp.label.color` layout element",
+    "info": "Track name text colors.\n\nFirst four coordinates: foreground\n\nSecond four coordinates: background"
+  },
+  "mcp.label.font": {
+    "title": "### `mcp.label.font` layout element",
+    "info": "Track name text font.\n\nFirst coordinate: font index (1–8 = user, 0 = main, −1 = volpan)"
+  },
+  "mcp.label.margin": {
+    "title": "### `mcp.label.margin` layout element",
+    "info": "Track name text margins (l, t, r, b) and alignment.\n\nAlignment: 0 = left, 0.5 = center, 1 = right"
+  },
+  "mcp.margin": {
+    "title": "### `mcp.margin` layout element",
+    "info": "Inner margins"
+  },
+  "mcp.meter": {
+    "title": "### `mcp.meter` layout element",
+    "info": "Meter outer coordinates"
+  },
+  "mcp.meter.inputlabel.color": {
+    "title": "### `mcp.meter.inputlabel.color` layout element",
+    "info": "First four coordinates: meter input source label text color"
+  },
+  "mcp.meter.inputlabelbox.color": {
+    "title": "### `mcp.meter.inputlabelbox.color` layout element",
+    "info": "First four coordinates: background for meter input source label\n\nSecond four coordinates: foreground/border color"
+  },
+  "mcp.meter.readout.color": {
+    "title": "### `mcp.meter.readout.color` layout element",
+    "info": "First four coordinates: non-clipped peak text color\n\nSecond four coordinates: clipped peak text color"
+  },
+  "mcp.meter.rmsreadout.color": {
+    "title": "### `mcp.meter.rmsreadout.color` layout element",
+    "info": "First four coordinates: RMS/LUFS mode readout text color"
+  },
+  "mcp.meter.scale.color.lit.bottom": {
+    "title": "### `mcp.meter.scale.color.lit.bottom` layout element",
+    "info": "First four coordinates: meter scale, lit/bottom, foreground\n\nSecond four coordinates: shadow color"
+  },
+  "mcp.meter.scale.color.lit.top": {
+    "title": "### `mcp.meter.scale.color.lit.top` layout element",
+    "info": "First four coordinates: meter scale, lit/top, foreground\n\nSecond four coordinates: shadow color"
+  },
+  "mcp.meter.scale.color.unlit.bottom": {
+    "title": "### `mcp.meter.scale.color.unlit.bottom` layout element",
+    "info": "First four coordinates: meter scale, unlit/bottom, foreground\n\nSecond four coordinates: shadow color"
+  },
+  "mcp.meter.scale.color.unlit.top": {
+    "title": "### `mcp.meter.scale.color.unlit.top` layout element",
+    "info": "First four coordinates: meter scale, unlit/top, foreground\n\nSecond four coordinates: shadow color"
+  },
+  "mcp.meter.vu.div": {
+    "title": "### `mcp.meter.vu.div` layout element",
+    "info": "Meter channel division settings.\n\nFirst coordinate: division between channels in meter\n\nSecond coordinate: division mode:\n0 = default (increase center division as necessary)\n1 = center, increasing middle by 1 px max\n−1 = for all even divisions/sizes (possibly uncentered)\n−2 = possibly uneven-sized channels\n\nThird coordinate: GR division adjustment; space to add or subtract between the last channel and the gain reduction meter. Default spacing is half the regular channel division.\n\nFourth coordinate: maximum width for GR meter"
+  },
+  "mcp.mute": {
+    "title": "### `mcp.mute` layout element",
+    "info": "Mute button"
+  },
+  "mcp.pan": {
+    "title": "### `mcp.pan` layout element",
+    "info": "Pan fader/knob"
+  },
+  "mcp.pan.color": {
+    "title": "### `mcp.pan.color` layout element",
+    "info": "Pan fader/knob colors.\n\nFirst four coordinates: knob line color\n\nSecond four coordinates: fader zero-line color"
+  },
+  "mcp.pan.fadermode": {
+    "title": "### `mcp.pan.fadermode` layout element",
+    "info": "Pan fader/knob: fader vs. knob mode.\n\nFirst coordinate: −1 = prevent knob, 1 = force knob, 0 = default"
+  },
+  "mcp.pan.label": {
+    "title": "### `mcp.pan.label` layout element",
+    "info": "Pan readout text"
+  },
+  "mcp.pan.label.color": {
+    "title": "### `mcp.pan.label.color` layout element",
+    "info": "Pan readout text colors.\n\nFirst four coordinates: foreground\n\nSecond four coordinates: background"
+  },
+  "mcp.pan.label.font": {
+    "title": "### `mcp.pan.label.font` layout element",
+    "info": "Pan readout text font.\n\nFirst coordinate: font index (1–8 = user, 0 = main, −1 = volpan)"
+  },
+  "mcp.pan.label.margin": {
+    "title": "### `mcp.pan.label.margin` layout element",
+    "info": "Pan readout text margins (l, t, r, b) and alignment.\n\nAlignment: 0 = left, 0.5 = center, 1 = right"
+  },
+  "mcp.phase": {
+    "title": "### `mcp.phase` layout element",
+    "info": "Phase/polarity button"
+  },
+  "mcp.recarm": {
+    "title": "### `mcp.recarm` layout element",
+    "info": "Record arm button"
+  },
+  "mcp.recinput": {
+    "title": "### `mcp.recinput` layout element",
+    "info": "Record input text field"
+  },
+  "mcp.recinput.color": {
+    "title": "### `mcp.recinput.color` layout element",
+    "info": "Record input text field text color and background color"
+  },
+  "mcp.recinput.font": {
+    "title": "### `mcp.recinput.font` layout element",
+    "info": "Record input text field font.\n\nFirst coordinate: font index (1–8 = user, 0 = main, −1 = volpan)"
+  },
+  "mcp.recinput.margin": {
+    "title": "### `mcp.recinput.margin` layout element",
+    "info": "Record input text field margins (l, t, r, b) and alignment.\n\nAlignment: 0 = left, 0.5 = center, 1 = right"
+  },
+  "mcp.recmode": {
+    "title": "### `mcp.recmode` layout element",
+    "info": "Record mode button"
+  },
+  "mcp.recmon": {
+    "title": "### `mcp.recmon` layout element",
+    "info": "Record monitor mode button"
+  },
+  "mcp.sendlist.font": {
+    "title": "### `mcp.sendlist.font` layout element",
+    "info": "Send list font.\n\nFirst coordinate: font index (1–8 = user, 0 = main, −1 = volpan)\n\nSecond coordinate: row height, if nonzero\n\nThird and fourth coordinates: minimum and maximum column width, if nonzero\n\nFifth coordinate: line spacing adjustment\n\nSeventh coordinate: scrollbar gap size (scrollbar size includes this gap)\n\nEighth coordinate: scrollbar size, if nonzero"
+  },
+  "mcp.sendlist.margin": {
+    "title": "### `mcp.sendlist.margin` layout element",
+    "info": "Send list margins.\n\nFirst coordinate: left margin\n\nThird coordinate: right margin\n\nFifth coordinate: alignment (0 = left, 0.5 = center, 1 = right)\n\nSixth coordinate: scroll button size, if positive\n\nEighth coordinate: gap between columns, if any"
+  },
+  "mcp.size": {
+    "title": "### `mcp.size` layout element",
+    "info": "First two coordinates: baseline size\n\nSecond two coordinates: minimum size"
+  },
+  "mcp.solo": {
+    "title": "### `mcp.solo` layout element",
+    "info": "Solo button"
+  },
+  "mcp.trackidx": {
+    "title": "### `mcp.trackidx` layout element",
+    "info": "Track index"
+  },
+  "mcp.trackidx.color": {
+    "title": "### `mcp.trackidx.color` layout element",
+    "info": "Track index colors.\n\nFirst four coordinates: foreground\n\nSecond four coordinates: background"
+  },
+  "mcp.trackidx.font": {
+    "title": "### `mcp.trackidx.font` layout element",
+    "info": "Track index font.\n\nFirst coordinate: font index (1–8 = user, 0 = main, −1 = volpan)"
+  },
+  "mcp.trackidx.margin": {
+    "title": "### `mcp.trackidx.margin` layout element",
+    "info": "Track index margins (l, t, r, b) and alignment.\n\nAlignment: 0 = left, 0.5 = center, 1 = right"
+  },
+  "mcp.volume": {
+    "title": "### `mcp.volume` layout element",
+    "info": "Volume fader"
+  },
+  "mcp.volume.color": {
+    "title": "### `mcp.volume.color` layout element",
+    "info": "Volume fader colors.\n\nFirst four coordinates: knob line color\n\nSecond four coordinates: fader zero-line color"
+  },
+  "mcp.volume.fadermode": {
+    "title": "### `mcp.volume.fadermode` layout element",
+    "info": "Volume fader: fader vs. knob mode.\n\nFirst coordinate: −1 = prevent knob, 1 = force knob, 0 = default"
+  },
+  "mcp.volume.label": {
+    "title": "### `mcp.volume.label` layout element",
+    "info": "Volume readout text"
+  },
+  "mcp.volume.label.color": {
+    "title": "### `mcp.volume.label.color` layout element",
+    "info": "Volume readout text colors.\n\nFirst four coordinates: foreground\n\nSecond four coordinates: background"
+  },
+  "mcp.volume.label.font": {
+    "title": "### `mcp.volume.label.font` layout element",
+    "info": "Volume readout text font.\n\nFirst coordinate: font index (1–8 = user, 0 = main, −1 = volpan)"
+  },
+  "mcp.volume.label.margin": {
+    "title": "### `mcp.volume.label.margin` layout element",
+    "info": "Volume readout text margins (l, t, r, b) and alignment.\n\nAlignment: 0 = left, 0.5 = center, 1 = right"
+  },
+  "mcp.width": {
+    "title": "### `mcp.width` layout element",
+    "info": "Width fader/knob"
+  },
+  "mcp.width.color": {
+    "title": "### `mcp.width.color` layout element",
+    "info": "Width fader/knob colors.\n\nFirst four coordinates: knob line color\n\nSecond four coordinates: fader zero-line color"
+  },
+  "mcp.width.fadermode": {
+    "title": "### `mcp.width.fadermode` layout element",
+    "info": "Width fader/knob: fader vs. knob mode.\n\nFirst coordinate: −1 = prevent knob, 1 = force knob, 0 = default"
+  },
+  "mcp.width.label": {
+    "title": "### `mcp.width.label` layout element",
+    "info": "Width readout text"
+  },
+  "mcp.width.label.color": {
+    "title": "### `mcp.width.label.color` layout element",
+    "info": "Width readout text colors.\n\nFirst four coordinates: foreground\n\nSecond four coordinates: background"
+  },
+  "mcp.width.label.font": {
+    "title": "### `mcp.width.label.font` layout element",
+    "info": "Width readout text font.\n\nFirst coordinate: font index (1–8 = user, 0 = main, −1 = volpan)"
+  },
+  "mcp.width.label.margin": {
+    "title": "### `mcp.width.label.margin` layout element",
+    "info": "Width readout text margins (l, t, r, b) and alignment.\n\nAlignment: 0 = left, 0.5 = center, 1 = right"
+  },
+
+  "master.mcp": {
+    "title": "### `master.mcp` layout element",
+    "info": "Master Mixer Control Panel"
+  },
+  "master.mcp.env": {
+    "title": "### `master.mcp.env` layout element",
+    "info": "Envelope/automation mode button"
+  },
+  "master.mcp.extmixer.mode": {
+    "title": "### `master.mcp.extmixer.mode` layout element",
+    "info": "Set to [1] to use `master.mcp.extmixer.position`.\n\nSet to [-1] to use the default handling, but with `master.mcp.extmixer.position` as a margin."
+  },
+  "master.mcp.extmixer.position": {
+    "title": "### `master.mcp.extmixer.position` layout element",
+    "info": "Position of extended mixer elements, including FX, sends, and FX parameters. Only used if `master.mcp.extmixer.mode` is set to [1]. Also used as a margin if `master.mcp.extmixer.mode` is set to [-1]."
+  },
+  "master.mcp.fx": {
+    "title": "### `master.mcp.fx` layout element",
+    "info": "FX button"
+  },
+  "master.mcp.fxbyp": {
+    "title": "### `master.mcp.fxbyp` layout element",
+    "info": "FX bypass button"
+  },
+  "master.mcp.fxlist.font": {
+    "title": "### `master.mcp.fxlist.font` layout element",
+    "info": "FX list font.\n\nFirst coordinate: font index (1–8 = user, 0 = main, −1 = volpan)\n\nSecond coordinate: row height, if nonzero\n\nThird and fourth coordinates: minimum and maximum column width, if nonzero\n\nFifth coordinate: line spacing adjustment\n\nSeventh coordinate: scrollbar gap size (scrollbar size includes this gap)\n\nEighth coordinate: scrollbar size, if nonzero"
+  },
+  "master.mcp.fxlist.margin": {
+    "title": "### `master.mcp.fxlist.margin` layout element",
+    "info": "FX list margins.\n\nFirst coordinate: left margin\n\nThird coordinate: right margin\n\nFifth coordinate: alignment (0 = left, 0.5 = center, 1 = right)\n\nSixth coordinate: scroll button size, if positive\n\nEighth coordinate: gap between columns, if any"
+  },
+  "master.mcp.fxparm.font": {
+    "title": "### `master.mcp.fxparm.font` layout element",
+    "info": "FX parameter list font.\n\nFirst coordinate: font index (1–8 = user, 0 = main, −1 = volpan)\n\nSecond coordinate: row height, if nonzero\n\nThird and fourth coordinates: minimum and maximum column width, if nonzero\n\nFifth coordinate: line spacing adjustment\n\nSeventh coordinate: scrollbar gap size (scrollbar size includes this gap)\n\nEighth coordinate: scrollbar size, if nonzero"
+  },
+  "master.mcp.fxparm.margin": {
+    "title": "### `master.mcp.fxparm.margin` layout element",
+    "info": "FX parameter list margins.\n\nFirst coordinate: left margin\n\nThird coordinate: right margin\n\nFifth coordinate: alignment (0 = left, 0.5 = center, 1 = right)\n\nSixth coordinate: scroll button size, if positive\n\nEighth coordinate: gap between columns, if any"
+  },
+  "master.mcp.io": {
+    "title": "### `master.mcp.io` layout element",
+    "info": "IO button"
+  },
+  "master.mcp.label": {
+    "title": "### `master.mcp.label` layout element",
+    "info": "Track name text"
+  },
+  "master.mcp.label.color": {
+    "title": "### `master.mcp.label.color` layout element",
+    "info": "Track name text colors.\n\nFirst four coordinates: foreground\n\nSecond four coordinates: background"
+  },
+  "master.mcp.label.font": {
+    "title": "### `master.mcp.label.font` layout element",
+    "info": "Track name text font.\n\nFirst coordinate: font index (1–8 = user, 0 = main, −1 = volpan)"
+  },
+  "master.mcp.label.margin": {
+    "title": "### `master.mcp.label.margin` layout element",
+    "info": "Track name text margins (l, t, r, b) and alignment.\n\nAlignment: 0 = left, 0.5 = center, 1 = right"
+  },
+  "master.mcp.margin": {
+    "title": "### `master.mcp.margin` layout element",
+    "info": "Inner margins"
+  },
+  "master.mcp.menubutton": {
+    "title": "### `master.mcp.menubutton` layout element",
+    "info": "Mixer menu button"
+  },
+  "master.mcp.meter": {
+    "title": "### `master.mcp.meter` layout element",
+    "info": "Meter outer coordinates"
+  },
+  "master.mcp.meter.readout.color": {
+    "title": "### `master.mcp.meter.readout.color` layout element",
+    "info": "Non-clipped peak text color.\n\nSecond four coordinates: clipped peak text color"
+  },
+  "master.mcp.meter.rmsreadout.color": {
+    "title": "### `master.mcp.meter.rmsreadout.color` layout element",
+    "info": "First four coordinates: RMS/LUFS mode readout text color"
+  },
+  "master.mcp.meter.scale.color.lit.bottom": {
+    "title": "### `master.mcp.meter.scale.color.lit.bottom` layout element",
+    "info": "First four coordinates: meter scale, lit/bottom, foreground\n\nSecond four coordinates: shadow color"
+  },
+  "master.mcp.meter.scale.color.lit.top": {
+    "title": "### `master.mcp.meter.scale.color.lit.top` layout element",
+    "info": "First four coordinates: meter scale, lit/top, foreground\n\nSecond four coordinates: shadow color"
+  },
+  "master.mcp.meter.scale.color.unlit.bottom": {
+    "title": "### `master.mcp.meter.scale.color.unlit.bottom` layout element",
+    "info": "First four coordinates: meter scale, unlit/bottom, foreground\n\nSecond four coordinates: shadow color"
+  },
+  "master.mcp.meter.scale.color.unlit.top": {
+    "title": "### `master.mcp.meter.scale.color.unlit.top` layout element",
+    "info": "First four coordinates: meter scale, unlit/top, foreground\n\nSecond four coordinates: shadow color"
+  },
+  "master.mcp.meter.vu.div": {
+    "title": "### `master.mcp.meter.vu.div` layout element",
+    "info": "Meter channel division settings.\n\nFirst coordinate: division between channels in meter\n\nSecond coordinate: division mode:\n0 = default (increase center division as necessary)\n1 = center, increasing middle by 1 px max\n−1 = for all even divisions/sizes (possibly uncentered)\n−2 = possibly uneven-sized channels\n\nThird coordinate: GR division adjustment; space to add or subtract between the last channel and the gain reduction meter. Default spacing is half the regular channel division.\n\nFourth coordinate: maximum width for GR meter"
+  },
+  "master.mcp.meter.vu.rmsdiv": {
+    "title": "### `master.mcp.meter.vu.rmsdiv` layout element",
+    "info": "First coordinate: division between RMS meter channels\n\nSecond coordinate: adjust RMS size in RMS + peak mode"
+  },
+  "master.mcp.mono": {
+    "title": "### `master.mcp.mono` layout element",
+    "info": "Mono button"
+  },
+  "master.mcp.mute": {
+    "title": "### `master.mcp.mute` layout element",
+    "info": "Mute button"
+  },
+  "master.mcp.pan": {
+    "title": "### `master.mcp.pan` layout element",
+    "info": "Pan fader/knob"
+  },
+  "master.mcp.pan.color": {
+    "title": "### `master.mcp.pan.color` layout element",
+    "info": "Pan fader/knob colors.\n\nFirst four coordinates: knob line color\n\nSecond four coordinates: fader zero-line color"
+  },
+  "master.mcp.pan.fadermode": {
+    "title": "### `master.mcp.pan.fadermode` layout element",
+    "info": "Pan fader/knob: fader vs. knob mode.\n\nFirst coordinate: −1 = prevent knob, 1 = force knob, 0 = default"
+  },
+  "master.mcp.pan.label": {
+    "title": "### `master.mcp.pan.label` layout element",
+    "info": "Pan readout text"
+  },
+  "master.mcp.pan.label.color": {
+    "title": "### `master.mcp.pan.label.color` layout element",
+    "info": "Pan readout text colors.\n\nFirst four coordinates: foreground\n\nSecond four coordinates: background"
+  },
+  "master.mcp.pan.label.font": {
+    "title": "### `master.mcp.pan.label.font` layout element",
+    "info": "Pan readout text font.\n\nFirst coordinate: font index (1–8 = user, 0 = main, −1 = volpan)"
+  },
+  "master.mcp.pan.label.margin": {
+    "title": "### `master.mcp.pan.label.margin` layout element",
+    "info": "Pan readout text margins (l, t, r, b) and alignment.\n\nAlignment: 0 = left, 0.5 = center, 1 = right"
+  },
+  "master.mcp.sendlist.font": {
+    "title": "### `master.mcp.sendlist.font` layout element",
+    "info": "Send list font.\n\nFirst coordinate: font index (1–8 = user, 0 = main, −1 = volpan)\n\nSecond coordinate: row height, if nonzero\n\nThird and fourth coordinates: minimum and maximum column width, if nonzero\n\nFifth coordinate: line spacing adjustment\n\nSeventh coordinate: scrollbar gap size (scrollbar size includes this gap)\n\nEighth coordinate: scrollbar size, if nonzero"
+  },
+  "master.mcp.sendlist.margin": {
+    "title": "### `master.mcp.sendlist.margin` layout element",
+    "info": "Send list margins.\n\nFirst coordinate: left margin\n\nThird coordinate: right margin\n\nFifth coordinate: alignment (0 = left, 0.5 = center, 1 = right)\n\nSixth coordinate: scroll button size, if positive\n\nEighth coordinate: gap between columns, if any"
+  },
+  "master.mcp.size": {
+    "title": "### `master.mcp.size` layout element",
+    "info": "First two coordinates: baseline size\n\nSecond two coordinates: minimum size"
+  },
+  "master.mcp.solo": {
+    "title": "### `master.mcp.solo` layout element",
+    "info": "Solo button"
+  },
+  "master.mcp.volume": {
+    "title": "### `master.mcp.volume` layout element",
+    "info": "Volume fader"
+  },
+  "master.mcp.volume.color": {
+    "title": "### `master.mcp.volume.color` layout element",
+    "info": "Volume fader colors.\n\nFirst four coordinates: knob line color\n\nSecond four coordinates: fader zero-line color"
+  },
+  "master.mcp.volume.fadermode": {
+    "title": "### `master.mcp.volume.fadermode` layout element",
+    "info": "Volume fader: fader vs. knob mode.\n\nFirst coordinate: −1 = prevent knob, 1 = force knob, 0 = default"
+  },
+  "master.mcp.volume.label": {
+    "title": "### `master.mcp.volume.label` layout element",
+    "info": "Volume readout text"
+  },
+  "master.mcp.volume.label.color": {
+    "title": "### `master.mcp.volume.label.color` layout element",
+    "info": "Volume readout text colors.\n\nFirst four coordinates: foreground\n\nSecond four coordinates: background"
+  },
+  "master.mcp.volume.label.font": {
+    "title": "### `master.mcp.volume.label.font` layout element",
+    "info": "Volume readout text font.\n\nFirst coordinate: font index (1–8 = user, 0 = main, −1 = volpan)"
+  },
+  "master.mcp.volume.label.margin": {
+    "title": "### `master.mcp.volume.label.margin` layout element",
+    "info": "Volume readout text margins (l, t, r, b) and alignment.\n\nAlignment: 0 = left, 0.5 = center, 1 = right"
+  },
+  "master.mcp.width": {
+    "title": "### `master.mcp.width` layout element",
+    "info": "Width fader/knob"
+  },
+  "master.mcp.width.color": {
+    "title": "### `master.mcp.width.color` layout element",
+    "info": "Width fader/knob colors.\n\nFirst four coordinates: knob line color\n\nSecond four coordinates: fader zero-line color"
+  },
+  "master.mcp.width.fadermode": {
+    "title": "### `master.mcp.width.fadermode` layout element",
+    "info": "Width fader/knob: fader vs. knob mode.\n\nFirst coordinate: −1 = prevent knob, 1 = force knob, 0 = default"
+  },
+  "master.mcp.width.label": {
+    "title": "### `master.mcp.width.label` layout element",
+    "info": "Width readout text"
+  },
+  "master.mcp.width.label.color": {
+    "title": "### `master.mcp.width.label.color` layout element",
+    "info": "Width readout text colors.\n\nFirst four coordinates: foreground\n\nSecond four coordinates: background"
+  },
+  "master.mcp.width.label.font": {
+    "title": "### `master.mcp.width.label.font` layout element",
+    "info": "Width readout text font.\n\nFirst coordinate: font index (1–8 = user, 0 = main, −1 = volpan)"
+  },
+  "master.mcp.width.label.margin": {
+    "title": "### `master.mcp.width.label.margin` layout element",
+    "info": "Width readout text margins (l, t, r, b) and alignment.\n\nAlignment: 0 = left, 0.5 = center, 1 = right"
+  },
+
+  "envcp": {
+    "title": "### `envcp` layout element",
+    "info": "Envelope Control Panel"
+  },
+  "envcp.arm": {
+    "title": "### `envcp.arm` layout element",
+    "info": "Arm button"
+  },
+  "envcp.bypass": {
+    "title": "### `envcp.bypass` layout element",
+    "info": "Bypass button"
+  },
+  "envcp.fader": {
+    "title": "### `envcp.fader` layout element",
+    "info": "Envelope fader"
+  },
+  "envcp.fader.color": {
+    "title": "### `envcp.fader.color` layout element",
+    "info": "Envelope fader colors.\n\nFirst four coordinates: knob line color\n\nSecond four coordinates: fader zero-line color"
+  },
+  "envcp.fader.fadermode": {
+    "title": "### `envcp.fader.fadermode` layout element",
+    "info": "Envelope fader: fader vs. knob mode.\n\nFirst coordinate: −1 = prevent knob, 1 = force knob, 0 = default"
+  },
+  "envcp.hide": {
+    "title": "### `envcp.hide` layout element",
+    "info": "Hide button"
+  },
+  "envcp.label": {
+    "title": "### `envcp.label` layout element",
+    "info": "Envelope label"
+  },
+  "envcp.label.color": {
+    "title": "### `envcp.label.color` layout element",
+    "info": "Envelope label colors.\n\nFirst four coordinates: foreground\n\nSecond four coordinates: background"
+  },
+  "envcp.label.font": {
+    "title": "### `envcp.label.font` layout element",
+    "info": "Envelope label font.\n\nFirst coordinate: font index (1–8 = user, 0 = main, −1 = volpan)"
+  },
+  "envcp.label.margin": {
+    "title": "### `envcp.label.margin` layout element",
+    "info": "Envelope label margins (l, t, r, b) and alignment.\n\nAlignment: 0 = left, 0.5 = center, 1 = right"
+  },
+  "envcp.learn": {
+    "title": "### `envcp.learn` layout element",
+    "info": "Learn button"
+  },
+  "envcp.margin": {
+    "title": "### `envcp.margin` layout element",
+    "info": "Inner margins"
+  },
+  "envcp.mod": {
+    "title": "### `envcp.mod` layout element",
+    "info": "Parameter modulation button"
+  },
+  "envcp.size": {
+    "title": "### `envcp.size` layout element",
+    "info": "First two coordinates: baseline size\n\nSecond two coordinates: minimum size"
+  },
+  "envcp.value": {
+    "title": "### `envcp.value` layout element",
+    "info": "Envelope value"
+  },
+  "envcp.value.color": {
+    "title": "### `envcp.value.color` layout element",
+    "info": "Envelope value colors.\n\nFirst four coordinates: foreground\n\nSecond four coordinates: background"
+  },
+  "envcp.value.font": {
+    "title": "### `envcp.value.font` layout element",
+    "info": "Envelope value font.\n\nFirst coordinate: font index (1–8 = user, 0 = main, −1 = volpan)"
+  },
+  "envcp.value.margin": {
+    "title": "### `envcp.value.margin` layout element",
+    "info": "Envelope value margins (l, t, r, b) and alignment.\n\nAlignment: 0 = left, 0.5 = center, 1 = right"
+  },
+
+  "trans": {
+    "title": "### `trans` layout element",
+    "info": "Transport"
+  },
+  "trans.automode": {
+    "title": "### `trans.automode` layout element",
+    "info": "Automation mode button"
+  },
+  "trans.bpm.edit": {
+    "title": "### `trans.bpm.edit` layout element",
+    "info": "BPM text/edit"
+  },
+  "trans.bpm.edit.color": {
+    "title": "### `trans.bpm.edit.color` layout element",
+    "info": "BPM text/edit colors.\n\nFirst four coordinates: foreground\n\nSecond four coordinates: background"
+  },
+  "trans.bpm.edit.font": {
+    "title": "### `trans.bpm.edit.font` layout element",
+    "info": "BPM text/edit font.\n\nFirst coordinate: font index (1–8 = user, 0 = main, −1 = volpan)"
+  },
+  "trans.bpm.edit.margin": {
+    "title": "### `trans.bpm.edit.margin` layout element",
+    "info": "BPM text/edit margins (l, t, r, b) and alignment.\n\nAlignment: 0 = left, 0.5 = center, 1 = right"
+  },
+  "trans.bpm.tap": {
+    "title": "### `trans.bpm.tap` layout element",
+    "info": "BPM tap button"
+  },
+  "trans.bpm.tap.color": {
+    "title": "### `trans.bpm.tap.color` layout element",
+    "info": "BPM tap button colors.\n\nFirst four coordinates: foreground\n\nSecond four coordinates: background"
+  },
+  "trans.bpm.tap.font": {
+    "title": "### `trans.bpm.tap.font` layout element",
+    "info": "BPM tap button font.\n\nFirst coordinate: font index (1–8 = user, 0 = main, −1 = volpan)"
+  },
+  "trans.bpm.tap.margin": {
+    "title": "### `trans.bpm.tap.margin` layout element",
+    "info": "BPM tap button margins"
+  },
+  "trans.curtimesig": {
+    "title": "### `trans.curtimesig` layout element",
+    "info": "Time signature display"
+  },
+  "trans.curtimesig.color": {
+    "title": "### `trans.curtimesig.color` layout element",
+    "info": "Time signature display colors.\n\nFirst four coordinates: foreground\n\nSecond four coordinates: background"
+  },
+  "trans.curtimesig.font": {
+    "title": "### `trans.curtimesig.font` layout element",
+    "info": "Time signature display font.\n\nFirst coordinate: font index (1–8 = user, 0 = main, −1 = volpan)"
+  },
+  "trans.fwd": {
+    "title": "### `trans.fwd` layout element",
+    "info": "Forward/end-of-project button"
+  },
+  "trans.margin": {
+    "title": "### `trans.margin` layout element",
+    "info": "Inner margins"
+  },
+  "trans.pause": {
+    "title": "### `trans.pause` layout element",
+    "info": "Pause button"
+  },
+  "trans.play": {
+    "title": "### `trans.play` layout element",
+    "info": "Play button"
+  },
+  "trans.rate": {
+    "title": "### `trans.rate` layout element",
+    "info": "Playback rate text/edit"
+  },
+  "trans.rate.color": {
+    "title": "### `trans.rate.color` layout element",
+    "info": "Playback rate text/edit colors.\n\nFirst four coordinates: foreground\n\nSecond four coordinates: background"
+  },
+  "trans.rate.fader": {
+    "title": "### `trans.rate.fader` layout element",
+    "info": "Playback rate slider"
+  },
+  "trans.rate.fader.color": {
+    "title": "### `trans.rate.fader.color` layout element",
+    "info": "Playback rate slider colors.\n\nFirst four coordinates: knob line color\n\nSecond four coordinates: fader zero-line color"
+  },
+  "trans.rate.fader.fadermode": {
+    "title": "### `trans.rate.fader.fadermode` layout element",
+    "info": "Playback rate slider: fader vs. knob mode.\n\nFirst coordinate: −1 = prevent knob, 1 = force knob, 0 = default"
+  },
+  "trans.rate.font": {
+    "title": "### `trans.rate.font` layout element",
+    "info": "Playback rate text/edit font.\n\nFirst coordinate: font index (1–8 = user, 0 = main, −1 = volpan)"
+  },
+  "trans.rate.margin": {
+    "title": "### `trans.rate.margin` layout element",
+    "info": "Playback rate text/edit margins (l, t, r, b) and alignment.\n\nAlignment: 0 = left, 0.5 = center, 1 = right"
+  },
+  "trans.rec": {
+    "title": "### `trans.rec` layout element",
+    "info": "Record button"
+  },
+  "trans.repeat": {
+    "title": "### `trans.repeat` layout element",
+    "info": "Repeat button"
+  },
+  "trans.rew": {
+    "title": "### `trans.rew` layout element",
+    "info": "Rewind/start-of-project button"
+  },
+  "trans.sel": {
+    "title": "### `trans.sel` layout element",
+    "info": "Selection information/edit"
+  },
+  "trans.sel.color": {
+    "title": "### `trans.sel.color` layout element",
+    "info": "Selection information/edit colors.\n\nFirst four coordinates: foreground\n\nSecond four coordinates: background"
+  },
+  "trans.sel.font": {
+    "title": "### `trans.sel.font` layout element",
+    "info": "Selection information/edit font.\n\nFirst coordinate: font index (1–8 = user, 0 = main, −1 = volpan)"
+  },
+  "trans.sel.margin": {
+    "title": "### `trans.sel.margin` layout element",
+    "info": "Selection information/edit margins"
+  },
+  "trans.size": {
+    "title": "### `trans.size` layout element",
+    "info": "Baseline size"
+  },
+  "trans.size.dockedheight": {
+    "title": "### `trans.size.dockedheight` layout element",
+    "info": "First coordinate: desired docked height"
+  },
+  "trans.size.minmax": {
+    "title": "### `trans.size.minmax` layout element",
+    "info": "First two coordinates: minimum size\n\nSecond two coordinates: maximum size"
+  },
+  "trans.status": {
+    "title": "### `trans.status` layout element",
+    "info": "Status display"
+  },
+  "trans.status.color": {
+    "title": "### `trans.status.color` layout element",
+    "info": "Status display foreground/background colors"
+  },
+  "trans.status.margin": {
+    "title": "### `trans.status.margin` layout element",
+    "info": "Status display margins"
+  },
+  "trans.stop": {
+    "title": "### `trans.stop` layout element",
+    "info": "Stop button"
+  },
+  "trans.timebase": {
+    "title": "### `trans.timebase` layout element",
+    "info": "Project timebase"
+  }
+}
