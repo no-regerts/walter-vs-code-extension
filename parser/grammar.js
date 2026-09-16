@@ -240,7 +240,7 @@ module.exports = grammar({
       optional(seq($.space, $.string)),
     ),
     layoutCommand: $ => seq(
-      token(prec(1, /layout/i)),
+      choice(token(prec(1, /layout/i)), token(prec(1, /globallayout/i))),
       $.space,
       $.string,
       optional(seq($.space, $.string)),

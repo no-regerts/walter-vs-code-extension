@@ -160,6 +160,10 @@ layout "mylayout" "folder"
 
 endlayout
 
+globallayout "mylayout" "folder"
+
+endlayout
+
 Layout "1. Classic Top Aligned"
 
 endLayout
