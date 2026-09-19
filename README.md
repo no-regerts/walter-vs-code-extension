@@ -30,6 +30,7 @@ Code linting is the automated process of analyzing source code to find formattin
 
 ### Other
 - Bracket/quote autoclosing.
+- Autocompletion / IntelliSense.
 
 # Planned features
 - Actions:
@@ -41,7 +42,6 @@ Code linting is the automated process of analyzing source code to find formattin
 - Hover tooltips:
   - Human-readable diagnostic messages.
   - User documentation comments (JSDoc style or similar).
-- Autocompletion / IntelliSense for built-in and user-defined entities.
 - Semantic error checking:
   - Unknown identifiers.
   - Unclosed `macro`/`layout` statements.
@@ -51,11 +51,13 @@ Code linting is the automated process of analyzing source code to find formattin
   - Indentation for `layout` and `macro` blocks.
   - Removal trailing whitespace.
 - Shrink/expand the selection.
+- Color picker for AABBGGRR values.
 - Linting:
   - `noDeadCode` - unused variables and macros, and dead branches.
   - `noMixedWhitespace` - mixing tabs and spaces in indentation or comments.
   - `noMixedQuotes` - using different types of quotation marks across the document.
   - `noConsecutiveBlankLines` - prevents excessive consecutive blank lines.
+  - `noDashesInIdentifiers`.
   - `consistentIdentifierCase` - enforces `camelCase` or `snake_case`.
   - `noLayoutVariableLookalikes` - e.g., `tcp.label.myVar`.
 
@@ -74,5 +76,9 @@ Code linting is the automated process of analyzing source code to find formattin
   - This is a limitation of the tooling being used. Currently, the parser cannot properly handle the end-of-file (EOF) and relies on a trailing newline character to parse commands correctly. This restriction is expected to be removed in a future version.
 
 # Release Notes
+## [1.1.0] - 2026-09-19
+- Code completion for built-in entities.
+- Improved hover documentation.
+- Minor bug fixes.
 
 ## [1.0.0] - 2026-09-14

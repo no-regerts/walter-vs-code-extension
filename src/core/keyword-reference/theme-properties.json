@@ -1,0 +1,240 @@
+{
+  "version": {
+    "title": "### `version` theme parameter",
+    "info": "Version 5 uses the newer v5 theme composition mode, recommended for new themes. Also enables PNG support.",
+    "meta": "Since: 5.0",
+    "example": "version 7.7",
+    "type": "config"
+  },
+  "use_pngs": {
+    "title": "### `use_pngs` theme parameter",
+    "info": "Enables PNG support.",
+    "example": "use_pngs 1",
+    "type": "config"
+  },
+  "use_overlays": {
+    "title": "### `use_overlays` theme parameter",
+    "info": "Enables button overlay image support.",
+    "example": "use_overlays 1",
+    "type": "config"
+  },
+  "tinttcp": {
+    "title": "### `tinttcp` theme parameter",
+    "info": "Overrides the `tinttcp=` line in reaper.ini.",
+    "meta": "Since: 5.0",
+    "example": "tinttcp 298",
+    "type": "config"
+  },
+  "peaksedges": {
+    "title": "### `peaksedges` theme parameter",
+    "info": "Overrides the `peaksedges=` line in reaper.ini.",
+    "meta": "Since: 5.0",
+    "example": "peaksedges 0",
+    "type": "config"
+  },
+  "tcp_folderindent": {
+    "title": "### `tcp_folderindent` theme parameter",
+    "info": "Size of folder indentation.",
+    "example": "tcp_folderindent 0",
+    "type": "config"
+  },
+  "tcp_heights": {
+    "title": "### `tcp_heights` theme parameter",
+    "info": "Default height of TCP panels: super-collapsed, small, medium, and full heights.",
+    "example": "tcp_heights 4 25 50 79",
+    "type": "config"
+  },
+  "tcp_master_minheight": {
+    "title": "### `tcp_master_minheight` theme parameter",
+    "info": "Minimum height of the TCP master.",
+    "example": "tcp_master_minheight 94",
+    "type": "config"
+  },
+  "tcp_voltext_flags": {
+    "title": "### `tcp_voltext_flags` theme parameter",
+    "info": "Flags for volume strings.\n\n1 = no dB\n\n2 = no fractional precision\n\n4 = no + on positive values\n\n8 = always show two digits of precision\n\nOptional second value specifies the maximum length of the total string.",
+    "example": "tcp_voltext_flags 7 4",
+    "type": "config"
+  },
+  "tcp_master_voltext_flags": {
+    "title": "### `tcp_master_voltext_flags` theme parameter",
+    "info": "Flags for volume strings.\n\n1 = no dB\n\n2 = no fractional precision\n\n4 = no + on positive values\n\n8 = always show two digits of precision\n\nOptional second value specifies the maximum length of the total string.",
+    "example": "tcp_master_voltext_flags 12",
+    "type": "config"
+  },
+  "mcp_voltext_flags": {
+    "title": "### `mcp_voltext_flags` theme parameter",
+    "info": "Flags for volume strings.\n\n1 = no dB\n\n2 = no fractional precision\n\n4 = no + on positive values\n\n8 = always show two digits of precision\n\nOptional second value specifies the maximum length of the total string.",
+    "example": "mcp_voltext_flags 5 5",
+    "type": "config"
+  },
+  "mcp_master_voltext_flags": {
+    "title": "### `mcp_master_voltext_flags` theme parameter",
+    "info": "Flags for volume strings.\n\n1 = no dB\n\n2 = no fractional precision\n\n4 = no + on positive values\n\n8 = always show two digits of precision\n\nOptional second value specifies the maximum length of the total string.",
+    "example": "mcp_master_voltext_flags 12",
+    "type": "config"
+  },
+  "tcp_vupeakwidth": {
+    "title": "### `tcp_vupeakwidth` theme parameter",
+    "info": "Size, in pixels, of the peak-hold indicator for the track panel meter.",
+    "example": "tcp_vupeakwidth 2",
+    "type": "config"
+  },
+  "mcp_vupeakheight": {
+    "title": "### `mcp_vupeakheight` theme parameter",
+    "info": "Size, in pixels, of the peak-hold indicator for the mixer meter.",
+    "example": "mcp_vupeakheight 2",
+    "type": "config"
+  },
+  "mcp_mastervupeakheight": {
+    "title": "### `mcp_mastervupeakheight` theme parameter",
+    "info": "Size, in pixels, of the peak-hold indicator for the mixer master meter.",
+    "example": "mcp_mastervupeakheight 4",
+    "type": "config"
+  },
+  "tcp_showborders": {
+    "title": "### `tcp_showborders` theme parameter",
+    "info": "Set to 0 to disable borders in the track panels.",
+    "meta": "Deprecated",
+    "example": "tcp_showborders 0",
+    "type": "config"
+  },
+  "mcp_showborders": {
+    "title": "### `mcp_showborders` theme parameter",
+    "info": "Set to 0 to disable borders in the mixer.",
+    "meta": "Deprecated",
+    "example": "mcp_showborders 0",
+    "type": "config"
+  },
+  "trans_showborders": {
+    "title": "### `trans_showborders` theme parameter",
+    "info": "Set to 0 to disable borders in the transport.",
+    "example": "trans_showborders 0",
+    "type": "config"
+  },
+  "mcp_altmeterpos": {
+    "title": "### `mcp_altmeterpos` theme parameter",
+    "info": "Puts MCP meters on the right side.",
+    "meta": "Deprecated",
+    "example": "mcp_altmeterpos 0",
+    "type": "config"
+  },
+  "tcp_vol_zeroline": {
+    "title": "### `tcp_vol_zeroline` theme parameter",
+    "info": "Sets the ABGR value of the TCP volume fader zero-line color. For example, `FFFF0000` produces solid blue. This was previously documented incorrectly.",
+    "meta": "Since: 2.0",
+    "example": "tcp_vol_zeroline 88FFFFFF",
+    "type": "config"
+  },
+  "tcp_pan_zeroline": {
+    "title": "### `tcp_pan_zeroline` theme parameter",
+    "info": "TCP pan fader zero-line color.",
+    "meta": "Since: 2.0",
+    "example": "tcp_pan_zeroline 88FFFFFF",
+    "type": "config"
+  },
+  "tcp_width_zeroline": {
+    "title": "### `tcp_width_zeroline` theme parameter",
+    "info": "TCP width fader zero-line color.",
+    "example": "",
+    "type": "config"
+  },
+  "mcp_vol_zeroline": {
+    "title": "### `mcp_vol_zeroline` theme parameter",
+    "info": "MCP volume fader zero-line color.",
+    "meta": "Since: 2.0",
+    "example": "mcp_vol_zeroline 88FFFFFF",
+    "type": "config"
+  },
+  "mcp_pan_zeroline": {
+    "title": "### `mcp_pan_zeroline` theme parameter",
+    "info": "MCP pan fader zero-line color.",
+    "meta": "Since: 2.0",
+    "example": "mcp_pan_zeroline 88FFFFFF",
+    "type": "config"
+  },
+  "mcp_width_zeroline": {
+    "title": "### `mcp_width_zeroline` theme parameter",
+    "info": "MCP width fader zero-line color.",
+    "example": "",
+    "type": "config"
+  },
+  "trans_speed_zeroline": {
+    "title": "### `trans_speed_zeroline` theme parameter",
+    "info": "Transport speed fader zero-line color.",
+    "meta": "Since: 2.0",
+    "example": "trans_speed_zeroline FFA7D2E1",
+    "type": "config"
+  },
+  "item_volknobfg": {
+    "title": "### `item_volknobfg` theme parameter",
+    "info": "Item volume knob colors.\n\n`parm2`: zero-gain color\n\n`parm3`: pushed color",
+    "example": "item_volknobfg 85FFFFFF 85FFFFFF 85FFFFFF",
+    "type": "config"
+  },
+  "envcp_min_height": {
+    "title": "### `envcp_min_height` theme parameter",
+    "info": "Minimum envelope panel height.",
+    "example": "envcp_min_height 20",
+    "type": "config"
+  },
+  "mcp_min_height": {
+    "title": "### `mcp_min_height` theme parameter",
+    "info": "Minimum mixer panel height.",
+    "example": "mcp_min_height 260",
+    "type": "config"
+  },
+  "no_meter_reclbl": {
+    "title": "### `no_meter_reclbl` theme parameter",
+    "info": "Hides the TCP meter record-input label.",
+    "example": "no_meter_reclbl 1",
+    "type": "config"
+  },
+  "gen_pan_zeroline": {
+    "title": "### `gen_pan_zeroline` theme parameter",
+    "info": "General pan fader zero-line color.",
+    "example": "gen_pan_zeroline 88FFFFFF",
+    "type": "config"
+  },
+  "gen_vol_zeroline": {
+    "title": "### `gen_vol_zeroline` theme parameter",
+    "info": "General volume fader zero-line color.",
+    "example": "gen_vol_zeroline 88FFFFFF",
+    "type": "config"
+  },
+  "warnings": {
+    "title": "### `warnings` theme parameter",
+    "info": "Warning level: `all` or `pedantic`.\n\nThis is only used if the theme is not zipped.",
+    "example": "warnings all",
+    "type": "config"
+  },
+  "adjuster_script": {
+    "title": "### `adjuster_script` theme parameter",
+    "info": "",
+    "example": "adjuster_script 'theme_adjuster.lua'",
+    "type": "config"
+  },
+  "misc_dpi_translate": {
+    "title": "### `misc_dpi_translate` theme parameter",
+    "info": "Affects elements such as toolbar images. The theme can specify one or more of these lines. If the DPI scaling is higher than `src_scale_percent`, `dest_scale_percent` is used. For example, `misc_dpi_translate 126 150` ensures that 1.5× images are used when the DPI is above 126%.",
+    "example": "misc_dpi_translate 50 100\nmisc_dpi_translate 134 150\nmisc_dpi_translate 174 200",
+    "type": "config"
+  },
+  "global_scale": {
+    "title": "### `global_scale` theme parameter",
+    "info": "Specifies the inherent DPI scaling of the theme. For example, if the theme uses only HiDPI images, setting this to 2.0 prevents a 2× display from scaling those images up further.",
+    "example": "",
+    "type": "config"
+  },
+  "layout_dpi_translate": {
+    "title": "### `layout_dpi_translate` theme parameter",
+    "info": "Remaps layouts by DPI. If the DPI is greater than `min_scale` (where 1.0 = 100%, 1.5 = 150%, etc.), and the user selects `requested_layout_name`, `destination_layout_name` is used instead.\n\nAn empty `requested_layout_name` can be used to match the default layout.",
+    "example": "layout_dpi_translate    '50%_A'     1.0         'A'\nlayout_dpi_translate    'A'         1.34        'A'\nlayout_dpi_translate    'A'         1.74        '~2x_A'",
+    "type": "config"
+  },
+  "want_os_type": {
+    "title": "### `want_os_type` theme parameter",
+    "example": "want_os_type 1",
+    "type": "config"
+  }
+}

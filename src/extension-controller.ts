@@ -8,6 +8,7 @@ import {
 } from "./core/static-analizer.js";
 import { WalterHoverProvider } from "./walter-hover-provider.js";
 import { ConfigManager } from "./config-manager.js";
+import { WalterCompletionProvider } from "./walter-completion-provider.js";
 
 export class ExtensionController {
   private context?: vscode.ExtensionContext;
@@ -101,8 +102,22 @@ export class ExtensionController {
   };
 
   private setupHoverProvider = () => {
-    const hp = new WalterHoverProvider(this.walterParser, this.showDebugInfo);
-    vscode.languages.registerHoverProvider("walter", hp);
+    this.disposables.push(
+      vscode.languages.registerHoverProvider(
+        "walter",
+        new WalterHoverProvider(this.walterParser, this.showDebugInfo),
+      ),
+    );
+  };
+
+  private setupCompletionProvider = () => {
+    this.disposables.push(
+      vscode.languages.registerCompletionItemProvider(
+        "walter",
+        new WalterCompletionProvider(),
+        '.'
+      ),
+    );
   };
 
   private setupFoldingRangeProvider = () => {
@@ -176,7 +191,7 @@ export class ExtensionController {
     this.context = context;
 
     if (!this.configManager.config?.isParserEnabled) return;
-    this.showDebugInfo =this.configManager.config?.showDebugInfo;
+    this.showDebugInfo = this.configManager.config?.showDebugInfo;
 
     await wts.Parser.init();
     const wasmPath = vscode.Uri.joinPath(
@@ -196,6 +211,7 @@ export class ExtensionController {
 
     this.setupDiagnostics();
     this.setupHoverProvider();
+    this.setupCompletionProvider();
     this.setupCommnads();
     this.setupEditorBindings();
 

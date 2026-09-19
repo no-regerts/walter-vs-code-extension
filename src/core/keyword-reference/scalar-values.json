@@ -1,0 +1,234 @@
+{
+  "w": {
+    "title": "### `w` scalar value",
+    "info": "Width of parent, pixels.",
+    "type": "scalar"
+  },
+  "h": {
+    "title": "### `h` scalar value",
+    "info": "Height of parent, pixels.",
+    "type": "scalar"
+  },
+  "reaper_version": {
+    "title": "### `reaper_version` scalar value",
+    "info": "REAPER version.",
+    "meta": "Since: 4.15",
+    "type": "scalar"
+  },
+  "os_type": {
+    "title": "### `os_type` scalar value",
+    "info": "Operating system type.\n\n0 = Windows\n\n1 = macOS (pre v7.70)\n\n2 = Linux (pre v7.70)\n\nOn v7.71+, 0 is returned for all platforms unless the theme specifies `want_os_type 1` in rtconfig.txt. In that case, macOS = 3 and Linux = 4.\n\nv7.70 always reports 3 for macOS and 4 for Linux.",
+    "meta": "Since: 5.972",
+    "type": "scalar"
+  },
+  "folderstate": {
+    "title": "### `folderstate` scalar value",
+    "info": "Folder state of track, if applicable.\n\n0 = normal\n\n-n = last track in folder(s).",
+    "meta": "Scope: track",
+    "type": "scalar"
+  },
+  "folderdepth": {
+    "title": "### `folderdepth` scalar value",
+    "info": "Indicates how many folders deep.\n\nPositive if in a folder.",
+    "meta": "Scope: track",
+    "type": "scalar"
+  },
+  "maxfolderdepth": {
+    "title": "### `maxfolderdepth` scalar value",
+    "info": "Highest folder depth of any track.",
+    "meta": "Scope: track",
+    "type": "scalar"
+  },
+  "mcp_maxfolderdepth": {
+    "title": "### `mcp_maxfolderdepth` scalar value",
+    "info": "Highest folder depth of any track in the mixer.",
+    "meta": "Since: 4.15; Scope: track",
+    "type": "scalar"
+  },
+  "recarm": {
+    "title": "### `recarm` scalar value",
+    "info": "Nonzero if track is record armed.",
+    "meta": "Scope: track",
+    "type": "scalar"
+  },
+  "tcp_iconsize": {
+    "title": "### `tcp_iconsize` scalar value",
+    "info": "Size of track panel icon column, if any.",
+    "meta": "Scope: track",
+    "type": "scalar"
+  },
+  "mcp_iconsize": {
+    "title": "### `mcp_iconsize` scalar value",
+    "info": "Size of mixer icon row, if any.",
+    "meta": "Scope: track",
+    "type": "scalar"
+  },
+  "mcp_wantextmix": {
+    "title": "### `mcp_wantextmix` scalar value",
+    "info": "Flags indicating which extended mixer settings are desired.\n\n&1 = inserts\n\n&2 = sends\n\n&4 = FX parameters.",
+    "meta": "Scope: track",
+    "type": "scalar"
+  },
+  "tracknch": {
+    "title": "### `tracknch` scalar value",
+    "info": "Number of track channels (2-64).",
+    "meta": "Scope: track",
+    "type": "scalar"
+  },
+  "trackpanmode": {
+    "title": "### `trackpanmode` scalar value",
+    "info": "Pan mode of track.\n\n0 = classic 3.x\n\n3 = new balance\n\n5 = stereo pan\n\n6 = dual pan.",
+    "meta": "Scope: track",
+    "type": "scalar"
+  },
+  "tcp_fxparms": {
+    "title": "### `tcp_fxparms` scalar value",
+    "info": "Count of TCP FX parameters visible (0-n), including sends or FX items if visible.",
+    "meta": "Scope: track",
+    "type": "scalar"
+  },
+  "tcp_fxembed": {
+    "title": "### `tcp_fxembed` scalar value",
+    "info": "Count of TCP embedded FX visible.",
+    "meta": "Since: 6.0; Scope: track",
+    "type": "scalar"
+  },
+  "mcp_fxembed": {
+    "title": "### `mcp_fxembed` scalar value",
+    "info": "Count of MCP embedded FX visible.",
+    "meta": "Since: 6.38; Scope: track",
+    "type": "scalar"
+  },
+  "tcp_sends_enabled": {
+    "title": "### `tcp_sends_enabled` scalar value",
+    "info": "User preference to show sends in TCP is enabled.",
+    "meta": "Since: 7.0; Scope: track",
+    "type": "scalar"
+  },
+  "tcp_fxlist_enabled": {
+    "title": "### `tcp_fxlist_enabled` scalar value",
+    "info": "User preference to show FX inserts in TCP is enabled.",
+    "meta": "Since: 7.0; Scope: track",
+    "type": "scalar"
+  },
+  "trackpinned": {
+    "title": "### `trackpinned` scalar value",
+    "info": "TCP-pinned state.\n\n1 = pinned, but globally disabled\n\n2 = pinned.",
+    "meta": "Since: 7.46; Scope: track",
+    "type": "scalar"
+  },
+  "tcp_hidden_overridden": {
+    "title": "### `tcp_hidden_overridden` scalar value",
+    "info": "1 if track is marked hidden in TCP but being displayed due to global override.",
+    "meta": "Since: 7.46; Scope: track",
+    "type": "scalar"
+  },
+  "send_cnt": {
+    "title": "### `send_cnt` scalar value",
+    "info": "Number of sends.",
+    "meta": "Since: 7.0; Scope: track",
+    "type": "scalar"
+  },
+  "fx_parm_cnt": {
+    "title": "### `fx_parm_cnt` scalar value",
+    "info": "Number of FX parameters.",
+    "meta": "Since: 7.0; Scope: track",
+    "type": "scalar"
+  },
+  "fx_cnt": {
+    "title": "### `fx_cnt` scalar value",
+    "info": "Number of FX inserts.",
+    "meta": "Since: 7.0; Scope: track",
+    "type": "scalar"
+  },
+  "recfx_cnt": {
+    "title": "### `recfx_cnt` scalar value",
+    "info": "Number of record input FX.",
+    "meta": "Since: 7.0; Scope: track",
+    "type": "scalar"
+  },
+  "trackcolor_valid": {
+    "title": "### `trackcolor_valid` scalar value",
+    "info": "Set to 1 if track color is set.",
+    "meta": "Since: 5.0; Scope: track",
+    "type": "scalar"
+  },
+  "trackcolor_r": {
+    "title": "### `trackcolor_r` scalar value",
+    "info": "Red value, 0-255.\n\nValid if `trackcolor_valid` is set.",
+    "meta": "Since: 5.0; Scope: track",
+    "type": "scalar"
+  },
+  "trackcolor_g": {
+    "title": "### `trackcolor_g` scalar value",
+    "info": "Green value, 0-255.\n\nValid if `trackcolor_valid` is set.",
+    "meta": "Since: 5.0; Scope: track",
+    "type": "scalar"
+  },
+  "trackcolor_b": {
+    "title": "### `trackcolor_b` scalar value",
+    "info": "Blue value, 0-255.\n\nValid if `trackcolor_valid` is set.",
+    "meta": "Since: 5.0; Scope: track",
+    "type": "scalar"
+  },
+  "mixer_visible": {
+    "title": "### `mixer_visible` scalar value",
+    "info": "Set to 1 if the mixer is visible.",
+    "meta": "Since: 5.972; Scope: track",
+    "type": "scalar"
+  },
+  "track_selected": {
+    "title": "### `track_selected` scalar value",
+    "info": "Set to 1 if track is selected.",
+    "meta": "Since: 5.972; Scope: track",
+    "type": "scalar"
+  },
+  "trackidx": {
+    "title": "### `trackidx` scalar value",
+    "info": "Track index.\n\n0 = master\n\n1+ = regular track.",
+    "meta": "Since: 6.47; Scope: track",
+    "type": "scalar"
+  },
+  "ntracks": {
+    "title": "### `ntracks` scalar value",
+    "info": "Total track count, not including master.",
+    "meta": "Since: 6.47; Scope: track",
+    "type": "scalar"
+  },
+  "trackfixedlanes": {
+    "title": "### `trackfixedlanes` scalar value",
+    "info": "Number of fixed lanes, or 0.",
+    "meta": "Since: 7.0; Scope: track",
+    "type": "scalar"
+  },
+  "trans_flags": {
+    "title": "### `trans_flags` scalar value",
+    "info": "Transport display flags.\n\n`trans_flags&1` is nonzero if transport is centered.\n\n`trans_flags&2` is nonzero if user wants play speed controls visible.\n\n`trans_flags&4` is nonzero if user wants current time signature visible.",
+    "meta": "Scope: transport",
+    "type": "scalar"
+  },
+  "trans_docked": {
+    "title": "### `trans_docked` scalar value",
+    "info": "Nonzero if docked transport.",
+    "meta": "Scope: transport",
+    "type": "scalar"
+  },
+  "trans_center": {
+    "title": "### `trans_center` scalar value",
+    "info": "Nonzero if transport is centered.",
+    "meta": "Scope: transport",
+    "type": "scalar"
+  },
+  "envcp_type": {
+    "title": "### `envcp_type` scalar value",
+    "info": "4 if FX envelope, which can display additional controls.",
+    "meta": "Scope: envelope",
+    "type": "scalar"
+  },
+  "env_selected": {
+    "title": "### `env_selected` scalar value",
+    "info": "Set to 1 if envelope is selected.",
+    "meta": "Scope: envelope",
+    "type": "scalar"
+  }
+}

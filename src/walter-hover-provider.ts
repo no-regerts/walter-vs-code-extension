@@ -1,16 +1,8 @@
 import * as vscode from "vscode";
 import * as wts from "web-tree-sitter";
 import { WalterParser } from "./core/walter-parser";
-import * as keywordData from "./core/keyword-reference.json";
+import { KeywordInfo, keywordReference } from './core/keyword-reference/keyword-reference';
 
-interface KeywordInfo {
-  title: string;
-  meta?: string;
-  info?: string;
-  example?: string;
-}
-
-const keywordInfo: Record<string, string | KeywordInfo> = keywordData;
 
 export class WalterHoverProvider implements vscode.HoverProvider {
   constructor(
@@ -30,7 +22,7 @@ export class WalterHoverProvider implements vscode.HoverProvider {
     if (!node) return;
 
     const nodeText = node.text.split(" ")[0].toLowerCase();
-    const nodeDescription = keywordInfo[nodeText] as KeywordInfo;
+    const nodeDescription = keywordReference[nodeText];
     const mdString = new vscode.MarkdownString();
     mdString.supportHtml = true;
 

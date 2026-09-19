@@ -1,0 +1,59 @@
+{
+  "clear": {
+    "title": "### `clear` command",
+    "info": "Clears a particular attribute (or wildcard list of attributes) to empty.",
+    "example": "clear tcp.mute\nclear tcp.*",
+    "type": "command"
+  },
+  "reset": {
+    "title": "### `reset` command",
+    "info": "Resets a particular attribute (or wildcard list of attributes) to their default settings.",
+    "example": "reset tcp.mute\nreset tcp.*",
+    "type": "command"
+  },
+  "set": {
+    "title": "### `set` command",
+    "info": "Sets an attribute or user variable to an expression.\n\nNote that you do not need to declare user variables, simply setting them is sufficient. As a matter of etiquette, do not use `.` in user variables (although you can), names with `.` in them are reserved for future expansion.",
+    "example": "set tcp.mute [0 0 10 10]\nset myvar w<100 [0 0 10 10] [20 20 10 10]\nset myvar w<100 [0 0 10 10] w<200 [20 20 10 10] [40 40 10 10]",
+    "type": "command"
+  },
+  "def": {
+    "title": "### `def` command",
+    "info": "Defines a value to be replaced with another value (e.g. a preprocessor #define).",
+    "example": "def square10 10 10\nset tcp.mute [0 0 square10] ; sets tcp.mute to [0 0 10 10]\ndef two_coords [10 10 0 0] [0 0 10 10]\nset tcp.mute + two_coords   ; sets tcp.mute to [10 10 10 10]\nset tcp.mute w<100 two_coords ; like set.tcp.mute w<100 [10 10 0 0] [0 0 10 10]",
+    "type": "command"
+  },
+  "front": {
+    "title": "### `front` command",
+    "info": "Brings an element to the front of the Z order. Note that the ordering of elements is static and can't be affected by logic.",
+    "example": "front tcp.solo\nfront tcp.mute",
+    "type": "command"
+  },
+  "macro": {
+    "title": "### `macro` command",
+    "info": "Defines a macro with any number of parameters which can be used later.\n\nNote that using `##` in a macro allows the parameter to be concatenated with another named string.",
+    "meta": "Since: 5.0",
+    "example": "macro setall dest src\n  set dest [src src src src src src src src]\n  set master.##dest dest\nendmacro\nsetall tcp.mute 1  ; set tcp.mute [1 1 1 1 1 1 1], set master.tcp.mute tcp.mute",
+    "type": "command"
+  },
+  "define_parameter": {
+    "title": "### `define_parameter` command",
+    "info": "Defines a ReaScript-accessible user-defined parameter which the WALTER code can use.\n\nThe default theme adjuster script will allow tweaking the first 10 parameters. Note that variable name is used to make the value persist for this theme",
+    "meta": "Since: 6.0",
+    "example": ";                variable name     description for user   default  minimum maximum\ndefine_parameter hide_mute         \"Hide Mute Button\"     0        0       1\n; later in script\nset tcp.mute hide_mute==1 [0] ; hide tcp.mute if hide_mute is set",
+    "type": "command"
+  },
+  "custom": {
+    "title": "### `custom` command",
+    "info": "Defines a custom element.\n\nNote that the custom element name must include the string `custom`. Custom elements become a normal part of the layout that contains them and can be used with `set`, `front`, etc. If `command_id` is specified and valid, and `button_image` is a valid image name, element will be a button. Otherwise, it will be a static text element with `text_label`. `tcp.custom.xyz.font`, `.color` and `.margin` may all be specified.",
+    "meta": "Since: 7.0",
+    "example": "custom tcp.custom.xyz \"text_label\" command_id \"accessibility_description\" \"button_image\"",
+    "type": "command"
+  },
+  "layout": {
+    "title": "### `layout` command",
+    "info": "Theme author can define layouts, by using the commands `layout` and `lndLayout`.\n\nWhen defining a layout, it inherits the behavior from the parent (or default) layout (at the time of first use in that UI context).\n\nThe `layout` command can take one or two paraemeters - the first parameter defines the name of that layout, and the optional second parameter defines the theme image subdirectory to use for that layout.\n\nYou can specify multiple layouts with the same name, and they will be treated similar to a single layout definiton, though for clarity it might be good to separate them based on the UI context (i.e. tcp.*, mcp.*, etc). If you define layouts with the same name for various UI contexts, you may wish to expose them as a global theme layout using `globalLayout`, which then lists that layout in the main layout list.",
+    "example": "layout \"Mute button mixer\"\n  clear mcp.*\n  set mcp.size [20 20]\n  set mcp.mute [0 0 20 20 0 0 1 1]\nendLayout",
+    "type": "command"
+  }
+}
