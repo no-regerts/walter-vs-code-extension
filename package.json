@@ -62,7 +62,22 @@
         "walter.linter.noTrailingSpaces": {
           "type": "boolean",
           "default": true,
-          "description": "Underlines trailing spaces at the end of lines"
+          "description": "Underlines trailing spaces at the end of lines (restart required)"
+        },
+        "walter.linter.noDefCommands": {
+          "type": "boolean",
+          "default": true,
+          "description": "Restricts the 'def' command usage (restart required)"
+        },
+        "walter.linter.noDashesInIdentifiers": {
+          "type": "boolean",
+          "default": true,
+          "description": "Disallows dashes in identifiers (restart required)"
+        },
+        "walter.linter.noSingleEquals": {
+          "type": "boolean",
+          "default": true,
+          "description": "Disallows single equals operator (restart required)"
         }
       }
     },
@@ -106,6 +121,16 @@
         "language": "walter",
         "scopeName": "source.walter",
         "path": "./configs/syntax-patterns.json"
+      },
+      {
+        "scopeName": "markdown.walter.codeblock",
+        "path": "./configs/markdown-codeblock.json",
+        "injectTo": [
+          "text.html.markdown"
+        ],
+        "embeddedLanguages": {
+          "meta.embedded.block.walter": "walter"
+        }
       }
     ]
   },
