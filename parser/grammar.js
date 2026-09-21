@@ -24,6 +24,10 @@ module.exports = grammar({
   word: $ => $.identifier,
 
   conflicts: $ => [
+    [$.commandStatement],
+    [$.macroCallStatement],
+    [$.themeConfigStatement],
+
     [$.defCommand],
     [$.frontCommand],
     [$.layoutCommand],
@@ -38,10 +42,11 @@ module.exports = grammar({
     [$._expression, $.scalarValue],
   ],
 
-  word: $ => $.identifier,
-
   rules: {
-    source_file: $ => repeat($._statement),
+    source_file: $ => seq(
+      repeat($._statement),
+      eof()
+    ),
 
     //////////////////////////////// STATEMENTS ////////////////////////////////
 
@@ -57,10 +62,21 @@ module.exports = grammar({
         $.lineEnd,
       ),
       seq(
+        alias($.space, $.trailingSpace),
+        eof(),
+      ),
+
+      seq(
         optional($.space),
         $.comment,
         $.lineEnd,
       ),
+      seq(
+        optional($.space),
+        $.comment,
+        eof(),
+      ),
+
       $.lineEnd,
     ),
     commandStatement: $ => seq(
@@ -80,13 +96,13 @@ module.exports = grammar({
         seq(
           optional($.space),
           $.comment,
-          $.lineEnd,
+          optional($.lineEnd),
         ),
         seq(
           alias($.space, $.trailingSpace),
-          $.lineEnd,
+          optional($.lineEnd),
         ),
-        $.lineEnd,
+        optional($.lineEnd),
       ),
     ),
     themeConfigStatement: $ => seq(
@@ -141,7 +157,7 @@ module.exports = grammar({
           alias($.space, $.trailingSpace),
           $.lineEnd,
         ),
-        $.lineEnd,
+        optional($.lineEnd),
       ),
     ),
     macroCallStatement: $ => seq(
@@ -166,7 +182,7 @@ module.exports = grammar({
           alias($.space, $.trailingSpace),
           $.lineEnd,
         ),
-        $.lineEnd,
+        optional($.lineEnd),
       ),
     ),
     
@@ -328,7 +344,7 @@ module.exports = grammar({
         $.scalarValue,
       ),
       token('+'),
-      token('-'),
+      token(prec(1, '-')),
       token('*'),
       token('/'),
     ),
@@ -364,6 +380,7 @@ module.exports = grammar({
         token('<='),
         token('>='),
         token('=='),
+        alias(token('='), $.singleEquals),
         token('!='),
       ),
       $.scalarValue,
@@ -379,7 +396,7 @@ module.exports = grammar({
 
     // For both user-defined and built-in (tcp.mute) properties
     property: $ => choice(
-      $.identifier,
+      alias($.identifier, $.identifier),
       prec.left(seq($.property, token('.'), $.identifier))
     ),
     predefinedScalarProperty: $ => choice(
@@ -426,10 +443,7 @@ module.exports = grammar({
 
     ////////////////////////////////////////////////////////////////////////////
 
-    lineEnd: $ => choice(
-      token(/\r?\n/),
-      token('\0'), // TODO: replace with eof() when it is added to web-tree-sitter.
-    ),
+    lineEnd: $ => token(/\r?\n/),
 
     commentWord: $ => token(/\S+/),
     anyWord: $ => nonSpaceRegex,
@@ -442,7 +456,7 @@ module.exports = grammar({
     )),
     commentWord: $ => commentWordRegex,
 
-    number: $ => seq(optional(token('-')), token(/\d+(?:\.\d+)?/)),
+    number: $ => seq(optional(token(prec(1, '-'))), token(/\d+(?:\.\d+)?/)),
 
     hexColor: $ => token(/[0-9a-f]{8}/i), // Verified: only 8-digit colors are supported.
 
@@ -455,6 +469,6 @@ module.exports = grammar({
     doubleQuoteString: $ => token(/"[^\r\n"]*"/),
     backtickQuoteString: $ => token(/`[^\r\n`]*`/),
 
-    identifier: $ => token(/[a-z_#](?:[a-z0-9._#]*[a-z0-9_#])?/i),
+    identifier: $ => token(/[a-z_#-](?:[a-z0-9._#-]*[a-z0-9_#-])?/i),
   }
 });

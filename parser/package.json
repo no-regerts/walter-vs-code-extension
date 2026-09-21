@@ -7,9 +7,9 @@
     "build": "tree-sitter build --wasm -o ../generated/walter-parser.wasm"
   },
   "devDependencies": {
-    "tree-sitter-cli": "^0.26.13"
+    "tree-sitter-cli": "^0.27.0"
   },
   "allowScripts": {
-    "tree-sitter-cli@0.26.13": true
+    "tree-sitter-cli@0.27.0": true
   }
 }

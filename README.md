@@ -52,14 +52,16 @@ Code linting is the automated process of analyzing source code to find formattin
   - Removal trailing whitespace.
 - Shrink/expand the selection.
 - Color picker for AABBGGRR values.
+- Bracket autosurrounding.
 - Linting:
   - `noDeadCode` - unused variables and macros, and dead branches.
   - `noMixedWhitespace` - mixing tabs and spaces in indentation or comments.
   - `noMixedQuotes` - using different types of quotation marks across the document.
   - `noConsecutiveBlankLines` - prevents excessive consecutive blank lines.
-  - `noDashesInIdentifiers`.
-  - `consistentIdentifierCase` - enforces `camelCase` or `snake_case`.
-  - `noLayoutVariableLookalikes` - e.g., `tcp.label.myVar`.
+  - `noDashesInIdentifiers` - prevents common errors such as `set a -b`.
+  - `noDefCommand`.
+  - `consistentIdentifierCase` - enforces `camelCase` or `snake_case` for user identifiers.
+  - `noLayoutElementLookalikes` - e.g., `tcp.label.myVar`.
 
 # Known issues and limitations
 - **Only a restricted set of characters is allowed in identifier names:**
@@ -72,5 +74,3 @@ Code linting is the automated process of analyzing source code to find formattin
 - **All places where strings are semantically expected accept only strings. Likewise, all places where identifiers are semantically expected accept only identifiers:**
   - Use `layout "Black" "folder-name"` instead of `layout "Black" folder-name`.
   - Use `set my_var 1` instead of `set "my var" 1`.
-- **The `rtconfig.txt` file must end with a newline:**
-  - This is a limitation of the tooling being used. Currently, the parser cannot properly handle the end-of-file (EOF) and relies on a trailing newline character to parse commands correctly. This restriction is expected to be removed in a future version.
