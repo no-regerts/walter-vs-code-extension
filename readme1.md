@@ -24,13 +24,22 @@ Provides full feature support for the WALTER language.
 
 ### Code linting
 Code linting is the automated process of analyzing source code to find formatting errors, stylistic inconsistencies, and potential bugs.
-- `walter.linter.noTrailingSpaces` (enabled by default):
+
+You can disable any linting rule by adding `"walter.linter.<lintingRuleName>": false,` to your settings.json file.
+- `walter.linter.noTrailingSpaces`:
   - ![](./assets/readme/trailing-spaces.png)
   - Disallows whitespace characters (spaces or tabs) at the end of a line.
+- `walter.linter.noDefCommands`:
+  - ???.
+- `walter.linter.noDashesInIdentifiers`:
+  - Prevents common errors such as `set a -b`.
+- `walter.linter.noSingleEquals`:
+  - ![](./assets/readme/single-equals.png)
 
 ### Other
 - Bracket/quote autoclosing.
 - Autocompletion / IntelliSense.
+- Syntax highlighting in Markdown fenced code blocks.
 
 # Planned features
 - Actions:
@@ -58,10 +67,9 @@ Code linting is the automated process of analyzing source code to find formattin
   - `noMixedWhitespace` - mixing tabs and spaces in indentation or comments.
   - `noMixedQuotes` - using different types of quotation marks across the document.
   - `noConsecutiveBlankLines` - prevents excessive consecutive blank lines.
-  - `noDashesInIdentifiers` - prevents common errors such as `set a -b`.
-  - `noDefCommand`.
   - `consistentIdentifierCase` - enforces `camelCase` or `snake_case` for user identifiers.
   - `noLayoutElementLookalikes` - e.g., `tcp.label.myVar`.
+  - `noSingleEquals` - bans expression strings like `a=b`.
 
 # Known issues and limitations
 - **Only a restricted set of characters is allowed in identifier names:**
