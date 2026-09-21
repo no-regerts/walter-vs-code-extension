@@ -1,10 +1,13 @@
 import * as vscode from "vscode";
 
-export interface LinterRules {
+export type LinterRules = {
   noTrailingSpaces: boolean;
+  noDefCommands: boolean;
+  noDashesInIdentifiers: boolean;
+  noSingleEquals: boolean;
 }
 
-export interface ConfigData {
+export type ConfigData = {
   isParserEnabled: boolean;
   showDebugInfo: boolean;
   parserInterval: number;
@@ -32,6 +35,18 @@ export class ConfigManager {
     const linterRules = {
       noTrailingSpaces: this.workspaceConfig.get<boolean>(
         "linter.noTrailingSpaces",
+        true,
+      ),
+      noDefCommands: this.workspaceConfig.get<boolean>(
+        "linter.noDefCommands",
+        true,
+      ),
+      noDashesInIdentifiers: this.workspaceConfig.get<boolean>(
+        "linter.noDashesInIdentifiers",
+        true,
+      ),
+      noSingleEquals: this.workspaceConfig.get<boolean>(
+        "linter.noSingleEquals",
         true,
       ),
     };

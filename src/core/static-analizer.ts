@@ -42,6 +42,8 @@ export class StaticAnalizer extends Observer {
       (MISSING) @missing
       (trailingSpace) @trailingSpaces
       (defCommands) @defCommands
+      (identifier) @identifiers
+      (singleEquals) @singleEquals
     `;
     let query = new wts.Query(this.language, queryString);
     const matches = query.matches(this.ast!.rootNode);
@@ -79,14 +81,39 @@ export class StaticAnalizer extends Observer {
             );
           break;
         case 3: // 'def' command.
-          this.diagnosticMessages.push(
-            ...match.captures.map((capture) => ({
-              type: DiagnosticMessageType.warning,
-              text: "Using the `def` command is prohibited",
-              startPosition: capture.node.startPosition,
-              endPosition: capture.node.endPosition,
-            })),
-          );
+          if (this.linterRules.noDefCommands)
+            this.diagnosticMessages.push(
+              ...match.captures.map((capture) => ({
+                type: DiagnosticMessageType.warning,
+                text: "Using the `def` command is prohibited",
+                startPosition: capture.node.startPosition,
+                endPosition: capture.node.endPosition,
+              })),
+            );
+          break;
+        case 4: // identifiers
+          if (this.linterRules.noDashesInIdentifiers)
+            this.diagnosticMessages.push(
+              ...match.captures
+              .filter((capture) => capture.node.text.includes('-'))
+              .map((capture) => ({
+                type: DiagnosticMessageType.warning,
+                text: "Using dashes in identifiers is prohibited",
+                startPosition: capture.node.startPosition,
+                endPosition: capture.node.endPosition,
+              })),
+            );
+          break;
+        case 5: // singleEquals.
+          if (this.linterRules.noSingleEquals)
+            this.diagnosticMessages.push(
+              ...match.captures.map((capture) => ({
+                type: DiagnosticMessageType.warning,
+                text: "Using the single equals operator (=) is prohibited",
+                startPosition: capture.node.startPosition,
+                endPosition: capture.node.endPosition,
+              })),
+            );
           break;
       }
     });

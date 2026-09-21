@@ -30,7 +30,7 @@
     },
     {
       "name": "keyword.operator.logical.walter",
-      "match": "<=|>=|<|>|==|!=|\\?|!|&"
+      "match": "<=|>=|<|>|==|=|!=|\\?|!|&"
     },
     {
       "name": "punctuation.walter",
