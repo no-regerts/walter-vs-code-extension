@@ -1,8 +1,7 @@
 import * as vscode from "vscode";
 import * as wts from "web-tree-sitter";
 import { WalterParser } from "./core/walter-parser";
-import { KeywordInfo, keywordReference } from './core/keyword-reference/keyword-reference';
-
+import { keywordReference } from "./core/keyword-reference/keyword-reference";
 
 export class WalterHoverProvider implements vscode.HoverProvider {
   constructor(
@@ -26,7 +25,7 @@ export class WalterHoverProvider implements vscode.HoverProvider {
     const mdString = new vscode.MarkdownString();
     mdString.supportHtml = true;
 
-    if (nodeDescription)
+    if (nodeDescription) {
       mdString.appendMarkdown(nodeDescription.title);
       if (nodeDescription.info) {
         mdString.appendMarkdown(`\n\n --- \n\n`);
@@ -39,11 +38,13 @@ export class WalterHoverProvider implements vscode.HoverProvider {
       if (nodeDescription.example) {
         mdString.appendMarkdown(`\n\n --- \n\n`);
         mdString.appendMarkdown(`Usage:\n\n`);
-        mdString.appendCodeblock(nodeDescription.example, 'walter');
+        mdString.appendCodeblock(nodeDescription.example, "walter");
       }
+    }
 
     if (this.showDebugInfo) {
-      mdString.appendCodeblock(`Debug info: ${this.buildDebugInfo(node)}`);
+      mdString.appendMarkdown(`\n\n --- \n\n`);
+      mdString.appendMarkdown(`Debug info: ${this.buildDebugInfo(node)}`);
     }
 
     return new vscode.Hover(mdString);

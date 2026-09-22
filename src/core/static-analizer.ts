@@ -41,7 +41,7 @@ export class StaticAnalizer extends Observer {
       (ERROR) @error
       (MISSING) @missing
       (trailingSpace) @trailingSpaces
-      (defCommands) @defCommands
+      (defCommand) @defCommands
       (identifier) @identifiers
       (singleEquals) @singleEquals
     `;
@@ -74,7 +74,7 @@ export class StaticAnalizer extends Observer {
             this.diagnosticMessages.push(
               ...match.captures.map((capture) => ({
                 type: DiagnosticMessageType.warning,
-                text: "Trailing spaces",
+                text: "Trailing spaces are not allowed.\nSee the extension's readme file for more information.",
                 startPosition: capture.node.startPosition,
                 endPosition: capture.node.endPosition,
               })),
@@ -85,7 +85,7 @@ export class StaticAnalizer extends Observer {
             this.diagnosticMessages.push(
               ...match.captures.map((capture) => ({
                 type: DiagnosticMessageType.warning,
-                text: "Using the `def` command is prohibited",
+                text: "Using the `def` command is not allowed.\nSee the extension's readme file for more information.",
                 startPosition: capture.node.startPosition,
                 endPosition: capture.node.endPosition,
               })),
@@ -98,7 +98,7 @@ export class StaticAnalizer extends Observer {
               .filter((capture) => capture.node.text.includes('-'))
               .map((capture) => ({
                 type: DiagnosticMessageType.warning,
-                text: "Using dashes in identifiers is prohibited",
+                text: "Using dashes in identifiers is not allowed.\nSee the extension's readme file for more information.",
                 startPosition: capture.node.startPosition,
                 endPosition: capture.node.endPosition,
               })),
@@ -109,7 +109,7 @@ export class StaticAnalizer extends Observer {
             this.diagnosticMessages.push(
               ...match.captures.map((capture) => ({
                 type: DiagnosticMessageType.warning,
-                text: "Using the single equals operator (=) is prohibited",
+                text: "Using the single equals operator (=) is not allowed.\nSee the extension's readme file for more information.",
                 startPosition: capture.node.startPosition,
                 endPosition: capture.node.endPosition,
               })),

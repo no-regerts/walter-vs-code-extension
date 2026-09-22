@@ -1,8 +1,5 @@
-// TODO: add Unicode whitespaces (\u00A0 \uFEFF \u3000)?
-
-const nonSpaceRegex = token(/[a-z0-9_+\-*/\\@&!?<>='"`:.,(){}\[\]]+/i);
-const commentWordRegex = token(/[\p{L}0-9_+\-*/\\@&!?<>='"`;:.,(){}\[\]]+/i);
-const spaceRegex = token(/[^\p{L}0-9_+\-*/\\@&!?<>='"`;:.,(){}\[\]\r\n]+/i);
+const anyWordRegex = token(/[^ \t\u00A0\uFEFF\u3000\r\n]+/i);
+const spaceRegex = token(/[ \t\u00A0\uFEFF\u3000]+/i);
 
 function repeatUpTo(max, rule) {
   const rules = [rule];
@@ -24,10 +21,6 @@ module.exports = grammar({
   word: $ => $.identifier,
 
   conflicts: $ => [
-    [$.commandStatement],
-    [$.macroCallStatement],
-    [$.themeConfigStatement],
-
     [$.defCommand],
     [$.frontCommand],
     [$.layoutCommand],
@@ -85,7 +78,7 @@ module.exports = grammar({
         $.clearCommand,
         $.resetCommand,
         $.setCommand,
-        alias($.defCommand, $.defCommands),
+        alias($.defCommand, $.defCommand),
         $.frontCommand,
         $.defineParameterCommand,
         $.customCommand,
@@ -96,13 +89,13 @@ module.exports = grammar({
         seq(
           optional($.space),
           $.comment,
-          optional($.lineEnd),
+          $.statementEnd,
         ),
         seq(
           alias($.space, $.trailingSpace),
-          optional($.lineEnd),
+          $.statementEnd,
         ),
-        optional($.lineEnd),
+        $.statementEnd,
       ),
     ),
     themeConfigStatement: $ => seq(
@@ -151,13 +144,13 @@ module.exports = grammar({
         seq(
           optional($.space),
           $.comment,
-          $.lineEnd,
+          $.statementEnd,
         ),
         seq(
           alias($.space, $.trailingSpace),
-          $.lineEnd,
+          $.statementEnd,
         ),
-        optional($.lineEnd),
+        $.statementEnd,
       ),
     ),
     macroCallStatement: $ => seq(
@@ -176,14 +169,19 @@ module.exports = grammar({
         seq(
           optional($.space),
           $.comment,
-          $.lineEnd,
+          $.statementEnd,
         ),
         seq(
           alias($.space, $.trailingSpace),
-          $.lineEnd,
+          $.statementEnd,
         ),
-        optional($.lineEnd),
+        $.statementEnd,
       ),
+    ),
+
+    statementEnd: $ => choice(
+      $.lineEnd,
+      eof(),
     ),
     
     ///////////////////////////////// COMMANDS /////////////////////////////////
@@ -446,7 +444,7 @@ module.exports = grammar({
     lineEnd: $ => token(/\r?\n/),
 
     commentWord: $ => token(/\S+/),
-    anyWord: $ => nonSpaceRegex,
+    anyWord: $ => anyWordRegex,
     space: $ => token(prec(1, spaceRegex)),
 
     comment: $ => prec.left(seq(
@@ -454,7 +452,7 @@ module.exports = grammar({
       repeat(seq(optional($.space), $.commentWord)),
       optional(alias($.space, $.trailingSpace)),
     )),
-    commentWord: $ => commentWordRegex,
+    commentWord: $ => anyWordRegex,
 
     number: $ => seq(optional(token(prec(1, '-'))), token(/\d+(?:\.\d+)?/)),
 

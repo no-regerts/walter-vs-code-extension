@@ -29,7 +29,7 @@ export class ConfigManager {
       200,
     );
     const showDebugInfo = this.workspaceConfig.get<boolean>(
-      "enableDebugMode",
+      "showDebugInfo",
       false,
     );
     const linterRules = {
