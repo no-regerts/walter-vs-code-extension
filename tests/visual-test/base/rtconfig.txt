@@ -130,7 +130,8 @@ set tcp.custom.sectionLeft1                              \
       [tcp.custom.sectionNumber]                         \
     [tcp.custom.sectionNumber{w} 0 sectionLeft1DrawW{0} h]
 
-def myDef whatever [1 2 3 4] "123" ;comment
+def myDef whatever [1 2 3 4] "123" ;comment   
+set -my-var 10=10 1 2   
 
 front mcp
 front mcp.custom.test mcp.custom.test mcp.custom.test

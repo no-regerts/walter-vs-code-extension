@@ -25,16 +25,15 @@ Provides full feature support for the WALTER language.
 ### Code linting
 Code linting is the automated process of analyzing source code to find formatting errors, stylistic inconsistencies, and potential bugs.
 
-You can disable any linting rule by adding `"walter.linter.<lintingRuleName>": false,` to your settings.json file.
-- `walter.linter.noTrailingSpaces`:
-  - ![](./assets/readme/trailing-spaces.png)
+You can disable any linting rule by adding `"walter.linter.<ruleName>": false,` to your `settings.json` file.
+- `noTrailingSpaces`:
   - Disallows whitespace characters (spaces or tabs) at the end of a line.
-- `walter.linter.noDefCommands`:
-  - ???.
-- `walter.linter.noDashesInIdentifiers`:
-  - Prevents common errors such as `set a -b`.
-- `walter.linter.noSingleEquals`:
-  - ![](./assets/readme/single-equals.png)
+- `noDefCommands`:
+  - Disallows the use of the `def` command, as it introduces ambiguity when reading source code.
+- `noDashesInIdentifiers`:
+  - Prevents common errors where dashes are mistaken for subtraction, such as `set a -b`.
+- `noSingleEquals`:
+  - Enforces using `==` instead of `=` for equality checks to maintain code consistency.
 
 ### Other
 - Bracket/quote autoclosing.
@@ -61,7 +60,6 @@ You can disable any linting rule by adding `"walter.linter.<lintingRuleName>": f
   - Removal trailing whitespace.
 - Shrink/expand the selection.
 - Color picker for AABBGGRR values.
-- Bracket autosurrounding.
 - Linting:
   - `noDeadCode` - unused variables and macros, and dead branches.
   - `noMixedWhitespace` - mixing tabs and spaces in indentation or comments.
@@ -69,7 +67,6 @@ You can disable any linting rule by adding `"walter.linter.<lintingRuleName>": f
   - `noConsecutiveBlankLines` - prevents excessive consecutive blank lines.
   - `consistentIdentifierCase` - enforces `camelCase` or `snake_case` for user identifiers.
   - `noLayoutElementLookalikes` - e.g., `tcp.label.myVar`.
-  - `noSingleEquals` - bans expression strings like `a=b`.
 
 # Known issues and limitations
 - **Only a restricted set of characters is allowed in identifier names:**
@@ -78,7 +75,6 @@ You can disable any linting rule by adding `"walter.linter.<lintingRuleName>": f
 - **Macros (`macro ... endmacro`) are not supported yet:**
   - Implementing full macro support will take some time. If the highlighting of false errors inside macros is distracting, you can disable the parser. To do so, add `"walter.enableParser": false` to your `settings.json`.
   - For now, all `##` are treated as ordinary identifier characters.
-- **Using the `def` command is prohibited**, as it introduces ambiguity when reading source code.
 - **All places where strings are semantically expected accept only strings. Likewise, all places where identifiers are semantically expected accept only identifiers:**
   - Use `layout "Black" "folder-name"` instead of `layout "Black" folder-name`.
   - Use `set my_var 1` instead of `set "my var" 1`.
