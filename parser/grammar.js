@@ -52,24 +52,18 @@ module.exports = grammar({
     noopStatement: $ => choice(
       seq(
         alias($.space, $.trailingSpace),
-        $.lineEnd,
+        choice($.lineEnd, eof()),
       ),
-      seq(
-        alias($.space, $.trailingSpace),
-        eof(),
-      ),
-
+      
       seq(
         optional($.space),
         $.comment,
-        $.lineEnd,
+        choice($.lineEnd, eof()),
       ),
-      seq(
-        optional($.space),
-        $.comment,
-        eof(),
-      ),
-
+      
+      // noopStatement has this special treatment because of the possible empty
+      // line case, which can't be handled properly with repeat(eof()). So this
+      // line can't be choice($.lineEnd, eof()).
       $.lineEnd,
     ),
     commandStatement: $ => seq(
@@ -89,13 +83,22 @@ module.exports = grammar({
         seq(
           optional($.space),
           $.comment,
-          $.statementEnd,
+          choice(
+            $.lineEnd,
+            eof(),
+          ),
         ),
         seq(
           alias($.space, $.trailingSpace),
-          $.statementEnd,
+          choice(
+            $.lineEnd,
+            eof(),
+          ),
         ),
-        $.statementEnd,
+        choice(
+          $.lineEnd,
+          eof(),
+        ),
       ),
     ),
     themeConfigStatement: $ => seq(
@@ -144,13 +147,22 @@ module.exports = grammar({
         seq(
           optional($.space),
           $.comment,
-          $.statementEnd,
+          choice(
+            $.lineEnd,
+            eof(),
+          ),
         ),
         seq(
           alias($.space, $.trailingSpace),
-          $.statementEnd,
+          choice(
+            $.lineEnd,
+            eof(),
+          ),
         ),
-        $.statementEnd,
+        choice(
+          $.lineEnd,
+          eof(),
+        ),
       ),
     ),
     macroCallStatement: $ => seq(
@@ -169,19 +181,23 @@ module.exports = grammar({
         seq(
           optional($.space),
           $.comment,
-          $.statementEnd,
+          choice(
+            $.lineEnd,
+            eof(),
+          ),
         ),
         seq(
           alias($.space, $.trailingSpace),
-          $.statementEnd,
+          choice(
+            $.lineEnd,
+            eof(),
+          ),
         ),
-        $.statementEnd,
+        choice(
+          $.lineEnd,
+          eof(),
+        ),
       ),
-    ),
-
-    statementEnd: $ => choice(
-      $.lineEnd,
-      eof(),
     ),
     
     ///////////////////////////////// COMMANDS /////////////////////////////////
