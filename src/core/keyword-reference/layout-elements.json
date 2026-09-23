@@ -1,7 +1,6 @@
 {
   "master": {
-    "title": "### `master`",
-    "info": "There is no layout element called `master`. This entry is added only for autocompletion purposes.",
+    "title": "",
     "type": "layout"
   },
   "tcp": {

@@ -5,7 +5,7 @@ import {
   keywordReference,
 } from "./core/keyword-reference/keyword-reference";
 
-export class WalterCompletionProvider implements vscode.CompletionItemProvider {
+export class CompletionProvider implements vscode.CompletionItemProvider {
   private itemContext = new Map<
     vscode.CompletionItem,
     { wordBeforeCursor: string }

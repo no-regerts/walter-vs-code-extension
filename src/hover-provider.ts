@@ -1,13 +1,16 @@
 import * as vscode from "vscode";
 import * as wts from "web-tree-sitter";
-import { WalterParser } from "./core/walter-parser";
+import { Parser } from "./core/parser";
 import { keywordReference } from "./core/keyword-reference/keyword-reference";
 
-export class WalterHoverProvider implements vscode.HoverProvider {
-  constructor(
-    private walterParser: WalterParser,
-    private showDebugInfo: boolean,
-  ) {}
+export class HoverProvider implements vscode.HoverProvider {
+  private walterParser!: Parser;
+  private showDebugInfo!: boolean;
+
+  init(walterParser: Parser, showDebugInfo: boolean) {
+    this.walterParser = walterParser;
+    this.showDebugInfo = showDebugInfo;
+  }
 
   public provideHover = (
     _document: vscode.TextDocument,

@@ -10,14 +10,13 @@ export interface TreeEditData {
   newEndPosition: wts.Point; // The end position of the change after the edit.
 }
 
-export class WalterParser extends Observer {
-  private parser: wts.Parser;
+export class Parser extends Observer {
+  private parser!: wts.Parser;
   private currentAst: wts.Tree | null = null;
 
-  constructor(private language: wts.Language) {
-    super();
+  public init(language: wts.Language) {
     this.parser = new wts.Parser();
-    this.parser.setLanguage(this.language);
+    this.parser.setLanguage(language);
   }
 
   public kill = () => {

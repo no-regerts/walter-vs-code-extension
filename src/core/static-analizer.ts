@@ -129,7 +129,8 @@ export class StaticAnalizer extends Observer {
     );
   };
 
-  private buildSymbolTable = () => {};
-
-  private buildCFG = () => {};
+  private traverseAst = () => {
+    // TODO: build symbol table.
+    // TODO: build CFG.
+  };
 }

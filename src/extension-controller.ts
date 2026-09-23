@@ -1,14 +1,15 @@
 import * as vscode from "vscode";
 import * as wts from "web-tree-sitter";
-import { WalterParser } from "./core/walter-parser.js";
+import { Parser } from "./core/parser.js";
 import {
   DiagnosticMessage,
   DiagnosticMessageType,
   StaticAnalizer,
 } from "./core/static-analizer.js";
-import { WalterHoverProvider } from "./walter-hover-provider.js";
+import { HoverProvider } from "./hover-provider.js";
 import { ConfigManager } from "./config-manager.js";
-import { WalterCompletionProvider } from "./walter-completion-provider.js";
+import { CompletionProvider } from "./completion-provider.js";
+import { SelectionRangeProvider } from "./selection-range-provider.js";
 
 export class ExtensionController {
   private context?: vscode.ExtensionContext;
@@ -16,20 +17,20 @@ export class ExtensionController {
 
   private showDebugInfo: boolean = false;
 
-  private configManager: ConfigManager;
-  private walterParser!: WalterParser;
-  private staticAnalizer: StaticAnalizer;
-
   private currentDocument?: vscode.TextDocument;
 
   private throttlerTimerId?: ReturnType<typeof setTimeout>;
   private isThrottled: boolean = false;
   private accumulatedChanges: vscode.TextDocumentContentChangeEvent[] = [];
 
-  constructor(configManager: ConfigManager, staticAnalizer: StaticAnalizer) {
-    this.configManager = configManager;
-    this.staticAnalizer = staticAnalizer;
-  }
+  constructor(
+    private configManager: ConfigManager,
+    private walterParser: Parser,
+    private staticAnalizer: StaticAnalizer,
+    private hoverProvider: HoverProvider,
+    private completionProvider: CompletionProvider,
+    private selectionRangeProvider: SelectionRangeProvider,
+  ) {}
 
   private extractTextFromEditorAndParse = () => {
     const editor = vscode.window.activeTextEditor;
@@ -103,10 +104,7 @@ export class ExtensionController {
 
   private setupHoverProvider = () => {
     this.disposables.push(
-      vscode.languages.registerHoverProvider(
-        "walter",
-        new WalterHoverProvider(this.walterParser, this.showDebugInfo),
-      ),
+      vscode.languages.registerHoverProvider("walter", this.hoverProvider),
     );
   };
 
@@ -114,15 +112,19 @@ export class ExtensionController {
     this.disposables.push(
       vscode.languages.registerCompletionItemProvider(
         "walter",
-        new WalterCompletionProvider(),
-        '.'
+        this.completionProvider,
+        ".",
       ),
     );
   };
 
-  private setupFoldingRangeProvider = () => {
-    // TODO
-    // registerFoldingRangeProvider(selector: DocumentSelector, provider: FoldingRangeProvider): Disposable
+  private setupSelectionRangeProvider = () => {
+    this.disposables.push(
+      vscode.languages.registerSelectionRangeProvider(
+        "walter",
+        this.selectionRangeProvider,
+      ),
+    );
   };
 
   private setupCommnads = () => {
@@ -200,20 +202,23 @@ export class ExtensionController {
       "walter-parser.wasm",
     );
     const language = await wts.Language.load(wasmPath.fsPath);
-    this.walterParser = new WalterParser(language);
-    this.walterParser.on("parsed", (ast: wts.Tree) =>
+    this.walterParser.init(language);
+    this.hoverProvider.init(this.walterParser, this.showDebugInfo);
+    this.walterParser.on("parsed", (ast: wts.Tree) => {
       this.staticAnalizer.init(
         language,
         ast,
         this.configManager.config?.linterRules!,
-      ),
-    );
+      );
+      this.selectionRangeProvider.init(ast);
+    });
 
     this.setupDiagnostics();
     this.setupHoverProvider();
     this.setupCompletionProvider();
     this.setupCommnads();
     this.setupEditorBindings();
+    this.setupSelectionRangeProvider();
 
     this.context!.subscriptions.push(...this.disposables);
   };
