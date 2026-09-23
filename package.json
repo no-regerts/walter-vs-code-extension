@@ -3,7 +3,7 @@
   "displayName": "WALTER",
   "description": "Language support for WALTER",
   "publisher": "StanislavYegorov",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "license": "MIT",
   "icon": "./assets/icons/extension-icon.png",
   "repository": {

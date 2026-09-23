@@ -1,5 +1,6 @@
-## [1.2.0] - 2026-09-??
+## [1.2.0] - 2026-09-23
 ### Added
+- The expand/shrink selection feature
 - Syntax highlighting in Markdown fenced code blocks
 - New linter rules:
   - `walter.linter.noDefCommands`

@@ -11,8 +11,18 @@ Provides full feature support for the WALTER language.
 ![](./assets/readme/hover-documentation.png)
 - Hover over any keyword to see its documentation.
 
+### Autocompletion / IntelliSense
+![](./assets/readme/autocompletion.gif)
+- Code completions are suggested as you type.
+- You can also open the suggestions menu by pressing `Ctrl + Spacebar`.
+
 ### Lexical syntax highlighting
 ![](./assets/readme/sintax-highlighting.gif)
+
+### Expanding and shrinking the selection
+![](./assets/readme/selection-provider.gif)
+- Press `Alt + Shift + Right` or `Alt + Shift + Left` to expand or shrink the selection, respectively.
+- This can help you determine the exact boundaries of expressions.
 
 ### Comment toggling
 ![](./assets/readme/comment-toggling.gif)
@@ -22,22 +32,17 @@ Provides full feature support for the WALTER language.
 ![](./assets/readme/custom-folding-regions.gif)
 - Use `;---` and `;-` to mark the start and end of a custom folding region, respectively.
 
-### Code linting
+### Linter
 Code linting is the automated process of analyzing source code to find formatting errors, stylistic inconsistencies, and potential bugs.
 
 You can disable any linting rule by adding `"walter.linter.<ruleName>": false,` to your `settings.json` file.
-- `noTrailingSpaces`:
-  - Disallows whitespace characters (spaces or tabs) at the end of a line.
-- `noDefCommands`:
-  - Disallows the use of the `def` command, as it introduces ambiguity when reading source code.
-- `noDashesInIdentifiers`:
-  - Prevents common errors where dashes are mistaken for subtraction, such as `set a -b`.
-- `noSingleEquals`:
-  - Enforces using `==` instead of `=` for equality checks to maintain code consistency.
+- `noTrailingSpaces` - disallows whitespace characters (spaces or tabs) at the end of a line.
+- `noDefCommands` - disallows the use of the `def` command, as it introduces ambiguity when reading source code.
+- `noDashesInIdentifiers` - prevents common errors where dashes are mistaken for subtraction, such as `set a -b`.
+- `noSingleEquals` - enforces using `==` instead of `=` for equality checks to maintain code consistency.
 
 ### Other
 - Bracket/quote autoclosing.
-- Autocompletion / IntelliSense.
 - Syntax highlighting in Markdown fenced code blocks.
 
 # Planned features
@@ -58,7 +63,6 @@ You can disable any linting rule by adding `"walter.linter.<ruleName>": false,` 
 - Auto-formatting:
   - Indentation for `layout` and `macro` blocks.
   - Removal trailing whitespace.
-- Shrink/expand the selection.
 - Color picker for AABBGGRR values.
 - Linting:
   - `noDeadCode` - unused variables and macros, and dead branches.
